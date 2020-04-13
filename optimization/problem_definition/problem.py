@@ -35,6 +35,8 @@ class OptimizationProblem:
         if not isinstance(decision_variables, dict):
             raise TypeError(f"Parameter 'decision_variables' must be dict type. "
                             f"Received: {decision_variables} ({type(decision_variables)}).")
+        if not decision_variables:
+            raise ValueError("Parameter 'decision_variables' cannot be empty.")
         if not all(isinstance(key, str) and isinstance(value, DecisionVariable)
                    for key, value in decision_variables.items()):
             raise ValueError(f"Keys of 'decision_variables' parameter must be str type and values must be "
@@ -61,7 +63,6 @@ class OptimizationProblem:
 
 class Solution(ABC):
     """Abstract definition of optimization problem solution."""
-    # todo: test this magnificent code
 
     @property
     @abstractmethod
@@ -81,16 +82,19 @@ class Solution(ABC):
         :param decision_variables_values:
             Keys: Names of decision variables.
             Values: Values assigned to the decision variables.
-        :raise ValueError: Value for unknown decision variable was provided.
+        :raise ValueError: Incorrect value of decision variable war provided or
+            value for unknown decision variable was received.
         """
         # find values for all variables
         values_to_set = {}
-        for decision_variable_name, decision_variable_definition in self.optimization_problem.decision_variables:
-            value = decision_variables_values.pop(decision_variable_name, None)
+        for variable_name, variable_definition in self.optimization_problem.decision_variables.items():
+            value = decision_variables_values.pop(variable_name, None)
             if value is None:
-                # set random value if no value were given
-                value = self.optimization_problem.decision_variables[decision_variable_name].generate_random_value()
-            values_to_set[decision_variable_name] = value
+                value = variable_definition.generate_random_value()
+            elif not variable_definition.is_value_correct(value):
+                raise ValueError(f"Received value of '{variable_name}' decision variable does not match the definition."
+                                 f" Received value: {value}.")
+            values_to_set[variable_name] = value
         # check if assignment of decision variables values was executed successfully
         if decision_variables_values:
             raise ValueError(f"Values for unknown decision variables were received: {decision_variables_values}."
