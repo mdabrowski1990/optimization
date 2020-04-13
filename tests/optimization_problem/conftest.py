@@ -3,7 +3,7 @@ from random import choices, uniform, randint
 from functools import reduce
 from string import printable
 
-from optimization.problem_definition.decision_variables import IntegerVariable, FloatVariable, ChoiceVariable
+from optimization.optimization_problem.decision_variables import IntegerVariable, FloatVariable, ChoiceVariable
 
 
 # ------------------------------------------------------ General ----------------------------------------------------- #

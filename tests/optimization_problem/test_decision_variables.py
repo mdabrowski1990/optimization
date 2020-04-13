@@ -1,8 +1,9 @@
 import pytest
 from mock import patch
 
-from optimization.problem_definition.decision_variables import IntegerVariable, FloatVariable, ChoiceVariable, \
-    DecisionVariable
+from optimization.optimization_problem.decision_variables import DecisionVariable,\
+    IntegerVariable, FloatVariable, ChoiceVariable, \
+    generate_random_int, generate_random_float, choose_random_value
 from .conftest import EXAMPLE_VALUE_TYPES, NUMBER_OF_DECISION_VARIABLE_EXAMPLES, \
     EXAMPLE_INT_VARIABLE_LIMITS, NUMBER_OF_INT_VARIABLE_EXAMPLES, \
     EXAMPLE_FLOAT_VARIABLE_LIMITS, NUMBER_OF_FLOAT_VARIABLE_EXAMPLES, \
@@ -52,7 +53,7 @@ class TestIntegerVariableClass:
         with pytest.raises(TypeError):
             IntegerVariable(min_value=0, max_value=example_value)
 
-    @patch("optimization.problem_definition.decision_variables.generate_random_int")
+    @patch("optimization.optimization_problem.decision_variables.generate_random_int")
     @pytest.mark.parametrize("example_integer_decision_variable", range(NUMBER_OF_INT_VARIABLE_EXAMPLES), indirect=True)
     def test_generate_random_value(self, mock_generate_random_int, example_integer_decision_variable):
         """
@@ -157,7 +158,7 @@ class TestFloatVariableClass:
         with pytest.raises(TypeError):
             FloatVariable(min_value=0., max_value=example_value)
 
-    @patch("optimization.problem_definition.decision_variables.generate_random_float")
+    @patch("optimization.optimization_problem.decision_variables.generate_random_float")
     @pytest.mark.parametrize("example_float_decision_variable", range(NUMBER_OF_FLOAT_VARIABLE_EXAMPLES), indirect=True)
     def test_generate_random_value(self, mock_generate_random_float, example_float_decision_variable):
         """
@@ -240,7 +241,7 @@ class TestChoiceVariableClass:
         with pytest.raises(TypeError):
             ChoiceVariable(possible_values=example_value)
 
-    @patch("optimization.problem_definition.decision_variables.choose_random_value")
+    @patch("optimization.optimization_problem.decision_variables.choose_random_value")
     @pytest.mark.parametrize("example_choice_decision_variable", range(NUMBER_OF_CHOICE_VARIABLE_EXAMPLES),
                              indirect=True)
     def test_generate_random_value(self, mock_choose_random_value, example_choice_decision_variable):
@@ -306,3 +307,85 @@ class TestDecisionVariableClass:
         """
         with pytest.raises(NotImplementedError):
             DecisionVariable.is_value_correct(example_decision_variable, example_value)
+
+
+class TestRandomValues:
+    def setup(self):
+        self.base_repetitions = 2500
+
+    @pytest.mark.parametrize("tested_function, output_type", [(generate_random_int, int),
+                                                              (generate_random_float, float)])
+    def test_valid_input_output(self, tested_function, output_type):
+        """
+        Check that 'generate_random_int' and 'generate_random_float' functions returns proper type of the output value.
+
+        :param tested_function: Tested function - either 'generate_random_int' or 'generate_random_float'.
+        :param output_type: Expected type of returned variable.
+        """
+        random_value = tested_function(0, 1)
+        assert isinstance(random_value, output_type)
+        assert 0 <= random_value <= 1
+
+    @pytest.mark.parametrize("min_value, max_value", [(0, 10), (-100, 100)])
+    def test_generate_random_int_distribution(self, min_value, max_value):
+        """
+        Simple test to check that 'generate_random_int' generates all integer values relatively similar probability.
+
+        :param min_value: Minimal value that can be drawn.
+        :param max_value: Maximal value that can be drawn.
+        """
+        repetitions = (max_value - min_value + 1) * self.base_repetitions
+        random_values_distribution = {}
+        for _ in range(repetitions):
+            rand_val = generate_random_int(min_value, max_value)
+            random_values_distribution[rand_val] = random_values_distribution.setdefault(rand_val, 0) + 1
+        assert set(random_values_distribution.keys()) == set(range(min_value, max_value+1))
+        assert all(0.9*self.base_repetitions <= drawn_times <= 1.1*self.base_repetitions
+                   for drawn_times in random_values_distribution.values())
+
+    @pytest.mark.parametrize("min_value, max_value", [(0, 10), (-100, 100)])
+    def test_generate_random_float_distribution(self, min_value, max_value):
+        """
+        Simple test to check that 'generate_random_float' generates float values in all regions
+        with relatively similar probability.
+
+        :param min_value: Minimal value that can be drawn.
+        :param max_value: Maximal value that can be drawn.
+        """
+        repetitions = (max_value - min_value) * self.base_repetitions
+        random_values = set()
+        integer_part_distribution = {}
+        for _ in range(repetitions):
+            rand_val = generate_random_float(min_value, max_value)
+            random_values.add(rand_val)
+            int_part = divmod(rand_val, 1)[0]
+            integer_part_distribution[int_part] = integer_part_distribution.setdefault(int_part, 0) + 1
+        assert len(random_values) >= repetitions-1
+        assert all(0.9*self.base_repetitions <= drawn_times <= 1.1*self.base_repetitions
+                   for drawn_times in integer_part_distribution.values())
+
+    @pytest.mark.parametrize("values_pool", [set(range(10)), {"black", "white", "red", "blue", "yellow"}])
+    def test_choose_random_value_simple(self, values_pool):
+        """
+        Check that 'choose_random_value' function returns value from values_pool.
+
+        :param values_pool: Values available to be drawn.
+        """
+        assert all(choose_random_value(values_pool) in values_pool for _ in range(10))
+
+    @pytest.mark.parametrize("values_pool", [set(range(-10, 11)), set(range(-1000, 1000, 13))])
+    def test_choose_random_value_distribution(self, values_pool):
+        """
+        Simple test to check that 'choose_random_value' function chooses random values from possible pool with
+        relatively similar probability.
+
+        :param values_pool: Set with possible values to choose.
+        """
+        repetitions = len(values_pool) * self.base_repetitions
+        random_values_distribution = {}
+        for _ in range(repetitions):
+            rand_val = choose_random_value(values_pool)
+            random_values_distribution[rand_val] = random_values_distribution.setdefault(rand_val, 0) + 1
+        assert set(random_values_distribution.keys()) == values_pool
+        assert all(0.9*self.base_repetitions <= drawn_times <= 1.1*self.base_repetitions
+                   for drawn_times in random_values_distribution.values())

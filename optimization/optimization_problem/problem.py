@@ -2,7 +2,7 @@ from typing import Callable, Dict, Any
 from enum import Enum
 from abc import ABC, abstractmethod
 
-from optimization.problem_definition.decision_variables import DecisionVariable
+from optimization.optimization_problem.decision_variables import DecisionVariable
 
 
 class OptimizationType(Enum):
@@ -60,6 +60,10 @@ class OptimizationProblem:
         self.objective_function = objective_function
         self.optimization_type = optimization_type
 
+    def get_data_for_logging(self) -> dict:
+        # todo
+        pass
+
 
 class Solution(ABC):
     """Abstract definition of optimization problem solution."""
@@ -104,19 +108,6 @@ class Solution(ABC):
         self.decision_variables_values = values_to_set
         self._objective_value = None
 
-    def get_objective_value_with_penalty(self) -> float:
-        """
-        Method for determining value of objective function with penalty.
-
-        :return: Value calculated according to definition of optimization problem.
-        """
-        if self._objective_value is None:
-            if self.optimization_problem.optimization_type == OptimizationType.Minimize:
-                self._objective_value = self._calculate_objective() + self._calculate_penalty()
-            else:
-                self._objective_value = self._calculate_objective() - self._calculate_penalty()
-        return self._objective_value
-
     def _calculate_objective(self) -> float:
         """
         Calculates value of the solution objective.
@@ -148,3 +139,20 @@ class Solution(ABC):
             for constraint_name, constraint_function in self.optimization_problem.constraints.items()
         }
         return constraints_values
+
+    def get_objective_value_with_penalty(self) -> float:
+        """
+        Method for determining value of objective function with penalty.
+
+        :return: Value calculated according to definition of optimization problem.
+        """
+        if self._objective_value is None:
+            if self.optimization_problem.optimization_type == OptimizationType.Minimize:
+                self._objective_value = self._calculate_objective() + self._calculate_penalty()
+            else:
+                self._objective_value = self._calculate_objective() - self._calculate_penalty()
+        return self._objective_value
+
+    def get_data_for_logging(self):
+        # todo
+        pass
