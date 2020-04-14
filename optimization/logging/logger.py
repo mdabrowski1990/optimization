@@ -1,4 +1,4 @@
-from typing import Optional, Iterable
+from typing import Iterable
 from enum import Enum
 from os import path, mkdir
 from yaml import dump as yaml_dump
@@ -13,23 +13,18 @@ class LoggingVerbosity(Enum):
     Enum with possible logging levels that represent verbosity of the log.
 
     Options:
-        - Nothing: Logging functionality is turned off.
-        - BestSolution: Contains all logs from lower levels. Additionally, best solution of optimization problem
-            will be logged.
+        - BestSolution: Only the best solution of optimization problem will be logged.
         - ProblemDefinition: Contains all logs from lower levels. Additionally, definition of optimization problem
             will be logged.
         - AlgorithmConfiguration: Contains all logs from lower levels. Additionally, configuration of used optimization
             algorithm will be logged.
         - AllSolutions: Contains all logs from lower levels. Additionally, information about all solution found
             during optimization process will be logged.
-        - Full: All possible information about optimization process will be logged.
     """
-    Nothing = 0
-    BestSolution = 10
-    ProblemDefinition = 20
-    AlgorithmConfiguration = 30
-    AllSolutions = 40
-    Full = 50
+    BestSolution = 0
+    ProblemDefinition = 10
+    AlgorithmConfiguration = 20
+    AllSolutions = 30
 
     def __lt__(self, other):
         if not isinstance(other, LoggingVerbosity):
@@ -66,28 +61,31 @@ class Logger:
     """
     Logger of optimization process.
     """
-    def __init__(self, logging_verbosity: LoggingVerbosity = LoggingVerbosity.Nothing,
-                 logs_location: Optional[str] = None) -> None:
+    LOG_DIRECTORY_PATTERN = "optimization_%Y_%m_%d_%H_%M_%S"
+
+    def __init__(self, logs_location: str, logging_verbosity: LoggingVerbosity = LoggingVerbosity.AllSolutions) -> None:
         """
         Defines how logging should be executed.
 
         :param logging_verbosity: Defines how much details of optimization process should be logged.
         :param logs_location: Path of directory in which log files will be created.
-        :raise TypeError: When 'logging_verbosity' parameter is not instance of 'LoggingVerbosity' class.
+        :raise TypeError: When 'logging_verbosity' parameter is not instance of 'LoggingVerbosity' class
+            or 'logs_location' parameter is not str type.
+        :raise ValueError: If value of 'logs_location' parameter is not an existing directory.
         """
         if not isinstance(logging_verbosity, LoggingVerbosity):
             raise TypeError(f"Provided value of 'logging_verbosity' parameter has unexpected type. "
                             f"Expected: {LoggingVerbosity}. Actual: {type(logging_verbosity)}.")
+        if not isinstance(logs_location, str):
+            raise TypeError(f"Provided value of 'logs_location' parameter has unexpected type. "
+                            f"Expected: {str}. Actual: {type(logs_location)}.")
+        if not path.isdir(logs_location):
+            raise ValueError(f"Provided value of 'logs_location' parameter is not an existing directory. "
+                             f"Received: {logs_location}.")
         self.logging_verbosity = logging_verbosity
-        if logging_verbosity > LoggingVerbosity.Nothing:
-            if not path.isdir(logs_location):
-                raise ValueError(f"Provided value of 'logs_location' parameter is not an existing directory. "
-                                 f"Received: {logs_location}.")
-            directory_name = datetime.now().strftime("optimization_%Y_%m_%d_%H_%M_%S")
-            self.logs_location = path.join(logs_location, directory_name)
-            mkdir(self.logs_location)
-        else:
-            self.logs_location = None
+        logs_directory_name = datetime.now().strftime(self.LOG_DIRECTORY_PATTERN)
+        self.logs_location = path.join(logs_location, logs_directory_name)
+        mkdir(self.logs_location)
 
     def log_at_start(self, optimization_algorithm: OptimizationAlgorithm) -> None:
         """
@@ -116,10 +114,16 @@ class Logger:
         :parameter iteration: Index of the optimization process iteration.
         :param solutions: Solutions of the optimization problem that were found during last iteration
             of the optimization process.
+        :raise TypeError: When 'iteration' parameter is not int type.
         """
+        if not isinstance(iteration, int):
+            raise TypeError(f"Provided value of 'iteration' parameter has unexpected type. "
+                            f"Expected: {int}. Actual: {type(iteration)}.")
         if self.logging_verbosity >= LoggingVerbosity.AllSolutions:
-            with open(file=path.join(self.logs_location, f"solutions_{iteration}.yaml"), mode="w") as solutions_file:
-                yaml_dump(data=[solution.get_data_for_logging() for solution in solutions], stream=solutions_file)
+            _data_to_dump = {f"Iteration {iteration}": [solution.get_data_for_logging() for solution in solutions]}
+            _mode = "a" if iteration else "w"
+            with open(file=path.join(self.logs_location, f"solutions.yaml"), mode=_mode) as solutions_file:
+                yaml_dump(data=_data_to_dump, stream=solutions_file)
 
     def log_at_end(self, best_solution: Solution) -> None:
         """
@@ -127,6 +131,7 @@ class Logger:
         It logs information available after optimization process is finished such as best solution found.
 
         :param best_solution: Best solution that was found by the optimization algorithm.
+        :raise TypeError: When 'best_solution' parameter is not instance of 'Solution' class.
         """
         if not isinstance(best_solution, Solution):
             raise TypeError(f"Provided value of 'best_solution' parameter has unexpected type. "
