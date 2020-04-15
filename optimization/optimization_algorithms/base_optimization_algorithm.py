@@ -24,7 +24,7 @@ class OptimizationAlgorithm(ABC):
             raise TypeError(f"Provided value of 'stop_condition' parameter has unexpected type. "
                             f"Expected: {StopCondition}. Actual: {type(stop_condition)}.")
         self.optimization_problem = optimization_problem
-        self.stop_condition = stop_condition
+        self.stop_condition = stop_condition  # todo: rethink stop_condition implementation
 
     def get_data_for_logging(self) -> dict:
         # todo
@@ -42,6 +42,7 @@ class OptimizationAlgorithm(ABC):
 
     @abstractmethod
     def find_new_solutions(self) -> Tuple[Solution, ...]:
+        # todo: new iteration?
         pass
 
 

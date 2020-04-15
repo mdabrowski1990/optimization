@@ -39,6 +39,16 @@ class DecisionVariable(ABC):
         raise NotImplementedError("You have called abstract method 'generate_random_value' of 'DecisionVariable' "
                                   "abstract class.")
 
+    @abstractmethod
+    def get_data_for_logging(self) -> dict:
+        """
+        Abstract definition of a method which prepares data of the instance of this class for logging.
+
+        :return: Crucial data of this object.
+        """
+        raise NotImplementedError("You have called abstract method 'get_data_for_logging' of 'DecisionVariable' "
+                                  "abstract class.")
+
 
 class IntegerVariable(DecisionVariable):
     """Class for defining decision variable that carries integer value."""
@@ -79,6 +89,18 @@ class IntegerVariable(DecisionVariable):
         :return: True if value is compatible with the definition, False if it is not.
         """
         return isinstance(value, int) and self.min_value <= value <= self.max_value
+
+    def get_data_for_logging(self) -> dict:
+        """
+        Method which prepares data of the instance of this class for logging.
+
+        :return: Crucial data of this object.
+        """
+        return {
+            "type": "IntegerVariable",
+            "min_value": self.min_value,
+            "max_value": self.max_value
+        }
 
 
 class FloatVariable(DecisionVariable):
@@ -121,6 +143,18 @@ class FloatVariable(DecisionVariable):
         """
         return isinstance(value, float) and self.min_value <= value <= self.max_value
 
+    def get_data_for_logging(self) -> dict:
+        """
+        Method which prepares data of the instance of this class for logging.
+
+        :return: Crucial data of this object.
+        """
+        return {
+            "type": "FloatVariable",
+            "min_value": self.min_value,
+            "max_value": self.max_value
+        }
+
 
 class ChoiceVariable(DecisionVariable):
     """Class for defining decision variable that carries value from possible values pool."""
@@ -154,3 +188,14 @@ class ChoiceVariable(DecisionVariable):
         :return: True if value is compatible with the definition, False if it is not.
         """
         return value in self.possible_values
+
+    def get_data_for_logging(self) -> dict:
+        """
+        Method which prepares data of the instance of this class for logging.
+
+        :return: Crucial data of this object.
+        """
+        return {
+            "type": "ChoiceVariable",
+            "possible_values": self.possible_values,
+        }

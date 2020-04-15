@@ -293,6 +293,8 @@ class TestOptimizationProblem:
                                 objective_function=example_objective_function,
                                 optimization_type=example_optimization_type)
 
+    # todo: test get_data_for_logging
+
 
 class TestSolution:
     def setup(self):
@@ -488,3 +490,5 @@ class TestSolution:
         assert solution._calculate_constraints() == dict(zip(constraints_names, abs_constraints_values))
         for _, mock_constraint_function in self.mock_constraints_items():
             mock_constraint_function.assert_called_once_with(**decision_variable_values)
+
+    # todo: test get_data_for_logging

@@ -3,6 +3,7 @@ from enum import Enum
 from abc import ABC, abstractmethod
 
 from optimization.optimization_problem.decision_variables import DecisionVariable
+from optimization.logging.utilities import log_function_code
 
 
 class OptimizationType(Enum):
@@ -61,8 +62,23 @@ class OptimizationProblem:
         self.optimization_type = optimization_type
 
     def get_data_for_logging(self) -> dict:
-        # todo
-        pass
+        """
+        Method which prepares data of the instance of this class for logging.
+
+        :return: Crucial data of this object.
+        """
+        return {
+            "decision_variables": {
+                var_name: var_object.get_data_for_logging() for var_name, var_object in self.decision_variables.items()
+            },
+            "constraints": {
+                constraint_name: log_function_code(constraint_function)
+                for constraint_name, constraint_function in self.constraints.items()
+            },
+            "penalty_function": log_function_code(self.penalty_function),
+            "objective_function": log_function_code(self.objective_function),
+            "optimization_type": self.optimization_type.value
+        }
 
 
 class Solution(ABC):
@@ -153,6 +169,13 @@ class Solution(ABC):
                 self._objective_value = self._calculate_objective() - self._calculate_penalty()
         return self._objective_value
 
-    def get_data_for_logging(self):
-        # todo
-        pass
+    def get_data_for_logging(self) -> dict:
+        """
+        Method which prepares data of the instance of this class for logging.
+
+        :return: Crucial data of this object.
+        """
+        return {
+            "decision_variables_values": self.decision_variables_values,
+            "objective_value_with_penalty": self.get_objective_value_with_penalty(),
+        }
