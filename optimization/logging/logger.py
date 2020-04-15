@@ -136,7 +136,7 @@ class Logger:
         if not isinstance(best_solution, Solution):
             raise TypeError(f"Provided value of 'best_solution' parameter has unexpected type. "
                             f"Expected: {Solution}. Actual: {type(best_solution)}.")
-        if self.logging_verbosity >= LoggingVerbosity.ProblemDefinition:
+        if self.logging_verbosity >= LoggingVerbosity.BestSolution:
             with open(file=path.join(self.logs_location, "best_solution.yaml"), mode="w") as best_solution_file:
                 yaml_dump(data=best_solution.get_data_for_logging(), stream=best_solution_file)
 

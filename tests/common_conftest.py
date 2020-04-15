@@ -12,11 +12,21 @@ def random_text():
 
 
 @pytest.fixture
-def example_value(request, random_text):
+def random_int():
+    return randint(-1000000, 1000000)
+
+
+@pytest.fixture
+def random_float():
+    return uniform(-1000000, 1000000)
+
+
+@pytest.fixture
+def example_value(request, random_text, random_int, random_float):
     if request.param == int:
-        return randint(-1000, 1000)
+        return random_int
     elif request.param == float:
-        return uniform(-1000, 1000)
+        return random_float
     elif request.param == str:
         return random_text
     elif request.param == bytes:
