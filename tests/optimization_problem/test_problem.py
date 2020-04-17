@@ -1,5 +1,5 @@
 import pytest
-from mock import Mock, PropertyMock, patch
+from mock import Mock, PropertyMock, patch, call
 
 from optimization.optimization_problem.decision_variables import choose_random_value
 from optimization.optimization_problem.problem import OptimizationProblem, OptimizationType, Solution
@@ -40,7 +40,7 @@ class TestOptimizationProblem:
         assert problem.objective_function == example_objective_function
         assert problem.optimization_type == example_optimization_type
 
-    # types checking
+    # init - types checking
 
     @pytest.mark.parametrize("example_value", EXAMPLE_VALUE_TYPES.difference({dict}), indirect=True)
     @pytest.mark.parametrize("example_constraints", [0], indirect=True)
@@ -162,7 +162,7 @@ class TestOptimizationProblem:
                                 objective_function=example_objective_function,
                                 optimization_type=example_value)
 
-    # values checking
+    # init - values checking
 
     @pytest.mark.parametrize("example_constraints", [0], indirect=True)
     @pytest.mark.parametrize("example_penalty_function", [0], indirect=True)
@@ -293,7 +293,66 @@ class TestOptimizationProblem:
                                 objective_function=example_objective_function,
                                 optimization_type=example_optimization_type)
 
-    # todo: test get_data_for_logging
+    # get_data_for_logging
+
+    @patch("optimization.optimization_problem.problem.log_function_code")
+    def test_get_data_for_logging_basic_check(self, mock_log_function_code):
+        """
+        Basic check for 'get_data_for_logging' method.
+
+        :param mock_log_function_code: Mock of 'log_function_code' function.
+        """
+        mock_penalty_function = Mock()
+        mock_objective_function = Mock()
+        mock_optimization_type = Mock(value="some value")
+        mock_problem = Mock(decision_variables={},
+                            constraints={},
+                            penalty_function=mock_penalty_function,
+                            objective_function=mock_objective_function,
+                            optimization_type=mock_optimization_type)
+        logging_data = OptimizationProblem.get_data_for_logging(self=mock_problem)
+        assert isinstance(logging_data, dict)
+        assert set(logging_data.keys()) == {"decision_variables", "constraints", "penalty_function",
+                                            "objective_function", "optimization_type"}
+        assert logging_data["decision_variables"] == {}
+        assert logging_data["constraints"] == {}
+        mock_log_function_code.assert_has_calls([call(mock_penalty_function), call(mock_objective_function)])
+
+    @patch("optimization.optimization_problem.problem.log_function_code")
+    def test_get_data_for_logging_check_decision_variables(self, mock_log_function_code):
+        """
+        Check that 'decision_variables' attribute is logged using 'get_data_for_logging' method.
+
+        :param mock_log_function_code: Mock of 'log_function_code' function.
+        """
+        mock_problem = Mock(decision_variables={f"var {i}": Mock(get_data_for_logging=Mock()) for i in range(5)},
+                            constraints={},
+                            penalty_function=Mock(),
+                            objective_function=Mock(),
+                            optimization_type=Mock())
+        logging_data = OptimizationProblem.get_data_for_logging(self=mock_problem)
+        assert isinstance(logging_data["decision_variables"], dict)
+        assert logging_data["decision_variables"].keys() == mock_problem.decision_variables.keys()
+        for var_mock in mock_problem.decision_variables.values():
+            var_mock.get_data_for_logging.assert_called_once_with()
+
+    @patch("optimization.optimization_problem.problem.log_function_code")
+    def test_get_data_for_logging_check_constraints(self, mock_log_function_code):
+        """
+        Check that 'constraints' attribute is logged using 'get_data_for_logging' method.
+
+        :param mock_log_function_code: Mock of 'log_function_code' function.
+        """
+        mock_problem = Mock(decision_variables={},
+                            constraints={f"constraint {i}": Mock() for i in range(5)},
+                            penalty_function=Mock(),
+                            objective_function=Mock(),
+                            optimization_type=Mock())
+        logging_data = OptimizationProblem.get_data_for_logging(self=mock_problem)
+        assert isinstance(logging_data["constraints"], dict)
+        assert logging_data["constraints"].keys() == mock_problem.constraints.keys()
+        mock_log_function_code.assert_has_calls([call(constraint_function)
+                                                 for constraint_function in mock_problem.constraints.values()])
 
 
 class TestSolution:
@@ -391,50 +450,6 @@ class TestSolution:
         with pytest.raises(ValueError):
             self.MockedSolution(**{var_name: "some invalid value"})
 
-    # get_objective_value_with_penalty
-
-    @pytest.mark.parametrize("example_value", EXAMPLE_VALUE_TYPES.difference({None}), indirect=True)
-    def test_get_objective_value_with_penalty_with_objective_value_set(self, example_value):
-        """
-        Check that 'get_objective_value_with_penalty' returns value of '_objective_value' attribute if set.
-
-        :param example_value: Example value to set to _objective_value.
-        """
-        solution = self.MockedSolution()
-        solution._objective_value = example_value
-        assert solution.get_objective_value_with_penalty() == solution._objective_value == example_value
-
-    @patch("optimization.optimization_problem.problem.Solution._calculate_penalty")
-    @patch("optimization.optimization_problem.problem.Solution._calculate_objective")
-    @pytest.mark.parametrize("optimization_type", OptimizationType)
-    @pytest.mark.parametrize("objective_value", EXAMPLE_OBJECTIVE_FUNCTION_VALUES)
-    @pytest.mark.parametrize("penalty_value", EXAMPLE_PENALTY_FUNCTION_VALUES)
-    def test_get_objective_value_with_penalty_minimize(self, mock_calculate_objective, mock_calculate_penalty,
-                                                       optimization_type, objective_value, penalty_value):
-        """
-        Check that 'get_objective_value_with_penalty' for minimization and maximization problems with
-        '_objective_value' attribute value not set.
-
-        :param mock_calculate_objective: Mock of '_calculate_objective' method.
-        :param mock_calculate_penalty: Mock of '_calculate_penalty' method.
-        :param optimization_type: Type of problem (Maximization or Minimization).
-        :param objective_value: Value to return by 'mock_calculate_objective'.
-        :param penalty_value: Value to return by 'mock_calculate_penalty'.
-        """
-        mock_calculate_objective.return_value = objective_value
-        mock_calculate_penalty.return_value = penalty_value
-        solution = self.MockedSolution()
-        solution._objective_value = None
-        solution.optimization_problem.optimization_type = optimization_type
-        if optimization_type == OptimizationType.Minimize:
-            expected_result = objective_value + penalty_value
-        elif optimization_type == OptimizationType.Maximize:
-            expected_result = objective_value - penalty_value
-        else:
-            raise ValueError
-        assert solution.get_objective_value_with_penalty() == solution._objective_value
-        assert solution._objective_value == expected_result
-
     # _calculate_objective
 
     @pytest.mark.parametrize("decision_variable_values", EXAMPLE_DECISION_VARIABLES_VALUES)
@@ -491,4 +506,66 @@ class TestSolution:
         for _, mock_constraint_function in self.mock_constraints_items():
             mock_constraint_function.assert_called_once_with(**decision_variable_values)
 
-    # todo: test get_data_for_logging
+    # get_objective_value_with_penalty
+
+    @pytest.mark.parametrize("example_value", EXAMPLE_VALUE_TYPES.difference({None}), indirect=True)
+    def test_get_objective_value_with_penalty_with_objective_value_set(self, example_value):
+        """
+        Check that 'get_objective_value_with_penalty' returns value of '_objective_value' attribute if set.
+
+        :param example_value: Example value to set to _objective_value.
+        """
+        solution = self.MockedSolution()
+        solution._objective_value = example_value
+        assert solution.get_objective_value_with_penalty() == solution._objective_value == example_value
+
+    @patch("optimization.optimization_problem.problem.Solution._calculate_penalty")
+    @patch("optimization.optimization_problem.problem.Solution._calculate_objective")
+    @pytest.mark.parametrize("optimization_type", OptimizationType)
+    @pytest.mark.parametrize("objective_value", EXAMPLE_OBJECTIVE_FUNCTION_VALUES)
+    @pytest.mark.parametrize("penalty_value", EXAMPLE_PENALTY_FUNCTION_VALUES)
+    def test_get_objective_value_with_penalty_minimize(self, mock_calculate_objective, mock_calculate_penalty,
+                                                       optimization_type, objective_value, penalty_value):
+        """
+        Check that 'get_objective_value_with_penalty' for minimization and maximization problems with
+        '_objective_value' attribute value not set.
+
+        :param mock_calculate_objective: Mock of '_calculate_objective' method.
+        :param mock_calculate_penalty: Mock of '_calculate_penalty' method.
+        :param optimization_type: Type of problem (Maximization or Minimization).
+        :param objective_value: Value to return by 'mock_calculate_objective'.
+        :param penalty_value: Value to return by 'mock_calculate_penalty'.
+        """
+        mock_calculate_objective.return_value = objective_value
+        mock_calculate_penalty.return_value = penalty_value
+        solution = self.MockedSolution()
+        solution._objective_value = None
+        solution.optimization_problem.optimization_type = optimization_type
+        if optimization_type == OptimizationType.Minimize:
+            expected_result = objective_value + penalty_value
+        elif optimization_type == OptimizationType.Maximize:
+            expected_result = objective_value - penalty_value
+        else:
+            raise ValueError
+        assert solution.get_objective_value_with_penalty() == solution._objective_value
+        assert solution._objective_value == expected_result
+
+    # get_data_for_logging
+
+    @pytest.mark.parametrize("decision_variable_values", EXAMPLE_DECISION_VARIABLES_VALUES)
+    def test_get_data_for_logging(self, decision_variable_values, random_float):
+        """
+        Check that 'get_data_for_logging' method logs 'decision_variables_values' and 'objective_value_with_penalty'.
+
+        :param decision_variable_values: Values to set in 'decision_variables_values' mock.
+        :param random_float: Values to return by 'get_objective_value_with_penalty' mock.
+        """
+        mock_get_objective_value_with_penalty = Mock(return_value=random_float)
+        solution_mock = Mock(decision_variables_values=decision_variable_values,
+                             get_objective_value_with_penalty=mock_get_objective_value_with_penalty)
+        logging_data = Solution.get_data_for_logging(self=solution_mock)
+        assert isinstance(logging_data, dict)
+        assert set(logging_data.keys()) == {"decision_variables_values", "objective_value_with_penalty"}
+        assert logging_data["decision_variables_values"] == decision_variable_values
+        assert logging_data["objective_value_with_penalty"] == random_float
+        mock_get_objective_value_with_penalty.assert_called_once_with()
