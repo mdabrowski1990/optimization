@@ -24,7 +24,7 @@ class DecisionVariable(ABC):
         """
         Abstract definition of a method that generates random value according to Decision Variable definition.
 
-        :raises NotImplementedError: Abstract method was called.
+        :raise NotImplementedError: Abstract method was called.
         """
         raise NotImplementedError("You have called abstract method 'generate_random_value' of 'DecisionVariable' "
                                   "abstract class.")
@@ -34,7 +34,7 @@ class DecisionVariable(ABC):
         """
         Abstract definition of a method that checks if received value is compatible with Decision Variable definition.
 
-        :raises NotImplementedError: Abstract method was called.
+        :raise NotImplementedError: Abstract method was called.
         """
         raise NotImplementedError("You have called abstract method 'generate_random_value' of 'DecisionVariable' "
                                   "abstract class.")
@@ -44,7 +44,7 @@ class DecisionVariable(ABC):
         """
         Abstract definition of a method which prepares data of the instance of this class for logging.
 
-        :return: Crucial data of this object.
+        :raise NotImplementedError: Abstract method was called.
         """
         raise NotImplementedError("You have called abstract method 'get_data_for_logging' of 'DecisionVariable' "
                                   "abstract class.")

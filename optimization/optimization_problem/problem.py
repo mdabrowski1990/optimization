@@ -90,7 +90,7 @@ class Solution(ABC):
         """
         Abstract definition of a property that stores reference to optimization problem.
 
-        :raises NotImplementedError: Abstract method was called.
+        :raise NotImplementedError: Abstract method was called.
         """
         raise NotImplementedError("You have called abstract property 'optimization_problem' of 'Solution' "
                                   "abstract class.")
