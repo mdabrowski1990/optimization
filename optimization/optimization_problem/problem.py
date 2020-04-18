@@ -124,6 +124,8 @@ class Solution(ABC):
         self.decision_variables_values = values_to_set
         self._objective_value = None
 
+    # todo: eq, nq, lt, ...
+
     def _calculate_objective(self) -> float:
         """
         Calculates value of the solution objective.
