@@ -13,6 +13,7 @@ class StopCondition:
       - no progress for some number of iteration (better solution was not found for predefined number of iterations)
       - no progress for some time (better solution was not found for some predefined time)
     """
+
     def __init__(self, time_limit: timedelta,
                  satisfying_objective_value: Optional[float] = None,
                  max_iterations_without_progress: Optional[int] = None,
@@ -31,6 +32,30 @@ class StopCondition:
             After the number of iterations without progress is exceeded, then optimization process is stopped.
             It is not taken into account when equals None
         """
+        if not isinstance(time_limit, timedelta):
+            raise TypeError(f"Parameter 'time_limit' must be timedelta type. "
+                            f"Received: {time_limit} ({type(time_limit)}).")
+        if timedelta() >= time_limit:
+            raise ValueError(f"Parameter 'time_limit' value must be greater than 0 seconds. "
+                             f"Received: {time_limit}")
+        if satisfying_objective_value is not None and not isinstance(satisfying_objective_value, float):
+            raise TypeError(f"Parameter 'satisfying_objective_value' must be None or float type. "
+                            f"Received: {satisfying_objective_value} ({type(satisfying_objective_value)}).")
+        if max_iterations_without_progress is not None:
+            if not isinstance(max_iterations_without_progress, int):
+                raise TypeError(f"Parameter 'max_iterations_without_progress' must be None or int type. "
+                                f"Received: {max_iterations_without_progress} "
+                                f"({type(max_iterations_without_progress)}).")
+            elif 0 > max_iterations_without_progress:
+                raise ValueError(f"Parameter 'max_iterations_without_progress' value must be greater than 0. "
+                                 f"Received: {max_iterations_without_progress}")
+        if max_time_without_progress is not None:
+            if not isinstance(max_time_without_progress, timedelta):
+                raise TypeError(f"Parameter 'max_iterations_without_progress' must be None or timedelta type. "
+                                f"Received: {max_time_without_progress} ({type(max_time_without_progress)}).")
+            elif timedelta() >= max_time_without_progress:
+                raise ValueError(f"Parameter 'max_time_without_progress' value must be greater than 0 seconds. "
+                                 f"Received: {max_time_without_progress}")
         self.time_limit = time_limit
         self.satisfying_objective_value = satisfying_objective_value
         self.max_iterations_without_progress = max_iterations_without_progress
@@ -39,6 +64,16 @@ class StopCondition:
         self._best_solution = None
         self._last_progress_time = None
 
+    def _is_time_exceeded(self, start_time: datetime) -> bool:
+        """
+        Check if optimization process lasts for longer than time limit.
+
+        :param start_time: Time when optimization process was started.
+
+        :return: True if time exceeded, otherwise False.
+        """
+        return start_time - datetime.now() >= self.time_limit
+
     def _is_satisfying_solution_found(self, best_solution: Solution) -> bool:
         """
         Check if satisfying solution was found.
@@ -46,7 +81,7 @@ class StopCondition:
         :param best_solution: Instance of Solution class with the best solution found in this iteration.
         :raise ValueError: Unexpected value of 'optimization_type' in 'optimization_problem' was found.
 
-        :return: True if satisfying solution found, else False.
+        :return: True if satisfying solution found, otherwise False.
         """
         optimization_type = best_solution.optimization_problem.optimization_type
         if optimization_type == OptimizationType.Minimize:
@@ -92,7 +127,7 @@ class StopCondition:
 
         :return: True when time limit restriction is exceeded, False if it is not.
         """
-        if start_time - datetime.now() >= self.time_limit:
+        if self._is_time_exceeded(start_time=start_time):
             return True
         elif self.satisfying_objective_value is not None and \
                 self._is_satisfying_solution_found(best_solution=solutions[0]):
