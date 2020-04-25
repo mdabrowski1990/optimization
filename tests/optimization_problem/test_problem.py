@@ -143,9 +143,8 @@ class TestOptimizationProblem:
     @pytest.mark.parametrize("example_penalty_function", [0], indirect=True)
     @pytest.mark.parametrize("example_objective_function", [0], indirect=True)
     @pytest.mark.parametrize("example_value", EXAMPLE_VALUE_TYPES, indirect=True)
-    def test_init_with_invalid_objective_function_type(self, example_decision_variables, example_constraints,
-                                                       example_penalty_function, example_objective_function,
-                                                       example_value):
+    def test_init_with_invalid_optimization_type(self, example_decision_variables, example_constraints,
+                                                 example_penalty_function, example_objective_function, example_value):
         """
         Check that 'OptimizationProblem' class will not be initialized with incorrect parameter.
 
@@ -439,7 +438,7 @@ class TestSolution:
             self.MockedSolution(some_invalid_variable_name="some value")
 
     @pytest.mark.parametrize("example_decision_variables", DECISION_VARIABLES_GROUPS, indirect=True)
-    def test_subclass_init_with_invalid_value_name(self, example_decision_variables):
+    def test_subclass_init_with_invalid_value_value(self, example_decision_variables):
         """
         Check that 'Solution' subclass cannot be initialized with variable with invalid value.
 

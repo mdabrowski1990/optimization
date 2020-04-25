@@ -42,7 +42,7 @@ class OptimizationAlgorithm(ABC):
         self.end_time = None
 
     @abstractmethod
-    def _initial_iteration(self) -> List[Solution, ...]:
+    def _initial_iteration(self) -> list:
         # todo
         pass
 
@@ -52,7 +52,7 @@ class OptimizationAlgorithm(ABC):
         return True
 
     @abstractmethod
-    def _find_new_solutions(self) -> List[Solution, ...]:
+    def _find_new_solutions(self) -> list:
         # todo: new iteration?
         pass
 
@@ -77,5 +77,5 @@ class OptimizationAlgorithm(ABC):
         }
 
     @staticmethod
-    def sort_solution_by_objective_value(solutions: List[Solution, ...]) -> List[Solution, ...]:
+    def sort_solution_by_objective_value(solutions: list) -> list:
         return sorted(solutions, key=lambda solution: solution.get_objective_value_with_penalty(), reverse=True)
