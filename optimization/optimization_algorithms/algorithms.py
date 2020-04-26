@@ -1,9 +1,7 @@
-from typing import List
 from abc import ABC, abstractmethod
-from datetime import datetime
 
 from optimization.optimization_algorithms.stop_conditions import StopCondition
-from optimization.optimization_problem.problem import OptimizationProblem, Solution
+from optimization.optimization_problem.problem import OptimizationProblem
 
 
 class OptimizationAlgorithm(ABC):
@@ -13,7 +11,7 @@ class OptimizationAlgorithm(ABC):
     @abstractmethod
     def algorithm_type(self) -> str:
         """
-        Abstract definition of a property that stores type of stop condition.
+        Abstract definition of a property that stores type of optimization algorithm.
 
         :raise NotImplementedError: Abstract method was called.
         """
@@ -42,27 +40,35 @@ class OptimizationAlgorithm(ABC):
         self.end_time = None
 
     @abstractmethod
-    def _initial_iteration(self) -> list:
-        # todo
-        pass
+    def initial_iteration(self) -> list:
+        """
+        Abstract definition of a method that perform initial iteration of optimization process and creates initial
+        population of solutions.
+
+        :raise NotImplementedError: Abstract method was called.
+        """
+        raise NotImplementedError("You have called abstract method '_initial_iteration' of 'OptimizationAlgorithm' "
+                                  "abstract class.")
 
     @abstractmethod
-    def _is_stop_condition_achieved(self) -> bool:
-        # todo
-        return True
+    def following_iteration(self) -> list:
+        """
+        Abstract definition of a method that perform following iteration of optimization process.
 
-    @abstractmethod
-    def _find_new_solutions(self) -> list:
-        # todo: new iteration?
-        pass
+        :raise NotImplementedError: Abstract method was called.
+        """
+        raise NotImplementedError("You have called abstract method '_following_iteration' of 'OptimizationAlgorithm' "
+                                  "abstract class.")
 
-    def perform_optimization(self) -> None:
-        # todo
-        self.start_time = datetime.now()
-        solutions = self._initial_iteration()
-        while self.stop_condition.is_condition_achieved(start_time=self.start_time, solutions=solutions):
-            solutions = self._find_new_solutions()
-        self.end_time = datetime.now()
+    def is_stop_condition_achieved(self, solutions: list) -> bool:
+        """
+        Checks whether stop condition was achieved in this iteration of the optimization process.
+
+        :param solutions: List of solutions that were created in last iteration of optimization process.
+
+        :return: True when time limit restriction is exceeded, False if it is not.
+        """
+        return self.stop_condition.is_achieved(start_time=self.start_time, solutions=solutions)
 
     @abstractmethod
     def get_data_for_logging(self) -> dict:
@@ -77,5 +83,10 @@ class OptimizationAlgorithm(ABC):
         }
 
     @staticmethod
-    def sort_solution_by_objective_value(solutions: list) -> list:
-        return sorted(solutions, key=lambda solution: solution.get_objective_value_with_penalty(), reverse=True)
+    def sort_solution_by_objective_value(solutions: list) -> None:
+        """
+        Sorts list with solution by objective value (with penalty).
+
+        :param solutions: List with solutions.
+        """
+        solutions.sort(key=lambda solution: solution.get_objective_value_with_penalty(), reverse=True)
