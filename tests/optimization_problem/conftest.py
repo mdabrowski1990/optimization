@@ -2,7 +2,7 @@ import pytest
 from random import choices, uniform
 from functools import reduce
 
-from ..common_conftest import EXAMPLE_VALUE_TYPES, example_value, random_text, random_int, random_float
+from ..common_conftest import *
 
 from optimization.optimization_problem.decision_variables import IntegerVariable, FloatVariable, ChoiceVariable
 

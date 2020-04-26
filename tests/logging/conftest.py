@@ -1,7 +1,7 @@
 import pytest
 from operator import lt, le, eq, ne, ge, gt
 
-from ..common_conftest import EXAMPLE_VALUE_TYPES, example_value, random_text, random_int, random_float
+from ..common_conftest import *
 
 
 COMPARISON_FUNCTIONS = [lt, le, eq, ne, ge, gt]

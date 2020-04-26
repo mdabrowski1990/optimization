@@ -346,5 +346,187 @@ class TestStopConditionMethods:
         assert mock_stop_condition._best_solution is mock_previously_best_solution
         assert mock_stop_condition._iterations_without_progress == random_positive_int + 1
 
-    # todo: is_achieved
-    # todo: get_data_for_logging
+    # _is_max_time_without_progress_exceeded
+
+    @pytest.mark.parametrize("max_time, result", [(-100, True), (-1, True), (0, False), (100, False)])
+    @patch("optimization.optimization_algorithms.stop_conditions.datetime")
+    def test_is_max_time_without_progress_exceeded_first(self, mock_datetime, random_positive_int, max_time, result):
+        """
+        Boundary Value Analysis tests for '_is_max_time_without_progress_exceeded' method.
+        Simulated first iteration (no solution is stored).
+
+        :param mock_datetime: Mock of datetime class in tested scope.
+        :param random_positive_int: Value to return by datetime.now() function.
+        :param max_time: Value to set in 'max_time_without_progress' attribute of StopCondition.
+        :param result: Expected return from '_is_max_time_without_progress_exceeded' method.
+        """
+        mock_datetime.now = Mock(return_value=random_positive_int)
+        mock_stop_condition = Mock(_best_solution=None, max_time_without_progress=max_time)
+        mock_best_solution = Mock()
+        assert StopCondition._is_max_time_without_progress_exceeded(self=mock_stop_condition,
+                                                                    best_solution=mock_best_solution) is result
+        assert mock_stop_condition._best_solution is mock_best_solution
+        assert mock_stop_condition._last_progress_time == random_positive_int
+
+    @pytest.mark.parametrize("max_time, result", [(-100, True), (-1, True), (0, False), (100, False)])
+    @patch("optimization.optimization_algorithms.stop_conditions.datetime")
+    def test_is_max_time_without_progress_exceeded_better_solution_found(self, mock_datetime, random_positive_int,
+                                                                         max_time, result):
+        """
+        Boundary Value Analysis tests for '_is_max_iteration_without_progress_exceeded' method.
+        Simulated better solution is found.
+
+        :param mock_datetime: Mock of datetime class in tested scope.
+        :param random_positive_int: Value to return by datetime.now() function.
+        :param max_time: Value to set in 'max_time_without_progress' attribute of StopCondition.
+        :param result: Expected return from '_is_max_time_without_progress_exceeded' method.
+        """
+        mock_datetime.now = Mock(return_value=random_positive_int)
+        mock_stop_condition = Mock(_best_solution=Mock(), max_time_without_progress=max_time)
+        mock_le = Mock(return_value=True)
+        mock_stop_condition._best_solution.__le__ = mock_le
+        mock_best_solution = Mock()
+        assert StopCondition._is_max_time_without_progress_exceeded(self=mock_stop_condition,
+                                                                    best_solution=mock_best_solution) is result
+        mock_le.assert_called_once_with(mock_best_solution)
+        assert mock_stop_condition._best_solution is mock_best_solution
+        assert mock_stop_condition._last_progress_time == random_positive_int
+
+    @pytest.mark.parametrize("diff, result", [(-100, True), (-1, True), (0, False), (100, False)])
+    @patch("optimization.optimization_algorithms.stop_conditions.datetime")
+    def test_is_max_time_without_progress_exceeded_better_solution_not_found(self, mock_datetime, random_positive_int,
+                                                                             random_int, diff, result):
+        """
+        Boundary Value Analysis tests for '_is_max_iteration_without_progress_exceeded' method.
+        Simulated better solution is not found.
+
+        :param mock_datetime: Mock of datetime class in tested scope.
+        :param random_positive_int: Value to return by datetime.now() function.
+        :param random_int: Value to set in '_last_progress_time' attribute of stop condition.
+        :param diff: Distance from boundary value.
+        :param result: Expected return from '_is_max_time_without_progress_exceeded' method.
+        """
+        mock_datetime.now = Mock(return_value=random_positive_int)
+        mock_previously_best_solution = Mock()
+        mock_stop_condition = Mock(_best_solution=mock_previously_best_solution, _last_progress_time=random_int,
+                                   max_time_without_progress=random_positive_int - random_int + diff)
+        mock_le = Mock(return_value=False)
+        mock_stop_condition._best_solution.__le__ = mock_le
+        mock_best_solution = Mock()
+        assert StopCondition._is_max_time_without_progress_exceeded(self=mock_stop_condition,
+                                                                    best_solution=mock_best_solution) is result
+        mock_le.assert_called_once_with(mock_best_solution)
+        assert mock_stop_condition._best_solution is mock_previously_best_solution
+        assert mock_stop_condition._last_progress_time == random_int
+
+    # is_achieved
+
+    def test_is_achieved_all_negative(self, random_datetime):
+        """
+        Test for 'is_achieved' method when False is expected in return value.
+
+        :param random_datetime: Value for 'start_time' parameter.
+        """
+        solutions = [Mock() for _ in range(5)]
+        mock_is_time_exceeded = Mock(return_value=False)
+        mock_is_satisfying_solution_found = Mock(return_value=False)
+        mock_is_max_iteration_without_progress_exceeded = Mock(return_value=False)
+        mock_is_max_time_without_progress_exceeded = Mock(return_value=False)
+        mock_stop_condition = Mock(
+            satisfying_objective_value="not none",
+            max_iterations_without_progress="not none",
+            max_time_without_progress="not none",
+            _is_time_exceeded=mock_is_time_exceeded,
+            _is_satisfying_solution_found=mock_is_satisfying_solution_found,
+            _is_max_iteration_without_progress_exceeded=mock_is_max_iteration_without_progress_exceeded,
+            _is_max_time_without_progress_exceeded=mock_is_max_time_without_progress_exceeded
+        )
+        assert StopCondition.is_achieved(self=mock_stop_condition, start_time=random_datetime, solutions=solutions) \
+            is False
+        mock_is_time_exceeded.assert_called_once_with(start_time=random_datetime)
+        mock_is_satisfying_solution_found.assert_called_once_with(best_solution=solutions[0])
+        mock_is_max_iteration_without_progress_exceeded.assert_called_once_with(best_solution=solutions[0])
+        mock_is_max_time_without_progress_exceeded.assert_called_once_with(best_solution=solutions[0])
+
+    @pytest.mark.parametrize("condition_achieved", range(4))
+    def test_is_achieved_positive(self, condition_achieved, random_datetime):
+        """
+        Test for 'is_achieved' method when True is expected in return value due to time exceeding
+        (no other checks are done).
+
+        :param condition_achieved: Index of stop condition that was achieved.
+        :param random_datetime: Value for 'start_time' parameter.
+        """
+        solutions = [Mock() for _ in range(5)]
+        mock_is_time_exceeded = Mock(return_value=(condition_achieved == 0))
+        mock_is_satisfying_solution_found = Mock(return_value=(condition_achieved == 1))
+        mock_is_max_iteration_without_progress_exceeded = Mock(return_value=(condition_achieved == 2))
+        mock_is_max_time_without_progress_exceeded = Mock(return_value=(condition_achieved == 3))
+        mock_stop_condition = Mock(
+            satisfying_objective_value="not none",
+            max_iterations_without_progress="not none",
+            max_time_without_progress="not none",
+            _is_time_exceeded=mock_is_time_exceeded,
+            _is_satisfying_solution_found=mock_is_satisfying_solution_found,
+            _is_max_iteration_without_progress_exceeded=mock_is_max_iteration_without_progress_exceeded,
+            _is_max_time_without_progress_exceeded=mock_is_max_time_without_progress_exceeded
+        )
+        assert StopCondition.is_achieved(self=mock_stop_condition, start_time=random_datetime, solutions=solutions) \
+            is True
+        mock_is_time_exceeded.assert_called_once_with(start_time=random_datetime)
+        if condition_achieved > 0:
+            mock_is_satisfying_solution_found.assert_called_once_with(best_solution=solutions[0])
+        else:
+            mock_is_satisfying_solution_found.assert_not_called()
+        if condition_achieved > 1:
+            mock_is_max_iteration_without_progress_exceeded.assert_called_once_with(best_solution=solutions[0])
+        else:
+            mock_is_max_iteration_without_progress_exceeded.assert_not_called()
+        if condition_achieved > 2:
+            mock_is_max_time_without_progress_exceeded.assert_called_once_with(best_solution=solutions[0])
+        else:
+            mock_is_max_time_without_progress_exceeded.assert_not_called()
+
+    def test_is_achieved_not_checked(self, random_datetime):
+        """
+        Test for 'is_achieved' method when True is expected in return value due to time exceeding
+        (no other checks are done).
+
+        :param random_datetime: Value for 'start_time' parameter.
+        """
+        solutions = [Mock() for _ in range(5)]
+        mock_is_time_exceeded = Mock(return_value=False)
+        mock_is_satisfying_solution_found = Mock(return_value=True)
+        mock_is_max_iteration_without_progress_exceeded = Mock(return_value=True)
+        mock_is_max_time_without_progress_exceeded = Mock(return_value=True)
+        mock_stop_condition = Mock(
+            satisfying_objective_value=None,
+            max_iterations_without_progress=None,
+            max_time_without_progress=None,
+            _is_time_exceeded=mock_is_time_exceeded,
+            _is_satisfying_solution_found=mock_is_satisfying_solution_found,
+            _is_max_iteration_without_progress_exceeded=mock_is_max_iteration_without_progress_exceeded,
+            _is_max_time_without_progress_exceeded=mock_is_max_time_without_progress_exceeded
+        )
+        assert StopCondition.is_achieved(self=mock_stop_condition, start_time=random_datetime, solutions=solutions) \
+            is False
+        mock_is_time_exceeded.assert_called_once_with(start_time=random_datetime)
+        mock_is_satisfying_solution_found.assert_not_called()
+        mock_is_max_iteration_without_progress_exceeded.assert_not_called()
+        mock_is_max_time_without_progress_exceeded.assert_not_called()
+
+    # get_data_for_logging
+
+    def test_get_data_for_logging(self):
+        """Test for 'get_data_for_logging' method."""
+        mock_stop_condition = Mock(time_limit=Mock(),
+                                   satisfying_objective_value=Mock(),
+                                   max_iterations_without_progress=Mock(),
+                                   max_time_without_progress=Mock())
+        data_for_logging = StopCondition.get_data_for_logging(self=mock_stop_condition)
+        assert isinstance(data_for_logging, dict)
+        assert data_for_logging["time_limit"] is mock_stop_condition.time_limit
+        assert data_for_logging["satisfying_objective_value"] is mock_stop_condition.satisfying_objective_value
+        assert data_for_logging["max_iterations_without_progress"] \
+            is mock_stop_condition.max_iterations_without_progress
+        assert data_for_logging["max_time_without_progress"] is mock_stop_condition.max_time_without_progress

@@ -4,6 +4,9 @@ from string import printable
 from datetime import datetime, timedelta
 
 
+__all__ = ["EXAMPLE_VALUE_TYPES", "random_text", "random_int", "random_positive_int", "random_negative_int",
+           "random_float", "random_datetime", "random_positive_timedelta", "random_negative_timedelta", "example_value"]
+
 EXAMPLE_VALUE_TYPES = {int, float, str, bytes, list, tuple, set, dict, "function", None, datetime, timedelta}
 
 
@@ -33,6 +36,18 @@ def random_float():
 
 
 @pytest.fixture
+def random_datetime():
+    random_value = None
+    while random_value is None:
+        try:
+            random_value = datetime(year=randint(1, 3000), month=randint(1, 12), day=randint(1, 31),
+                                    hour=randint(0, 23), minute=randint(0, 59), second=randint(0, 59))
+        except ValueError:
+            pass
+    return random_value
+
+
+@pytest.fixture
 def random_positive_timedelta():
     return timedelta(seconds=uniform(0.000001, 1000000))
 
@@ -43,7 +58,7 @@ def random_negative_timedelta():
 
 
 @pytest.fixture
-def example_value(request, random_text, random_int, random_float):
+def example_value(request, random_text, random_int, random_float, random_datetime):
     if request.param == int:
         return random_int
     elif request.param == float:
@@ -63,7 +78,7 @@ def example_value(request, random_text, random_int, random_float):
     elif request.param == "function":
         return lambda a, b: a+b
     elif request.param == datetime:
-        return datetime.now()
+        return random_datetime
     elif request.param == timedelta:
         return timedelta(seconds=random_float)
     else:

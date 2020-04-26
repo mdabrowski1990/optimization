@@ -1,8 +1,7 @@
 import pytest
 from datetime import timedelta
 
-from ..common_conftest import example_value, random_text, random_int, random_float, EXAMPLE_VALUE_TYPES, \
-    random_positive_timedelta, random_negative_timedelta, random_positive_int, random_negative_int
+from ..common_conftest import *
 
 
 EXAMPLE_VALID_SATISFYING_OBJECTIVE_VALUES = [None, 0., -1., 2154355.23453452]
