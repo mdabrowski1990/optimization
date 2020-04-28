@@ -1,7 +1,7 @@
 from typing import List, Optional
 from datetime import datetime, timedelta
 
-from optimization.optimization_problem.problem import OptimizationType, Solution
+from optimization.optimization_problem.problem import OptimizationType, AbstractSolution
 
 
 class StopCondition:
@@ -74,11 +74,11 @@ class StopCondition:
         """
         return start_time - datetime.now() >= self.time_limit
 
-    def _is_satisfying_solution_found(self, best_solution: Solution) -> bool:
+    def _is_satisfying_solution_found(self, best_solution: AbstractSolution) -> bool:
         """
         Check if satisfying solution was found.
 
-        :param best_solution: Instance of Solution class with the best solution found in this iteration.
+        :param best_solution: Instance of AbstractSolution class with the best solution found in this iteration.
         :raise ValueError: Unexpected value of 'optimization_type' in 'optimization_problem' was found.
 
         :return: True if satisfying solution found, otherwise False.
@@ -90,11 +90,11 @@ class StopCondition:
             return best_solution.get_objective_value_with_penalty() >= self.satisfying_objective_value
         raise ValueError("Unexpected value of 'optimization_type' attribute.")
 
-    def _is_max_iteration_without_progress_exceeded(self, best_solution: Solution) -> bool:
+    def _is_max_iteration_without_progress_exceeded(self, best_solution: AbstractSolution) -> bool:
         """
         Check if exceeded maximal number of iteration without finding a better solution.
 
-        :param best_solution: Instance of Solution class with the best solution found in this iteration.
+        :param best_solution: Instance of AbstractSolution class with the best solution found in this iteration.
 
         :return: True if exceeded maximal number of iteration without progress, otherwise False.
         """
@@ -105,11 +105,11 @@ class StopCondition:
             self._iterations_without_progress += 1
         return self._iterations_without_progress > self.max_iterations_without_progress
 
-    def _is_max_time_without_progress_exceeded(self, best_solution: Solution) -> bool:
+    def _is_max_time_without_progress_exceeded(self, best_solution: AbstractSolution) -> bool:
         """
         Check if exceeded maximal time without finding a better solution.
 
-        :param best_solution: Instance of Solution class with the best solution found in this iteration.
+        :param best_solution: Instance of AbstractSolution class with the best solution found in this iteration.
 
         :return: True if exceeded maximal number of iteration without progress, otherwise False.
         """

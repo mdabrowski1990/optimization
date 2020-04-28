@@ -5,7 +5,7 @@ from yaml import dump as yaml_dump
 from datetime import datetime
 
 from optimization.optimization_algorithms.algorithms import OptimizationAlgorithm
-from optimization.optimization_problem.problem import Solution
+from optimization.optimization_problem.problem import AbstractSolution
 
 
 class LoggingVerbosity(Enum):
@@ -125,17 +125,17 @@ class Logger:
             with open(file=path.join(self.logs_location, f"solutions.yaml"), mode=_mode) as solutions_file:
                 yaml_dump(data=_data_to_dump, stream=solutions_file)
 
-    def log_at_end(self, best_solution: Solution) -> None:
+    def log_at_end(self, best_solution: AbstractSolution) -> None:
         """
         Logging method that should be executed at the end of the optimization process.
         It logs information available after optimization process is finished such as best solution found.
 
         :param best_solution: Best solution that was found by the optimization algorithm.
-        :raise TypeError: When 'best_solution' parameter is not instance of 'Solution' class.
+        :raise TypeError: When 'best_solution' parameter is not instance of 'AbstractSolution' class.
         """
-        if not isinstance(best_solution, Solution):
+        if not isinstance(best_solution, AbstractSolution):
             raise TypeError(f"Provided value of 'best_solution' parameter has unexpected type. "
-                            f"Expected: {Solution}. Actual: {type(best_solution)}.")
+                            f"Expected: {AbstractSolution}. Actual: {type(best_solution)}.")
         if self.logging_verbosity >= LoggingVerbosity.BestSolution:
             with open(file=path.join(self.logs_location, "best_solution.yaml"), mode="w") as best_solution_file:
                 yaml_dump(data=best_solution.get_data_for_logging(), stream=best_solution_file)

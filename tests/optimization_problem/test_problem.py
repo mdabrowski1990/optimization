@@ -2,7 +2,7 @@ import pytest
 from mock import Mock, PropertyMock, patch, call
 
 from optimization.optimization_problem.decision_variables import choose_random_value
-from optimization.optimization_problem.problem import OptimizationProblem, OptimizationType, Solution
+from optimization.optimization_problem.problem import OptimizationProblem, OptimizationType, AbstractSolution
 from .conftest import EXAMPLE_VALUE_TYPES, DECISION_VARIABLES_GROUPS, NUMBER_OF_CONSTRAINTS_EXAMPLES, \
     NUMBER_OF_PENALTY_FUNCTIONS_EXAMPLES, NUMBER_OF_OBJECTIVE_FUNCTIONS_EXAMPLES, \
     EXAMPLE_OBJECTIVE_FUNCTION_VALUES, EXAMPLE_PENALTY_FUNCTION_VALUES, EXAMPLE_CONSTRAINTS_VALUES, \
@@ -367,7 +367,7 @@ class TestSolution:
                                          objective_function=mock_objective_function,
                                          optimization_type=mock_optimization_type)
 
-        class MockedSolution(Solution):
+        class MockedSolution(AbstractSolution):
             optimization_problem = mock_optimization_problem
         self.MockedSolution = MockedSolution
         self.mock_decision_variables = mock_decision_variables
@@ -381,14 +381,14 @@ class TestSolution:
     # __init__
 
     def test_abstract_class_init(self):
-        """Check that abstract class 'Solution' cannot be directly initialized (exception is raised)."""
+        """Check that abstract class 'AbstractSolution' cannot be directly initialized (exception is raised)."""
         with pytest.raises(Exception):
-            Solution()
+            AbstractSolution()
 
     @pytest.mark.parametrize("example_decision_variables", DECISION_VARIABLES_GROUPS, indirect=True)
     def test_subclass_init_without_values(self, example_decision_variables):
         """
-        Check that 'Solution' subclass can be initialized without any parameters.
+        Check that 'AbstractSolution' subclass can be initialized without any parameters.
 
         :param example_decision_variables: Example valid value of decision variables definition.
         """
@@ -401,7 +401,7 @@ class TestSolution:
     @pytest.mark.parametrize("example_decision_variables", DECISION_VARIABLES_GROUPS, indirect=True)
     def test_subclass_init_with_one_valid_value(self, example_decision_variables):
         """
-        Check that 'Solution' subclass can be initialized with one valid value set.
+        Check that 'AbstractSolution' subclass can be initialized with one valid value set.
 
         :param example_decision_variables: Example valid value of decision variables definition.
         """
@@ -416,7 +416,7 @@ class TestSolution:
     @pytest.mark.parametrize("example_decision_variables", DECISION_VARIABLES_GROUPS, indirect=True)
     def test_subclass_init_with_valid_values(self, example_decision_variables):
         """
-        Check that 'Solution' subclass can be initialized with all valid values set.
+        Check that 'AbstractSolution' subclass can be initialized with all valid values set.
 
         :param example_decision_variables: Example valid value of decision variables definition.
         """
@@ -432,7 +432,7 @@ class TestSolution:
 
     def test_subclass_init_with_invalid_value_name(self):
         """
-        Check that 'Solution' subclass cannot be initialized with variable with invalid name.
+        Check that 'AbstractSolution' subclass cannot be initialized with variable with invalid name.
         """
         with pytest.raises(ValueError):
             self.MockedSolution(some_invalid_variable_name="some value")
@@ -440,7 +440,7 @@ class TestSolution:
     @pytest.mark.parametrize("example_decision_variables", DECISION_VARIABLES_GROUPS, indirect=True)
     def test_subclass_init_with_invalid_value_value(self, example_decision_variables):
         """
-        Check that 'Solution' subclass cannot be initialized with variable with invalid value.
+        Check that 'AbstractSolution' subclass cannot be initialized with variable with invalid value.
 
         :param example_decision_variables: Example valid value of decision variables definition.
         """
@@ -468,7 +468,7 @@ class TestSolution:
 
     # _calculate_penalty
 
-    @patch("optimization.optimization_problem.problem.Solution._calculate_constraints")
+    @patch("optimization.optimization_problem.problem.AbstractSolution._calculate_constraints")
     @pytest.mark.parametrize("constraints_values", EXAMPLE_CONSTRAINTS_VALUES)
     @pytest.mark.parametrize("penalty_value", EXAMPLE_PENALTY_FUNCTION_VALUES)
     def test_calculate_penalty(self, mock_calculate_constraints, constraints_values, penalty_value):
@@ -518,8 +518,8 @@ class TestSolution:
         solution._objective_value = example_value
         assert solution.get_objective_value_with_penalty() == solution._objective_value == example_value
 
-    @patch("optimization.optimization_problem.problem.Solution._calculate_penalty")
-    @patch("optimization.optimization_problem.problem.Solution._calculate_objective")
+    @patch("optimization.optimization_problem.problem.AbstractSolution._calculate_penalty")
+    @patch("optimization.optimization_problem.problem.AbstractSolution._calculate_objective")
     @pytest.mark.parametrize("optimization_type", OptimizationType)
     @pytest.mark.parametrize("objective_value", EXAMPLE_OBJECTIVE_FUNCTION_VALUES)
     @pytest.mark.parametrize("penalty_value", EXAMPLE_PENALTY_FUNCTION_VALUES)
@@ -562,7 +562,7 @@ class TestSolution:
         mock_get_objective_value_with_penalty = Mock(return_value=random_float)
         solution_mock = Mock(decision_variables_values=decision_variable_values,
                              get_objective_value_with_penalty=mock_get_objective_value_with_penalty)
-        logging_data = Solution.get_data_for_logging(self=solution_mock)
+        logging_data = AbstractSolution.get_data_for_logging(self=solution_mock)
         assert isinstance(logging_data, dict)
         assert set(logging_data.keys()) == {"decision_variables_values", "objective_value_with_penalty"}
         assert logging_data["decision_variables_values"] == decision_variable_values

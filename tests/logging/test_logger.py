@@ -3,7 +3,7 @@ from mock import Mock, patch, call
 
 from optimization.logging.logger import Logger, LoggingVerbosity
 from optimization.optimization_algorithms.algorithms import OptimizationAlgorithm
-from optimization.optimization_problem.problem import Solution
+from optimization.optimization_problem.problem import AbstractSolution
 from .conftest import COMPARISON_FUNCTIONS, EXAMPLE_VALUE_TYPES, \
     VALID_COMPARISON_DATA_SETS, INVALID_COMPARISON_DATA_SETS
 
@@ -289,7 +289,7 @@ class TestLoggerMethods:
         :param random_text: Random text value to be returned by 'path.join' function.
         """
         mock_path.join = Mock(return_value=random_text)
-        mocked_solutions = [Mock(spec=Solution, get_data_for_logging=Mock(return_value=value)) for value in some_values]
+        mocked_solutions = [Mock(spec=AbstractSolution, get_data_for_logging=Mock(return_value=value)) for value in some_values]
         if verbosity_value == "equal":
             self.logging_verbosity_mock.value = LoggingVerbosity.AllSolutions.value
         elif verbosity_value == "just_above":
@@ -324,7 +324,7 @@ class TestLoggerMethods:
         :param random_text: Random text value to be returned by 'path.join' function.
         """
         mock_path.join = Mock(return_value=random_text)
-        mocked_solutions = [Mock(spec=Solution, get_data_for_logging=Mock(return_value=value)) for value in some_values]
+        mocked_solutions = [Mock(spec=AbstractSolution, get_data_for_logging=Mock(return_value=value)) for value in some_values]
         if verbosity_value == "equal":
             self.logging_verbosity_mock.value = LoggingVerbosity.AllSolutions.value
         elif verbosity_value == "just_above":
@@ -344,10 +344,10 @@ class TestLoggerMethods:
     def test_log_at_end_invalid_best_solution(self, example_value):
         """
         Check that TypeError is raised when 'log_at_end' method of 'Logger' class is called with parameter
-        'best_solution' that is not instance of 'Solution' class.
+        'best_solution' that is not instance of 'AbstractSolution' class.
 
         :param example_value: Example invalid value for 'best_solution' parameter that is not instance of
-            'Solution' class.
+            'AbstractSolution' class.
         """
         with pytest.raises(TypeError):
             Logger.log_at_end(self=self.logger_instance_mock, best_solution=example_value)
@@ -364,7 +364,7 @@ class TestLoggerMethods:
         :param mock_open: Mock of 'open' function used within 'log_at_end' method.
         :param verbosity_value: Type of 'verbosity_level' attribute value of the 'Logger' class instance.
         """
-        mock_best_solution = Mock(spec=Solution)
+        mock_best_solution = Mock(spec=AbstractSolution)
         if verbosity_value == "just_below":
             self.logging_verbosity_mock.value = LoggingVerbosity.BestSolution.value - 0.1
         elif verbosity_value == "below":
@@ -393,7 +393,7 @@ class TestLoggerMethods:
         :param example_value: Example value to be used by best solution mock.
         :param random_text: Random text value to be returned by 'path.join' function.
         """
-        mock_best_solution = Mock(spec=Solution, get_data_for_logging=Mock(return_value=example_value))
+        mock_best_solution = Mock(spec=AbstractSolution, get_data_for_logging=Mock(return_value=example_value))
         mock_path.join = Mock(return_value=random_text)
         if verbosity_value == "equal":
             self.logging_verbosity_mock.value = LoggingVerbosity.BestSolution.value

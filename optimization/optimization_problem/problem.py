@@ -80,8 +80,19 @@ class OptimizationProblem:
             "optimization_type": self.optimization_type.value
         }
 
+    def spawn_solution_definition(self) -> type:
+        """
+        Creates type (class) which is definition of the solutions to this problem. Each instance of the returned type
+        represents one solution of this optimization problem.
 
-class Solution(ABC):
+        :return: Definition of the solution type to this problem.
+        """
+        class ThisProblemSolution(AbstractSolution):
+            optimization_problem = self
+        return ThisProblemSolution
+
+
+class AbstractSolution(ABC):
     """Abstract definition of optimization problem solution."""
 
     @property
@@ -92,7 +103,7 @@ class Solution(ABC):
 
         :raise NotImplementedError: Abstract method was called.
         """
-        raise NotImplementedError("You have called abstract property 'optimization_problem' of 'Solution' "
+        raise NotImplementedError("You have called abstract property 'optimization_problem' of 'AbstractSolution' "
                                   "abstract class.")
 
     def __init__(self, **decision_variables_values: Any) -> None:
@@ -124,7 +135,35 @@ class Solution(ABC):
         self.decision_variables_values = values_to_set
         self._objective_value = None
 
-    # todo: eq, nq, lt, ...
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            return self.get_objective_value_with_penalty() == other.get_objective_value_with_penalty()
+        raise TypeError
+
+    def __ne__(self, other):
+        if isinstance(other, self.__class__):
+            return self.get_objective_value_with_penalty() != other.get_objective_value_with_penalty()
+        raise TypeError
+
+    def __le__(self, other):
+        if isinstance(other, self.__class__):
+            return self.get_objective_value_with_penalty() <= other.get_objective_value_with_penalty()
+        raise TypeError
+
+    def __lt__(self, other):
+        if isinstance(other, self.__class__):
+            return self.get_objective_value_with_penalty() < other.get_objective_value_with_penalty()
+        raise TypeError
+
+    def __gt__(self, other):
+        if isinstance(other, self.__class__):
+            return self.get_objective_value_with_penalty() > other.get_objective_value_with_penalty()
+        raise TypeError
+
+    def __ge__(self, other):
+        if isinstance(other, self.__class__):
+            return self.get_objective_value_with_penalty() >= other.get_objective_value_with_penalty()
+        raise TypeError
 
     def _calculate_objective(self) -> float:
         """

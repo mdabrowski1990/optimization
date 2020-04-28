@@ -7,17 +7,6 @@ from optimization.optimization_problem.problem import OptimizationProblem
 class OptimizationAlgorithm(ABC):
     """Abstract definition of Optimization Algorithm."""
 
-    @property
-    @abstractmethod
-    def algorithm_type(self) -> str:
-        """
-        Abstract definition of a property that stores type of optimization algorithm.
-
-        :raise NotImplementedError: Abstract method was called.
-        """
-        raise NotImplementedError("You have called abstract property 'algorithm_type' of 'OptimizationAlgorithm' "
-                                  "abstract class.")
-
     @abstractmethod
     def __init__(self, optimization_problem: OptimizationProblem, stop_condition: StopCondition) -> None:
         """
@@ -36,6 +25,7 @@ class OptimizationAlgorithm(ABC):
                             f"Expected: {StopCondition}. Actual: {type(stop_condition)}.")
         self.optimization_problem = optimization_problem
         self.stop_condition = stop_condition
+        self.solution_type = optimization_problem.spawn_solution_definition()
         self.start_time = None
         self.end_time = None
 
@@ -78,7 +68,7 @@ class OptimizationAlgorithm(ABC):
         :return: Crucial data of this object.
         """
         return {
-            "algorithm_type": self.algorithm_type,
+            "algorithm_type": self.__class__.__name__,
             "stop_condition": self.stop_condition.get_data_for_logging(),
         }
 
@@ -90,3 +80,47 @@ class OptimizationAlgorithm(ABC):
         :param solutions: List with solutions.
         """
         solutions.sort(key=lambda solution: solution.get_objective_value_with_penalty(), reverse=True)
+
+
+class RandomOptimizationAlgorithm(OptimizationAlgorithm):
+    """Optimization algorithm that uses random values of decision variables to search for optimal solution."""
+
+    def __init__(self, optimization_problem: OptimizationProblem, stop_condition: StopCondition,
+                 population_size=1000) -> None:
+        """
+        Initialization of random algorithm.
+
+        :param optimization_problem: Definition of optimization problem to solve.
+        :param stop_condition: Definition of condition when optimization should be stopped.
+        :param population_size: Number of solution generated in one iteration.
+        """
+        super().__init__(optimization_problem=optimization_problem, stop_condition=stop_condition)
+        self.population_size = population_size
+
+    def initial_iteration(self) -> list:
+        """
+        Searches for solutions in first iterations of random algorithm.
+
+        :return: List of solution sorted by objective value (calculation includes penalty).
+        """
+        solutions = [self.solution_type() for _ in range(self.population_size)]
+        self.sort_solution_by_objective_value(solutions=solutions)
+        return solutions
+
+    def following_iteration(self) -> list:
+        """
+        Searches for solutions in following iterations of random algorithm.
+
+        :return: List of solution sorted by objective value (calculation includes penalty).
+        """
+        return self.initial_iteration()
+
+    def get_data_for_logging(self) -> dict:
+        """
+        Method which prepares data of the instance of this class for logging.
+
+        :return: Crucial data of this object.
+        """
+        data = super().get_data_for_logging()
+        data["population_size"] = self.population_size
+        return data
