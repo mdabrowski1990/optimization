@@ -2,7 +2,7 @@ import pytest
 from mock import Mock, patch, call
 
 from optimization.logging.logger import Logger, LoggingVerbosity
-from optimization.optimization_algorithms.algorithms import OptimizationAlgorithm
+from optimization.optimization_algorithms.algorithm_definition import OptimizationAlgorithm
 from optimization.optimization_problem.problem import AbstractSolution
 from .conftest import COMPARISON_FUNCTIONS, EXAMPLE_VALUE_TYPES, \
     VALID_COMPARISON_DATA_SETS, INVALID_COMPARISON_DATA_SETS

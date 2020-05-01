@@ -4,7 +4,7 @@ from os import path, mkdir
 from yaml import dump as yaml_dump
 from datetime import datetime
 
-from optimization.optimization_algorithms.algorithms import OptimizationAlgorithm
+from optimization.optimization_algorithms.algorithm_definition import OptimizationAlgorithm
 from optimization.optimization_problem.problem import AbstractSolution
 
 

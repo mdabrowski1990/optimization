@@ -1,19 +1,7 @@
 from typing import Any, Set
 from abc import ABC, abstractmethod
-from random import randint as generate_random_int
-from random import uniform as generate_random_float
-from random import sample as _sample
 
-
-def choose_random_value(values_pool: set) -> Any:
-    """
-    Picks randomly chosen value from 'values_pool'.
-
-    :param values_pool: Set with possible values to pick.
-
-    :return: Randomly chosen value.
-    """
-    return _sample(population=values_pool, k=1)[0]
+from optimization.utilities import generate_random_int, generate_random_float, choose_random_value
 
 
 class DecisionVariable(ABC):
