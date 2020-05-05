@@ -1,5 +1,7 @@
 from typing import Callable, Dict, Any
+from typing import OrderedDict as TypingOrderedDict
 from enum import Enum
+from collections import OrderedDict
 from abc import ABC, abstractmethod
 
 from optimization.optimization_problem.decision_variables import DecisionVariable
@@ -15,7 +17,7 @@ class OptimizationType(Enum):
 class OptimizationProblem:
     """Class for defining the problem for which optimal solution to be searched."""
 
-    def __init__(self, decision_variables: Dict[str, DecisionVariable], constraints: Dict[str, Callable],
+    def __init__(self, decision_variables: TypingOrderedDict[str, DecisionVariable], constraints: Dict[str, Callable],
                  penalty_function: Callable, objective_function: Callable, optimization_type: OptimizationType) -> None:
         """
         Definition of optimization problem.
@@ -117,7 +119,7 @@ class AbstractSolution(ABC):
             value for unknown decision variable was received.
         """
         # find values for all variables
-        values_to_set = {}
+        values_to_set = OrderedDict()
         for variable_name, variable_definition in self.optimization_problem.decision_variables.items():
             value = decision_variables_values.pop(variable_name, None)
             if value is None:
