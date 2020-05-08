@@ -6,10 +6,13 @@ from optimization.utilities import choose_random_values, binary_search, generate
 from optimization.optimization_problem import AbstractSolution, OptimizationType
 
 
+__all__ = ["SelectionFunction", "SELECTION_PARAMETERS"]
+
+
 SelectionOutput = Iterator[Tuple[AbstractSolution, AbstractSolution]]
 
 
-class SelectionFunctions(Enum):
+class SelectionFunction(Enum):
     """Enum with selection functions that are available for Evolutionary Algorithm"""
 
     @staticmethod
@@ -27,26 +30,25 @@ class SelectionFunctions(Enum):
             yield choose_random_values(values_pool=population, values_number=2)
 
     @staticmethod
-    def tournament(population_size: int, population: List[AbstractSolution], group_size: int,
-                   optimization_type: OptimizationType) -> SelectionOutput:
+    def tournament(population_size: int, population: List[AbstractSolution], tournament_group_size: int) \
+            -> SelectionOutput:
         """
         Creates generator that can be used as selection function.
         Selection is performed according to tournament selection.
 
         :param population_size: Size of the population.
         :param population: Sorted list with solutions.
-        :param group_size: Number os individuals (solutions) in one group.
-        :param optimization_type: Type of optimization.
+        :param tournament_group_size: Number os individuals (solutions) in one group.
 
         :return: Generator of solutions pairs.
         """
-        if optimization_type == OptimizationType.Minimize:
+        if population[0].optimization_problem.optimization_type == OptimizationType.Minimize:
             func = min
         else:
             func = max
 
         def _get_individual():
-            return func(choose_random_values(values_pool=population, values_number=group_size),
+            return func(choose_random_values(values_pool=population, values_number=tournament_group_size),
                         key=lambda solution: solution.get_objective_value_with_penalty())
 
         for _ in range(population_size // 2):
@@ -71,7 +73,7 @@ class SelectionFunctions(Enum):
         worst_solution_obj = population[-1].get_objective_value_with_penalty()
         # if best solution has similar objective value as worst, then roulette works the same as stochastic selection
         if best_solution_obj == worst_solution_obj:
-            return SelectionFunctions.stochastic(population_size=population_size, population=population)
+            return SelectionFunction.stochastic(population_size=population_size, population=population)
 
         factor = (roulette_bias - 1) / (best_solution_obj - worst_solution_obj)
         offset = 1 - factor*worst_solution_obj
@@ -119,3 +121,10 @@ class SelectionFunctions(Enum):
 
         for _ in range(population_size // 2):
             yield _get_individual(), _get_individual()
+
+
+SELECTION_PARAMETERS = {
+    SelectionFunction.tournament: {"tournament_group_size"},
+    SelectionFunction.roulette: {"roulette_bias"},
+    SelectionFunction.ranking: {"ranking_bias"},
+}

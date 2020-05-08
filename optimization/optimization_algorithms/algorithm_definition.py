@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
 from optimization.optimization_algorithms.stop_conditions import StopCondition
-from optimization.optimization_problem.problem import OptimizationProblem
+from optimization.optimization_problem.problem import OptimizationProblem, OptimizationType
 
 
 class OptimizationAlgorithm(ABC):
@@ -79,6 +79,5 @@ class OptimizationAlgorithm(ABC):
 
         :param solutions: List with solutions.
         """
-        # todo: order depends on optimization type
-        # todo: consider applying normalization of objective value
-        solutions.sort(key=lambda solution: solution.get_objective_value_with_penalty(), reverse=True)
+        _reverse = solutions[0].optimization_problem.optimization_type == OptimizationType.Maximize
+        solutions.sort(key=lambda solution: solution.get_objective_value_with_penalty(), reverse=_reverse)

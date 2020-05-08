@@ -5,10 +5,13 @@ from optimization.utilities import generate_random_int, choose_random_values
 from optimization.optimization_problem import AbstractSolution
 
 
+__all__ = ["CrossoverFunction", "CROSSOVER_PARAMETERS"]
+
+
 IndividualsPair = Tuple[AbstractSolution, AbstractSolution]
 
 
-class CrossoverFunctions(Enum):
+class CrossoverFunction(Enum):
     """Enum with crossover functions that are available for Evolutionary Algorithm"""
 
     @staticmethod
@@ -33,8 +36,8 @@ class CrossoverFunctions(Enum):
         return solution_class(**child_1_values), solution_class(**child_2_values)
 
     @staticmethod
-    def multi_point(parents: IndividualsPair, variables_number: int, solution_class: type, number_of_points) \
-            -> IndividualsPair:
+    def multi_point(parents: IndividualsPair, variables_number: int, solution_class: type,
+                    crossover_points_number: int) -> IndividualsPair:
         """
         Crossover function that mixes genes of two parents and returns new children.
         Crossover is performed according to multi point crossover.
@@ -42,11 +45,11 @@ class CrossoverFunctions(Enum):
         :param parents: Pair of parents that provides genes.
         :param variables_number: Number of decision variables (genes).
         :param solution_class: Definition of solution (class of which objects must be returned).
-        :param number_of_points: Number of crossover points.
+        :param crossover_points_number: Number of crossover points.
 
         :return: Children solutions pair.
         """
-        crossover_points = choose_random_values(range(1, variables_number-1), number_of_points)
+        crossover_points = choose_random_values(range(1, variables_number-1), crossover_points_number)
         parent_1_values = list(parents[0].decision_variables_values.items())
         parent_2_values = list(parents[1].decision_variables_values.items())
         child_1_values = dict(parent_1_values[:crossover_points[0]])
@@ -87,7 +90,7 @@ class CrossoverFunctions(Enum):
         return solution_class(**child_1_values), solution_class(**child_2_values)
 
     @staticmethod
-    def pattern_based(parents: IndividualsPair, variables_number: int, solution_class: type, pattern: int) \
+    def adaptive(parents: IndividualsPair, variables_number: int, solution_class: type, crossover_pattern: int) \
             -> IndividualsPair:
         """
         Crossover function that mixes genes of two parents and returns new children.
@@ -96,7 +99,7 @@ class CrossoverFunctions(Enum):
         :param parents: Pair of parents that provides genes.
         :param variables_number: Number of decision variables (genes).
         :param solution_class: Definition of solution (class of which objects must be returned).
-        :param pattern: Pattern of crossover.
+        :param crossover_pattern: Pattern of crossover.
 
         :return: Children solutions pair.
         """
@@ -105,10 +108,17 @@ class CrossoverFunctions(Enum):
         child_1_values = {}
         child_2_values = {}
         for i in range(variables_number):
-            if (pattern << i) & 1:
+            if (crossover_pattern << i) & 1:
                 child_1_values.update(parent_1_values[i:i+1])
                 child_2_values.update(parent_2_values[i:i+1])
             else:
                 child_1_values.update(parent_2_values[i:i+1])
                 child_2_values.update(parent_1_values[i:i+1])
         return solution_class(**child_1_values), solution_class(**child_2_values)
+
+
+CROSSOVER_PARAMETERS = {
+    CrossoverFunction.multi_point: {"crossover_points_number"},
+    CrossoverFunction.adaptive: {"crossover_pattern"},
+}
+

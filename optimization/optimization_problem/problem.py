@@ -1,5 +1,4 @@
 from typing import Callable, Dict, Any
-from typing import OrderedDict as TypingOrderedDict
 from enum import Enum
 from collections import OrderedDict
 from abc import ABC, abstractmethod
@@ -17,8 +16,8 @@ class OptimizationType(Enum):
 class OptimizationProblem:
     """Class for defining the problem for which optimal solution to be searched."""
 
-    def __init__(self, decision_variables: TypingOrderedDict[str, DecisionVariable], constraints: Dict[str, Callable],
-                 penalty_function: Callable, objective_function: Callable, optimization_type: OptimizationType) -> None:
+    def __init__(self, decision_variables: OrderedDict, constraints: Dict[str, Callable], penalty_function: Callable,
+                 objective_function: Callable, optimization_type: OptimizationType) -> None:
         """
         Definition of optimization problem.
 

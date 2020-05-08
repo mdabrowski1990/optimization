@@ -9,7 +9,7 @@ class RandomAlgorithm(OptimizationAlgorithm):
     """Optimization algorithm that uses random values of decision variables to search for optimal solution."""
 
     def __init__(self, optimization_problem: OptimizationProblem, stop_condition: StopCondition,
-                 population_size=1000) -> None:
+                 population_size) -> None:
         """
         Initialization of random algorithm.
 
