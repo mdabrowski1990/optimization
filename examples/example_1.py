@@ -17,6 +17,3 @@ problem = OptimizationProblem(decision_variables=OrderedDict(a=IntegerVariable(m
                               objective_function=lambda **vars_values: sum(vars_values.values()),
                               optimization_type=OptimizationType.Maximize)
 ra = RandomAlgorithm(optimization_problem=problem, population_size=100, stop_condition=stop_condition, logger=logger)
-
-x = ra.perform_optimization()
-print(x.__dict__)

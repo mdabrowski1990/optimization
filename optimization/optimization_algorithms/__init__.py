@@ -1,5 +1,4 @@
-from optimization.optimization_algorithms.evolutionary_algorithms import EvolutionaryAlgorithm, SelectionFunction, \
-    CrossoverFunction, MutationFunction
-from optimization.optimization_algorithms.random_algorithms import RandomAlgorithm
-from optimization.optimization_algorithms.stop_conditions import StopCondition
-from optimization.optimization_algorithms.algorithm_definition import OptimizationAlgorithm
+from .evolutionary_algorithms import EvolutionaryAlgorithm, SelectionFunction, CrossoverFunction, MutationFunction
+from .random_algorithms import RandomAlgorithm
+from .stop_conditions import StopCondition
+from .algorithm_definition import OptimizationAlgorithm

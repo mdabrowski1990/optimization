@@ -75,7 +75,7 @@ class StopCondition:
 
         :return: True if time exceeded, otherwise False.
         """
-        return start_time - datetime.now() >= self.time_limit
+        return datetime.now() - start_time >= self.time_limit
 
     def _is_satisfying_solution_found(self, best_solution: AbstractSolution) -> bool:
         """

@@ -2,6 +2,7 @@ from typing import Optional, List
 from abc import ABC, abstractmethod
 from datetime import datetime
 
+from optimization.logging import Logger
 from optimization.optimization_problem import OptimizationProblem, OptimizationType, AbstractSolution
 from optimization.optimization_algorithms.stop_conditions import StopCondition
 
@@ -14,7 +15,7 @@ class OptimizationAlgorithm(ABC):
 
     @abstractmethod
     def __init__(self, optimization_problem: OptimizationProblem, stop_condition: StopCondition,
-                 logger: Optional[object]) -> None:
+                 logger: Optional[Logger]) -> None:
         """
         Common initialization of optimization algorithm.
 
@@ -114,7 +115,7 @@ class OptimizationAlgorithm(ABC):
         }
 
     @staticmethod
-    def sort_solutions(solutions: list) -> None:
+    def sort_solutions(solutions: List[AbstractSolution]) -> None:
         """
         Sorts list with solution by objective value (with penalty).
 

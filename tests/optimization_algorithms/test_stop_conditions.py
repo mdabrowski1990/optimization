@@ -231,9 +231,9 @@ class TestStopConditionMethods:
         :param result: Expected return from '_is_time_exceeded' method.
         """
         mock_stop_condition = Mock(time_limit=random_positive_int)
-        mock_datetime.now = Mock(return_value=random_float)
+        mock_datetime.now = Mock(return_value=random_float + random_positive_int + diff)
         assert StopCondition._is_time_exceeded(self=mock_stop_condition,
-                                               start_time=random_positive_int + random_float + diff) is result
+                                               start_time=random_float) is result
         mock_datetime.now.assert_called_once_with()
 
     # _is_satisfying_solution_found

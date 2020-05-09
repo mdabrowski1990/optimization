@@ -87,7 +87,7 @@ class Logger:
         self.logs_location = path.join(logs_location, logs_directory_name)
         mkdir(self.logs_location)
 
-    def log_at_start(self, optimization_algorithm) -> None:
+    def log_at_start(self, optimization_algorithm: "Algorithm") -> None:
         """
         Logging method that should be executed at the start of the optimization process.
         It logs information available before optimization process such as problem definition,
@@ -102,7 +102,7 @@ class Logger:
             with open(file=path.join(self.logs_location, "algorithm_configuration.yaml"), mode="w") as alg_config_file:
                 yaml_dump(data=optimization_algorithm.get_data_for_logging(), stream=alg_config_file)
 
-    def log_solutions(self, iteration: int, solutions: Iterable) -> None:
+    def log_solutions(self, iteration: int, solutions: Iterable["Solution"]) -> None:
         """
         Logging method that should be executed after each iteration of optimization algorithm.
         It logs information available about found solution.
@@ -117,7 +117,7 @@ class Logger:
             with open(file=path.join(self.logs_location, f"solutions.yaml"), mode=_mode) as solutions_file:
                 yaml_dump(data=_data_to_dump, stream=solutions_file)
 
-    def log_at_end(self, best_solution) -> None:
+    def log_at_end(self, best_solution: "Solution") -> None:
         """
         Logging method that should be executed at the end of the optimization process.
         It logs information available after optimization process is finished such as best solution found.
