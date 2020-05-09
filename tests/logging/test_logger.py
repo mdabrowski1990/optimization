@@ -1,9 +1,9 @@
 import pytest
 from mock import Mock, patch, call
 
-from optimization.logging.logger import Logger, LoggingVerbosity
-from optimization.optimization_algorithms.algorithm_definition import OptimizationAlgorithm
-from optimization.optimization_problem.problem import AbstractSolution
+from optimization.logging import Logger, LoggingVerbosity
+from optimization.optimization_algorithms import OptimizationAlgorithm
+from optimization.optimization_problem import AbstractSolution
 from .conftest import COMPARISON_FUNCTIONS, EXAMPLE_VALUE_TYPES, \
     VALID_COMPARISON_DATA_SETS, INVALID_COMPARISON_DATA_SETS
 
@@ -118,6 +118,7 @@ class TestLoggerMethods:
 
     # log_at_start
 
+    @pytest.mark.skip("No need to check type")
     @pytest.mark.parametrize("example_value", EXAMPLE_VALUE_TYPES, indirect=True)
     def test_log_at_start_invalid_optimization_algorithm(self, example_value):
         """
@@ -234,6 +235,7 @@ class TestLoggerMethods:
 
     # log_found_solutions
 
+    @pytest.mark.skip("No need to check type")
     @pytest.mark.parametrize("example_value", EXAMPLE_VALUE_TYPES.difference({int}), indirect=True)
     def test_log_found_solutions_invalid_iteration(self, example_value):
         """
@@ -340,6 +342,7 @@ class TestLoggerMethods:
 
     # log_at_end
 
+    @pytest.mark.skip("No need to check type")
     @pytest.mark.parametrize("example_value", EXAMPLE_VALUE_TYPES.difference({int}), indirect=True)
     def test_log_at_end_invalid_best_solution(self, example_value):
         """

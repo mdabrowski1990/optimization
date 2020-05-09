@@ -3,8 +3,8 @@ from enum import Enum
 from collections import OrderedDict
 from abc import ABC, abstractmethod
 
-from optimization.optimization_problem.decision_variables import DecisionVariable
-from optimization.logging.utilities import log_function_code
+from optimization.optimization_problem import DecisionVariable
+from optimization.logging import log_function_code
 
 
 __all__ = ["OptimizationType", "OptimizationProblem", "AbstractSolution"]
