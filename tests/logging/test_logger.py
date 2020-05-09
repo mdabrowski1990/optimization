@@ -243,7 +243,7 @@ class TestLoggerMethods:
         :param example_value: Example invalid value for 'iteration' parameter that is not int type.
         """
         with pytest.raises(TypeError):
-            Logger.log_found_solutions(self=self.logger_instance_mock, iteration=example_value, solutions=[])
+            Logger.log_solutions(self=self.logger_instance_mock, iteration=example_value, solutions=[])
 
     @patch("optimization.logging.logger.open")
     @patch("optimization.logging.logger.yaml_dump")
@@ -265,7 +265,7 @@ class TestLoggerMethods:
             self.logging_verbosity_mock.value = LoggingVerbosity.AllSolutions.value - 100
         else:
             raise ValueError
-        Logger.log_found_solutions(self=self.logger_instance_mock, iteration=random_int, solutions=[])
+        Logger.log_solutions(self=self.logger_instance_mock, iteration=random_int, solutions=[])
         mock_yaml_dump.assert_not_called()
         mock_open.assert_not_called()
 
@@ -298,7 +298,7 @@ class TestLoggerMethods:
             self.logging_verbosity_mock.value = LoggingVerbosity.AllSolutions.value + 100
         else:
             raise ValueError
-        Logger.log_found_solutions(self=self.logger_instance_mock, iteration=0, solutions=mocked_solutions)
+        Logger.log_solutions(self=self.logger_instance_mock, iteration=0, solutions=mocked_solutions)
         mock_open.assert_called_once_with(file=random_text, mode="w")
         mock_yaml_dump.assert_called_once_with(data={"Iteration 0": list(some_values)}, stream=mock_open().__enter__())
 
@@ -333,7 +333,7 @@ class TestLoggerMethods:
             self.logging_verbosity_mock.value = LoggingVerbosity.AllSolutions.value + 100
         else:
             raise ValueError
-        Logger.log_found_solutions(self=self.logger_instance_mock, iteration=iteration, solutions=mocked_solutions)
+        Logger.log_solutions(self=self.logger_instance_mock, iteration=iteration, solutions=mocked_solutions)
         mock_open.assert_called_once_with(file=random_text, mode="a")
         mock_yaml_dump.assert_called_once_with(data={f"Iteration {iteration}": list(some_values)},
                                                stream=mock_open().__enter__())

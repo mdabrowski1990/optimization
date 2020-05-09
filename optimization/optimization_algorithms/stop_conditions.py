@@ -1,7 +1,10 @@
 from typing import List, Optional
 from datetime import datetime, timedelta
 
-from optimization.optimization_problem.problem import OptimizationType, AbstractSolution
+from optimization.optimization_problem import OptimizationType, AbstractSolution
+
+
+__all__ = ["StopCondition"]
 
 
 class StopCondition:

@@ -1,4 +1,4 @@
-from typing import List, Tuple, Any, Callable, Iterator
+from typing import List, Tuple, Any, Callable, Iterator, Optional
 
 from optimization.optimization_algorithms.algorithm_definition import OptimizationAlgorithm
 from optimization.optimization_algorithms.stop_conditions import StopCondition
@@ -8,13 +8,18 @@ from optimization.optimization_algorithms.evolutionary_algorithms.mutation impor
 from optimization.optimization_problem import OptimizationProblem, AbstractSolution
 
 
+__all__ = ["EvolutionaryAlgorithm"]
+
+
 class EvolutionaryAlgorithm(OptimizationAlgorithm):
     """Optimization algorithm that uses mechanism inspired by biological evolution."""
 
     def __init__(self, optimization_problem: OptimizationProblem, stop_condition: StopCondition,
                  population_size: int, selection_type: Callable, crossover_type: Callable,
-                 mutation_type: Callable, apply_elitism: bool, **other_params: Any) -> None:
-        super().__init__(optimization_problem=optimization_problem, stop_condition=stop_condition)
+                 mutation_type: Callable, apply_elitism: bool, logger: Optional[object] = None,
+                 **other_params: Any) -> None:
+        # todo: description
+        super().__init__(optimization_problem=optimization_problem, stop_condition=stop_condition, logger=logger)
         self.population_size = population_size
         self.selection_type = selection_type
         self.selection_params = {selection_param: other_params.pop(selection_param)
@@ -23,7 +28,7 @@ class EvolutionaryAlgorithm(OptimizationAlgorithm):
         self.crossover_params = {crossover_param: other_params.pop(crossover_param)
                                  for crossover_param in CROSSOVER_PARAMETERS.get(crossover_type, [])}
         self.crossover_params.update(variables_number=len(optimization_problem.decision_variables),
-                                     solution_class=optimization_problem.spawn_solution_definition())
+                                     solution_class=self.solution_type)
         self.mutation_type = mutation_type
         self.mutation_params = {mutation_param: other_params.pop(mutation_param)
                                 for mutation_param in MUTATION_PARAMETERS.get(mutation_type, [])}

@@ -4,8 +4,8 @@ from os import path, mkdir
 from yaml import dump as yaml_dump
 from datetime import datetime
 
-from optimization.optimization_algorithms.algorithm_definition import OptimizationAlgorithm
-from optimization.optimization_problem.problem import AbstractSolution
+
+__all__ = ["LoggingVerbosity", "Logger"]
 
 
 class LoggingVerbosity(Enum):
@@ -87,18 +87,14 @@ class Logger:
         self.logs_location = path.join(logs_location, logs_directory_name)
         mkdir(self.logs_location)
 
-    def log_at_start(self, optimization_algorithm: OptimizationAlgorithm) -> None:
+    def log_at_start(self, optimization_algorithm) -> None:
         """
         Logging method that should be executed at the start of the optimization process.
         It logs information available before optimization process such as problem definition,
         optimization algorithm configuration, etc.
 
         :param optimization_algorithm: Optimization algorithm used during optimization process.
-        :raise TypeError: When 'optimization_algorithm' parameter is not instance of 'OptimizationAlgorithm' class.
         """
-        if not isinstance(optimization_algorithm, OptimizationAlgorithm):
-            raise TypeError(f"Provided value of 'optimization_algorithm' parameter has unexpected type. "
-                            f"Expected: {OptimizationAlgorithm}. Actual: {type(optimization_algorithm)}.")
         if self.logging_verbosity >= LoggingVerbosity.ProblemDefinition:
             with open(file=path.join(self.logs_location, "problem.yaml"), mode="w") as problem_file:
                 yaml_dump(data=optimization_algorithm.optimization_problem.get_data_for_logging(), stream=problem_file)
@@ -106,36 +102,28 @@ class Logger:
             with open(file=path.join(self.logs_location, "algorithm_configuration.yaml"), mode="w") as alg_config_file:
                 yaml_dump(data=optimization_algorithm.get_data_for_logging(), stream=alg_config_file)
 
-    def log_found_solutions(self, iteration: int, solutions: Iterable) -> None:
+    def log_solutions(self, iteration: int, solutions: Iterable) -> None:
         """
         Logging method that should be executed after each iteration of optimization algorithm.
         It logs information available about found solution.
 
-        :parameter iteration: Index of the optimization process iteration.
+        :param iteration: Index of the optimization process iteration.
         :param solutions: Solutions of the optimization problem that were found during last iteration
             of the optimization process.
-        :raise TypeError: When 'iteration' parameter is not int type.
         """
-        if not isinstance(iteration, int):
-            raise TypeError(f"Provided value of 'iteration' parameter has unexpected type. "
-                            f"Expected: {int}. Actual: {type(iteration)}.")
         if self.logging_verbosity >= LoggingVerbosity.AllSolutions:
             _data_to_dump = {f"Iteration {iteration}": [solution.get_data_for_logging() for solution in solutions]}
             _mode = "a" if iteration else "w"
             with open(file=path.join(self.logs_location, f"solutions.yaml"), mode=_mode) as solutions_file:
                 yaml_dump(data=_data_to_dump, stream=solutions_file)
 
-    def log_at_end(self, best_solution: AbstractSolution) -> None:
+    def log_at_end(self, best_solution) -> None:
         """
         Logging method that should be executed at the end of the optimization process.
         It logs information available after optimization process is finished such as best solution found.
 
         :param best_solution: Best solution that was found by the optimization algorithm.
-        :raise TypeError: When 'best_solution' parameter is not instance of 'AbstractSolution' class.
         """
-        if not isinstance(best_solution, AbstractSolution):
-            raise TypeError(f"Provided value of 'best_solution' parameter has unexpected type. "
-                            f"Expected: {AbstractSolution}. Actual: {type(best_solution)}.")
         if self.logging_verbosity >= LoggingVerbosity.BestSolution:
             with open(file=path.join(self.logs_location, "best_solution.yaml"), mode="w") as best_solution_file:
                 yaml_dump(data=best_solution.get_data_for_logging(), stream=best_solution_file)

@@ -1,6 +1,9 @@
 from typing import Any, List, Optional
 
 
+__all__ = ["binary_search"]
+
+
 def binary_search(sorted_list: List[Any], value: Any, list_size: Optional[int] = None) -> int:
     """
     Performs binary search.
