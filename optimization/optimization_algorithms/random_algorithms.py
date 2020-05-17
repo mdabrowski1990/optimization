@@ -18,7 +18,7 @@ class RandomAlgorithm(OptimizationAlgorithm):
 
         :param optimization_problem: Definition of optimization problem to solve.
         :param stop_condition: Definition of condition when optimization should be stopped.
-        :param population_size: Number of solution generated in one iteration.
+        :param population_size: Number of solutions generated in one iteration.
         :param logger: Configured logger that would report optimization process.
 
         :return Random optimization algorithm ready for the optimization process.

@@ -103,18 +103,18 @@ class FloatVariable(DecisionVariable):
 
         :param min_value: Minimal value that can be set.
         :param max_value: Maximal value that can be set.
-        :raise TypeError: Parameter 'min_value' or 'max_value' is not float type.
+        :raise TypeError: Parameter 'min_value' or 'max_value' is not float or int type.
         :raise ValueError: Value of parameter 'min_value' is not less than value of 'max_value'.
         """
-        if not isinstance(min_value, float):
+        if not isinstance(min_value, (int, float)):
             raise TypeError(f"Parameter 'min_value' must be float type. Received: {min_value} ({type(min_value)}).")
-        if not isinstance(max_value, float):
+        if not isinstance(max_value, (int, float)):
             raise TypeError(f"Parameter 'max_value' must be float type. Received: {max_value} ({type(max_value)}).")
         if min_value >= max_value:
             raise ValueError(f"Value of 'min_value' must be less than value of 'max_value'. "
                              f"Received: min_value={min_value}, max_value={max_value}.")
-        self.min_value = min_value
-        self.max_value = max_value
+        self.min_value = float(min_value)
+        self.max_value = float(max_value)
 
     def generate_random_value(self) -> float:
         """
@@ -155,7 +155,7 @@ class ChoiceVariable(DecisionVariable):
         Creates definition of Choice Decision Variable.
 
         :param possible_values:
-        :raise TypeError: Parameter 'min_value' or 'max_value' is not float type.
+        :raise TypeError: Parameter 'possible_values' is not set type.
         """
         if not isinstance(possible_values, set):
             raise TypeError(f"Parameter 'possible_values' must be set type. "
@@ -188,5 +188,5 @@ class ChoiceVariable(DecisionVariable):
         """
         return {
             "type": "ChoiceVariable",
-            "possible_values": self.possible_values,
+            "possible_values": list(self.possible_values),
         }

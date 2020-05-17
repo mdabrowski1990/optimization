@@ -150,7 +150,7 @@ class StopCondition:
         :return: Crucial data of this object.
         """
         return {
-            "time_limit": self.time_limit,
+            "time_limit": f"{self.time_limit.seconds} seconds",
             "satisfying_objective_value": self.satisfying_objective_value,
             "max_iterations_without_progress": self.max_iterations_without_progress,
             "max_time_without_progress": self.max_time_without_progress,

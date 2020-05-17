@@ -2,6 +2,7 @@ from typing import Iterable
 from enum import Enum
 from os import path, mkdir
 from yaml import dump as yaml_dump
+from yamlordereddictloader import Dumper
 from datetime import datetime
 
 
@@ -97,10 +98,11 @@ class Logger:
         """
         if self.logging_verbosity >= LoggingVerbosity.ProblemDefinition:
             with open(file=path.join(self.logs_location, "problem.yaml"), mode="w") as problem_file:
-                yaml_dump(data=optimization_algorithm.optimization_problem.get_data_for_logging(), stream=problem_file)
+                yaml_dump(data=optimization_algorithm.optimization_problem.get_data_for_logging(), stream=problem_file,
+                          Dumper=Dumper)
         if self.logging_verbosity >= LoggingVerbosity.AlgorithmConfiguration:
             with open(file=path.join(self.logs_location, "algorithm_configuration.yaml"), mode="w") as alg_config_file:
-                yaml_dump(data=optimization_algorithm.get_data_for_logging(), stream=alg_config_file)
+                yaml_dump(data=optimization_algorithm.get_data_for_logging(), stream=alg_config_file, Dumper=Dumper)
 
     def log_solutions(self, iteration: int, solutions: Iterable["Solution"]) -> None:
         """
@@ -115,7 +117,7 @@ class Logger:
             _data_to_dump = {f"Iteration {iteration}": [solution.get_data_for_logging() for solution in solutions]}
             _mode = "a" if iteration else "w"
             with open(file=path.join(self.logs_location, f"solutions.yaml"), mode=_mode) as solutions_file:
-                yaml_dump(data=_data_to_dump, stream=solutions_file)
+                yaml_dump(data=_data_to_dump, stream=solutions_file, Dumper=Dumper)
 
     def log_at_end(self, best_solution: "Solution") -> None:
         """
@@ -126,5 +128,5 @@ class Logger:
         """
         if self.logging_verbosity >= LoggingVerbosity.BestSolution:
             with open(file=path.join(self.logs_location, "best_solution.yaml"), mode="w") as best_solution_file:
-                yaml_dump(data=best_solution.get_data_for_logging(), stream=best_solution_file)
+                yaml_dump(data=best_solution.get_data_for_logging(), stream=best_solution_file, Dumper=Dumper)
 

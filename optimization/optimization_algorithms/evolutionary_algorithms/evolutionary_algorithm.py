@@ -1,10 +1,13 @@
-from typing import List, Tuple, Any, Callable, Iterator, Optional
+from typing import List, Tuple, Any, Iterator, Optional, Union
 
 from optimization.optimization_algorithms.algorithm_definition import OptimizationAlgorithm
 from optimization.optimization_algorithms.stop_conditions import StopCondition
-from optimization.optimization_algorithms.evolutionary_algorithms.selection import SELECTION_PARAMETERS
-from optimization.optimization_algorithms.evolutionary_algorithms.crossover import CROSSOVER_PARAMETERS
-from optimization.optimization_algorithms.evolutionary_algorithms.mutation import MUTATION_PARAMETERS
+from optimization.optimization_algorithms.evolutionary_algorithms.selection import SelectionType, \
+    SELECTION_FUNCTIONS, ADDITIONAL_SELECTION_PARAMETERS
+from optimization.optimization_algorithms.evolutionary_algorithms.crossover import CrossoverType, \
+    CROSSOVER_FUNCTIONS, ADDITIONAL_CROSSOVER_PARAMETERS
+from optimization.optimization_algorithms.evolutionary_algorithms.mutation import MutationType, \
+    MUTATION_FUNCTIONS, ADDITIONAL_MUTATION_PARAMETERS
 from optimization.optimization_problem import OptimizationProblem, AbstractSolution
 
 
@@ -15,48 +18,77 @@ class EvolutionaryAlgorithm(OptimizationAlgorithm):
     """Optimization algorithm that uses mechanism inspired by biological evolution."""
 
     def __init__(self, optimization_problem: OptimizationProblem, stop_condition: StopCondition,
-                 population_size: int, selection_type: Callable, crossover_type: Callable,
-                 mutation_type: Callable, apply_elitism: bool, logger: Optional[object] = None,
-                 **other_params: Any) -> None:
-        # todo: description
+                 population_size: int, selection_type: Union[str, SelectionType], crossover_type: [str, CrossoverType],
+                 mutation_type: Union[str, MutationType], apply_elitism: bool, mutation_chance: float,
+                 logger: Optional[object] = None, **other_params: Any) -> None:
+        """
+        Initialization of evolutionary algorithm.
+
+        :param optimization_problem: Definition of optimization problem to solve.
+        :param stop_condition: Definition of condition when optimization should be stopped.
+        :param population_size: Number of solutions generated in one iteration.
+        :param selection_type: Type of selection function to be used by the algorithm.
+            It can be either passed as name of selection function or selection function itself.
+        :param crossover_type: Type of crossover function to be used by the algorithm.
+            It can be either passed as name of crossover function or crossover function itself.
+        :param mutation_type: ype of mutation function to be used by the algorithm.
+            It can be either passed as name of mutation function or mutation function itself.
+        :param apply_elitism: Flag whether elitism should be applied, that means:
+            Children would only replace parents if they are better in terms of objective function.
+        :param mutation_chance: Probability of mutation (~chance of mutating a single gen for a single individual).
+        :param logger: Configured logger that would report optimization process.
+        :param other_params: Parameters configuring selection, crossover and mutation functions.
+
+        :raise ValueError: Parameter 'other_params' contains unused values.
+        """
         super().__init__(optimization_problem=optimization_problem, stop_condition=stop_condition, logger=logger)
         self.population_size = population_size
-        self.selection_type = selection_type
+        # selection configuration
+        self.selection_type = selection_type if isinstance(selection_type, str) else selection_type.value
+        self.selection_function = SELECTION_FUNCTIONS[self.selection_type]
         self.selection_params = {selection_param: other_params.pop(selection_param)
-                                 for selection_param in SELECTION_PARAMETERS.get(selection_type, [])}
-        self.crossover_type = crossover_type
+                                 for selection_param in ADDITIONAL_SELECTION_PARAMETERS[self.selection_type]}
+        # crossover configuration
+        self.crossover_type = crossover_type if isinstance(crossover_type, str) else crossover_type.value
+        self.crossover_function = CROSSOVER_FUNCTIONS[self.crossover_type]
         self.crossover_params = {crossover_param: other_params.pop(crossover_param)
-                                 for crossover_param in CROSSOVER_PARAMETERS.get(crossover_type, [])}
-        self.crossover_params.update(variables_number=len(optimization_problem.decision_variables),
-                                     solution_class=self.solution_type)
-        self.mutation_type = mutation_type
+                                 for crossover_param in ADDITIONAL_CROSSOVER_PARAMETERS[self.crossover_type]}
+        # mutation configuration
+        self.mutation_type = mutation_type if isinstance(mutation_type, str) else mutation_type.value
+        self.mutation_function = MUTATION_FUNCTIONS[self.mutation_type]
         self.mutation_params = {mutation_param: other_params.pop(mutation_param)
-                                for mutation_param in MUTATION_PARAMETERS.get(mutation_type, [])}
-        self.mutation_params["mutation_chance"] = other_params.pop("mutation_chance")
+                                for mutation_param in ADDITIONAL_MUTATION_PARAMETERS[self.mutation_type]}
+        self.mutation_chance = mutation_chance
+        # other params
         self.apply_elitism = apply_elitism
         self.population = None
+        self.optimized_variables_number = len(self.optimization_problem.decision_variables)
+        if other_params:
+            raise ValueError(f"Unexpected parameters received: {other_params}")
 
     def _selection(self, population: List[AbstractSolution]) -> Iterator[Tuple[AbstractSolution, AbstractSolution]]:
-        return self.selection_type(population_size=self.population_size, population=population, **self.selection_params)
+        return self.selection_function(population_size=self.population_size, population=population,
+                                       **self.selection_params)
 
     def _crossover(self, parents):
-        return self.crossover_type(parents=parents, **self.crossover_params)
+        return self.crossover_function(parents=parents, variables_number=self.optimized_variables_number,
+                                       solution_class=self.solution_type, **self.crossover_params)
 
     def _mutation(self, individual):
-        self.mutation_type(individual=individual, **self.mutation_params)
+        self.mutation_function(individual=individual, mutation_chance=self.mutation_chance, **self.mutation_params)
 
-    def initial_iteration(self) -> List[AbstractSolution]:
+    def _initial_iteration(self) -> List[AbstractSolution]:
         """
         Searches for solutions in first iterations of evolutionary algorithm.
 
         :return: List of solution sorted by objective value (calculation includes penalty).
         """
         solutions = [self.solution_type() for _ in range(self.population_size)]
-        self.sort_solution_by_objective_value(solutions=solutions)
+        self.sort_solutions(solutions=solutions)
         self.population = solutions
         return solutions
 
-    def following_iteration(self) -> List[AbstractSolution]:
+    def _following_iteration(self) -> List[AbstractSolution]:
         new_population = []
         for parents_pair in self._selection(population=self.population):
             children1, children2 = self._crossover(parents=parents_pair)
@@ -68,16 +100,21 @@ class EvolutionaryAlgorithm(OptimizationAlgorithm):
                 new_population.append(children2 if children2 >= parent2 else children2)
             else:
                 new_population.extend([children1, children2])
-        self.sort_solution_by_objective_value(new_population)
+        self.sort_solutions(new_population)
         self.population = new_population
         return new_population
 
     def get_data_for_logging(self):
         data = super().get_data_for_logging()
         data.update({
+            # selection
+            "selection_params": self.selection_params, "selection_type": self.selection_type,
+            # crossover
+            "crossover_params": self.crossover_params, "crossover_type": self.crossover_type,
+            # mutation
+            "mutation_params": self.mutation_params, "mutation_type": self.mutation_type,
+            "mutation_chance": self.mutation_chance,
+            # other
             "apply_elitism": self.apply_elitism,
-            "selection_params": self.selection_params, "selection_type": self.selection_type.__name__,
-            "crossover_params": self.crossover_params, "crossover_type": self.crossover_type.__name__,
-            "mutation_params": self.mutation_params, "mutation_type": self.mutation_type.__name__,
         })
         return data
