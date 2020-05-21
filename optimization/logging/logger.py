@@ -62,7 +62,7 @@ class Logger:
     """
     Logger of optimization process.
     """
-    LOG_DIRECTORY_PATTERN = "optimization_%Y_%m_%d_%H_%M_%S"
+    LOG_DIRECTORY_PATTERN = "optimization_%Y-%m-%d_%H-%M-%S"
 
     def __init__(self, logs_location: str, logging_verbosity: LoggingVerbosity = LoggingVerbosity.AllSolutions) -> None:
         """
@@ -70,6 +70,7 @@ class Logger:
 
         :param logging_verbosity: Defines how much details of optimization process should be logged.
         :param logs_location: Path of directory in which log files will be created.
+
         :raise TypeError: When 'logging_verbosity' parameter is not instance of 'LoggingVerbosity' class
             or 'logs_location' parameter is not str type.
         :raise ValueError: If value of 'logs_location' parameter is not an existing directory.
@@ -107,7 +108,7 @@ class Logger:
     def log_solutions(self, iteration: int, solutions: Iterable["Solution"]) -> None:
         """
         Logging method that should be executed after each iteration of optimization algorithm.
-        It logs information available about found solution.
+        It logs information available about found solutions.
 
         :param iteration: Index of the optimization process iteration.
         :param solutions: Solutions of the optimization problem that were found during last iteration
@@ -116,7 +117,7 @@ class Logger:
         if self.logging_verbosity >= LoggingVerbosity.AllSolutions:
             _data_to_dump = {f"Iteration {iteration}": [solution.get_data_for_logging() for solution in solutions]}
             _mode = "a" if iteration else "w"
-            with open(file=path.join(self.logs_location, f"solutions.yaml"), mode=_mode) as solutions_file:
+            with open(file=path.join(self.logs_location, "solutions.yaml"), mode=_mode) as solutions_file:
                 yaml_dump(data=_data_to_dump, stream=solutions_file, Dumper=Dumper)
 
     def log_at_end(self, best_solution: "Solution") -> None:
@@ -130,3 +131,65 @@ class Logger:
             with open(file=path.join(self.logs_location, "best_solution.yaml"), mode="w") as best_solution_file:
                 yaml_dump(data=best_solution.get_data_for_logging(), stream=best_solution_file, Dumper=Dumper)
 
+
+class SEALogger(Logger):
+    """
+    Logger of optimization process for Self-adaptive Evolutionary Algorithm.
+    """
+    LOG_SAE_LOWER_DIRECTORY_PATTERN = "SAE_Iteration_{}"
+
+    def log_at_start(self, sea: "SEA") -> None:
+        """
+        Logging method that should be executed at the start of the optimization process.
+        It logs information available before optimization process such as problem definition,
+        optimization algorithm configuration, etc.
+
+        :param sea: Self-adaptive Evolutionary Algorithm used during optimization process.
+        """
+        if self.logging_verbosity >= LoggingVerbosity.ProblemDefinition:
+            with open(file=path.join(self.logs_location, "adaptation_problem.yaml"), mode="w") as problem_file:
+                yaml_dump(data=sea.optimization_problem.get_data_for_logging(), stream=problem_file, Dumper=Dumper)
+            with open(file=path.join(self.logs_location, "problem.yaml"), mode="w") as problem_file:
+                yaml_dump(data=sea.optimization_problem.optimization_problem.get_data_for_logging(),
+                          stream=problem_file, Dumper=Dumper)
+        if self.logging_verbosity >= LoggingVerbosity.AlgorithmConfiguration:
+            with open(file=path.join(self.logs_location, "algorithm_configuration.yaml"), mode="w") as alg_config_file:
+                yaml_dump(data=sea.get_data_for_logging(), stream=alg_config_file, Dumper=Dumper)
+
+    def log_solutions(self, iteration: int, solutions: Iterable["SEALower"]) -> None:
+        """
+        Logging method that should be executed after each iteration of SEA optimization algorithm.
+        It logs information available about found solutions (SEA Lower).
+
+        :param iteration: Index of the SEA optimization process iteration.
+        :param solutions: Solutions of the adaptation problem that were found during last iteration of the
+            optimization process.
+        """
+        if self.logging_verbosity >= LoggingVerbosity.AllSolutions:
+            _data_to_dump = {f"Iteration {iteration}": [solution.get_data_for_logging() for solution in solutions]}
+            _mode = "a" if iteration else "w"
+            with open(file=path.join(self.logs_location, "sea_lower.yaml"), mode=_mode) as solutions_file:
+                yaml_dump(data=_data_to_dump, stream=solutions_file, Dumper=Dumper)
+
+    def log_sea_lower_solutions(self, sea_upper_iteration: int, sea_lower_index: int, sea_lower_iteration: int,
+                                solutions: Iterable["Solution"]) -> None:
+        """
+        Logging method that should be executed after each iteration of SEA Lower optimization algorithm.
+        It logs information available about found solutions (optimized problem).
+
+        :param sea_upper_iteration: Index of the SEA optimization process iteration.
+        :param sea_lower_index: Ordinal number of the SEA Lower algorithm for which solutions are logged.
+        :param sea_lower_iteration: Index of the SEA Lower optimization process iteration.
+        :param solutions: Solutions of the optimization problem that were found during last iteration of the
+            optimization process.
+        """
+        if self.logging_verbosity >= LoggingVerbosity.AllSolutions:
+            directory_path = path.join(self.logs_location, self.LOG_DIRECTORY_PATTERN.format(sea_upper_iteration))
+            if not path.isdir(directory_path):
+                mkdir(directory_path)
+            _data_to_dump = {f"Iteration {sea_lower_iteration}":
+                                 [solution.get_data_for_logging() for solution in solutions]}
+            _mode = "a" if sea_lower_iteration else "w"
+            with open(file=path.join(self.logs_location, f"solution_of_sea_lower_{sea_lower_index}.yaml"), mode=_mode) \
+                    as solutions_file:
+                yaml_dump(data=_data_to_dump, stream=solutions_file, Dumper=Dumper)

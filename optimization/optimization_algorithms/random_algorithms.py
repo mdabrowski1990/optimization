@@ -1,5 +1,6 @@
 from typing import List, Dict, Optional
 
+from optimization.logging import Logger
 from optimization.optimization_algorithms.algorithm_definition import OptimizationAlgorithm
 from optimization.optimization_algorithms.stop_conditions import StopCondition
 from optimization.optimization_problem import OptimizationProblem, AbstractSolution
@@ -12,7 +13,7 @@ class RandomAlgorithm(OptimizationAlgorithm):
     """Optimization algorithm that uses random values of decision variables to search for optimal solution."""
 
     def __init__(self, optimization_problem: OptimizationProblem, stop_condition: StopCondition,
-                 population_size, logger: Optional[object] = None) -> None:
+                 population_size, logger: Optional[Logger] = None) -> None:
         """
         Initialization of random algorithm.
 

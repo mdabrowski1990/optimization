@@ -17,8 +17,7 @@ class StopCondition:
       - no progress for some time (better solution was not found for some predefined time)
     """
 
-    def __init__(self, time_limit: timedelta,
-                 satisfying_objective_value: Optional[float] = None,
+    def __init__(self, time_limit: timedelta, satisfying_objective_value: Optional[float] = None,
                  max_iterations_without_progress: Optional[int] = None,
                  max_time_without_progress: Optional[timedelta] = None) -> None:
         """
@@ -155,4 +154,3 @@ class StopCondition:
             "max_iterations_without_progress": self.max_iterations_without_progress,
             "max_time_without_progress": self.max_time_without_progress,
         }
-

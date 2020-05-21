@@ -13,8 +13,6 @@ def log_function_code(func_to_log: Callable) -> str:
 
     :return: Code of the function.
     """
-    # todo: test
+    # todo: test and make output easier to read
     function_definition = inspect.getsource(func_to_log)
-    # todo: remove prefix '... lambda **decision_variables_values:'
-    # todo: remove suffix ', ...'
-    return function_definition
+    return function_definition.strip().replace("\n", " ").replace("\r", " ").replace("  ", " ").rstrip(",")

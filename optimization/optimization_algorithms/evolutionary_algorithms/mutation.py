@@ -1,10 +1,13 @@
+from typing import List
 from enum import Enum
 
-from optimization.utilities import generate_random_int, choose_random_value, choose_random_values
-from optimization.optimization_problem import AbstractSolution
+from optimization.utilities import generate_random_float, choose_random_values
 
 
 __all__ = ["MutationType", "ADDITIONAL_MUTATION_PARAMETERS", "MUTATION_FUNCTIONS"]
+
+
+MUTATION_POINTS = List[int]
 
 
 class MutationType(Enum):
@@ -20,57 +23,54 @@ ADDITIONAL_MUTATION_PARAMETERS = {
 }
 
 
-def single_point_mutation(individual: AbstractSolution, mutation_chance: float) -> None:
+def single_point_mutation(variables_number: int, mutation_chance: float) -> MUTATION_POINTS:
     """
     Mutation function that changes gene(s).
     Mutation is performed according to single point mutation.
 
-    :param individual: Individual that may be mutated.
+    :param variables_number: Number of decision variables (genes).
     :param mutation_chance: Probability of the mutation.
 
-    :return: None
+    :return: List of genes indices to be mutated.
     """
-    if generate_random_int(0, 1) <= mutation_chance:
-        mutation_point = choose_random_value(individual.decision_variables_values.keys())
-        individual.decision_variables_values[mutation_point] = \
-            individual.optimization_problem.decision_variables[mutation_point].generate_random_value()
+    scaled_mutation_chance = variables_number * mutation_chance
+    if generate_random_float(0, 1) <= scaled_mutation_chance:
+        return choose_random_values(values_pool=range(variables_number), values_number=1)
+    return []
 
 
-def multi_point_mutation(individual: AbstractSolution, mutation_chance: float, mutation_points_number: int) -> None:
+def multi_point_mutation(variables_number: int, mutation_chance: float, mutation_points_number: int) -> MUTATION_POINTS:
     """
     Mutation function that changes gene(s).
     Mutation is performed according to multi points mutation.
 
-    :param individual: Individual that may be mutated.
+    :param variables_number: Number of decision variables (genes).
     :param mutation_chance: Probability of the mutation.
     :param mutation_points_number: Number of mutation points
 
-    :return: None
+    :return: List of genes indices to be mutated.
     """
-    scaled_mutation_chance = mutation_chance/mutation_points_number
-    if generate_random_int(0, 1) <= scaled_mutation_chance:
-        mutation_points = choose_random_values(individual.decision_variables_values.keys(), mutation_points_number)
-        for mutation_point in mutation_points:
-            individual.decision_variables_values[mutation_point] = \
-                individual.optimization_problem.decision_variables[mutation_point].generate_random_value()
+    scaled_mutation_chance = variables_number * mutation_chance / mutation_points_number
+    if generate_random_float(0, 1) <= scaled_mutation_chance:
+        return choose_random_values(values_pool=range(variables_number), values_number=mutation_points_number)
+    return []
 
 
-def mutation_probabilistic_mutation(individual: AbstractSolution, mutation_chance: float) -> None:
+def mutation_probabilistic_mutation(variables_number: int, mutation_chance: float) -> MUTATION_POINTS:
     """
     Mutation function that changes gene(s).
     Mutation is performed according to probabilistic mutation.
 
-    :param individual: Individual that may be mutated.
+    :param variables_number: Number of decision variables (genes).
     :param mutation_chance: Probability of the mutation to be taking place.
 
-    :return: None
+    :return: List of genes indices to be mutated.
     """
-    # todo: update scaling formula
-    scaled_mutation_chance = pow(mutation_chance, len(individual.decision_variables_values))
-    for variable_name in individual.decision_variables_values.keys():
-        if generate_random_int(0, 1) <= scaled_mutation_chance:
-            individual.decision_variables_values[variable_name] = \
-                individual.optimization_problem.decision_variables[variable_name].generate_random_value()
+    mutation_points = []
+    for var_index in range(variables_number):
+        if generate_random_float(0, 1) <= mutation_chance:
+            mutation_points.append(var_index)
+    return mutation_points
 
 
 MUTATION_FUNCTIONS = {

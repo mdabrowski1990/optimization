@@ -1,5 +1,7 @@
 from typing import List, Tuple, Any, Iterator, Optional, Union
+from collections import OrderedDict
 
+from optimization.logging import Logger
 from optimization.optimization_algorithms.algorithm_definition import OptimizationAlgorithm
 from optimization.optimization_algorithms.stop_conditions import StopCondition
 from optimization.optimization_algorithms.evolutionary_algorithms.selection import SelectionType, \
@@ -20,7 +22,7 @@ class EvolutionaryAlgorithm(OptimizationAlgorithm):
     def __init__(self, optimization_problem: OptimizationProblem, stop_condition: StopCondition,
                  population_size: int, selection_type: Union[str, SelectionType], crossover_type: [str, CrossoverType],
                  mutation_type: Union[str, MutationType], apply_elitism: bool, mutation_chance: float,
-                 logger: Optional[object] = None, **other_params: Any) -> None:
+                 logger: Optional[Logger] = None, **other_params: Any) -> None:
         """
         Initialization of evolutionary algorithm.
 
@@ -70,12 +72,13 @@ class EvolutionaryAlgorithm(OptimizationAlgorithm):
         return self.selection_function(population_size=self.population_size, population=population,
                                        **self.selection_params)
 
-    def _crossover(self, parents):
+    def _crossover(self, parents: Tuple[AbstractSolution, AbstractSolution]) -> Tuple[OrderedDict, OrderedDict]:
         return self.crossover_function(parents=parents, variables_number=self.optimized_variables_number,
-                                       solution_class=self.solution_type, **self.crossover_params)
+                                       **self.crossover_params)
 
-    def _mutation(self, individual):
-        self.mutation_function(individual=individual, mutation_chance=self.mutation_chance, **self.mutation_params)
+    def _mutation(self) -> List[int]:
+        return self.mutation_function(variables_number=self.optimized_variables_number,
+                                      mutation_chance=self.mutation_chance, **self.mutation_params)
 
     def _initial_iteration(self) -> List[AbstractSolution]:
         """
@@ -90,16 +93,28 @@ class EvolutionaryAlgorithm(OptimizationAlgorithm):
 
     def _following_iteration(self) -> List[AbstractSolution]:
         new_population = []
+        decision_variables_list = list(self.optimization_problem.decision_variables.items())
         for parents_pair in self._selection(population=self.population):
-            children1, children2 = self._crossover(parents=parents_pair)
-            self._mutation(children1)
-            self._mutation(children2)
+            # crossover
+            child_1_values, child_2_values = self._crossover(parents=parents_pair)
+            # mutation child 1
+            for mutation_point in self._mutation():
+                name, var = decision_variables_list[mutation_point]
+                child_1_values[name] = var.generate_random_value()
+            # mutation child 2
+            for mutation_point in self._mutation():
+                name, var = decision_variables_list[mutation_point]
+                child_2_values[name] = var.generate_random_value()
+            # create children object
+            child1 = self.solution_type(**child_1_values)
+            child2 = self.solution_type(**child_2_values)
+            # update new population
             if self.apply_elitism:
                 parent1, parent2 = parents_pair
-                new_population.append(children1 if children1 >= parent1 else parent1)
-                new_population.append(children2 if children2 >= parent2 else children2)
+                new_population.append(child1 if child1 >= parent1 else parent1)
+                new_population.append(child2 if child2 >= parent2 else parent2)
             else:
-                new_population.extend([children1, children2])
+                new_population.extend([child1, child2])
         self.sort_solutions(new_population)
         self.population = new_population
         return new_population
