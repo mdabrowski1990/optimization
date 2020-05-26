@@ -18,6 +18,9 @@ class SelectionType(Enum):
     ROULETTE = "Roulette"
     RANKING = "Ranking"
 
+    def __repr__(self):
+        return self.value
+
 
 ADDITIONAL_SELECTION_PARAMETERS = {
     SelectionType.STOCHASTIC.value: {},
@@ -85,23 +88,23 @@ def roulette_selection(population_size: int, population: List[AbstractSolution],
     worst_solution_obj = population[-1].get_objective_value_with_penalty()
     # if best solution has similar objective value as worst, then roulette works the same as stochastic selection
     if best_solution_obj == worst_solution_obj:
-        return stochastic_selection(population_size=population_size, population=population)
+        for _ in range(population_size // 2):
+            yield choose_random_values(values_pool=population, values_number=2)
+    else:
+        factor = (roulette_bias - 1) / (best_solution_obj - worst_solution_obj)
+        offset = 1 - factor*worst_solution_obj
 
-    factor = (roulette_bias - 1) / (best_solution_obj - worst_solution_obj)
-    offset = 1 - factor*worst_solution_obj
+        def _get_scaled_objective(solution: AbstractSolution) -> float:
+            return factor*solution.get_objective_value_with_penalty() + offset
 
-    def _get_scaled_objective(solution: AbstractSolution) -> float:
-        return factor*solution.get_objective_value_with_penalty() + offset
+        roulette_wheel = list(accumulate((_get_scaled_objective(solution) for solution in population)))
 
-    roulette_wheel = list(accumulate((_get_scaled_objective(solution) for solution in population)))
+        def _get_individual():
+            rand_value = generate_random_float(0, roulette_wheel[-1])
+            return population[binary_search(sorted_list=roulette_wheel, value=rand_value, list_size=population_size)]
 
-    def _get_individual():
-        rand_value = generate_random_float(0, roulette_wheel[-1])
-        return population[
-            binary_search(sorted_list=roulette_wheel, value=rand_value, list_size=population_size)]
-
-    for _ in range(population_size // 2):
-        yield _get_individual(), _get_individual()
+        for _ in range(population_size // 2):
+            yield _get_individual(), _get_individual()
 
 
 def ranking_selection(population_size: int, population: List[AbstractSolution], ranking_bias: float) -> SelectionOutput:
@@ -125,10 +128,10 @@ def ranking_selection(population_size: int, population: List[AbstractSolution], 
         # if value is additionally divided by population_size, we will received probability of selection
         return (2 - ranking_bias) + (2*rank*(ranking_bias-1) / (population_size-1))
 
-    roulette_wheel = list(accumulate((_get_scaled_rank(rank) for rank in range(population_size-1, -1, -1))))
+    roulette_wheel = list(accumulate((_get_scaled_rank(rank) for rank in range(population_size))))
 
     def _get_individual():
-        rand_value = generate_random_int(0, roulette_wheel[-1])
+        rand_value = generate_random_float(0., roulette_wheel[-1])
         return population[binary_search(sorted_list=roulette_wheel, value=rand_value, list_size=population_size)]
 
     for _ in range(population_size // 2):

@@ -114,12 +114,11 @@ class OptimizationAlgorithm(ABC):
             "stop_condition": self.stop_condition.get_data_for_logging(),
         }
 
-    @staticmethod
-    def sort_solutions(solutions: List[AbstractSolution]) -> None:
+    def sort_solutions(self, solutions: List[AbstractSolution]) -> None:
         """
         Sorts list with solution by objective value (with penalty).
 
         :param solutions: List with solutions.
         """
-        _reverse = solutions[0].optimization_problem.optimization_type == OptimizationType.Maximize
+        _reverse = self.optimization_problem.optimization_type == OptimizationType.Maximize
         solutions.sort(key=lambda solution: solution.get_objective_value_with_penalty(), reverse=_reverse)

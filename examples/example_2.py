@@ -9,7 +9,7 @@ from optimization.optimization_problem import OptimizationProblem, OptimizationT
 
 logger = Logger(logs_location="E:\\MGR")
 
-stop_condition = StopCondition(time_limit=timedelta(seconds=1))
+stop_condition = StopCondition(time_limit=timedelta(seconds=10))
 problem = OptimizationProblem(decision_variables=OrderedDict(a=IntegerVariable(min_value=0, max_value=100),
                                                              b=FloatVariable(min_value=0., max_value=100.),
                                                              c=ChoiceVariable(possible_values=set(range(10)))),

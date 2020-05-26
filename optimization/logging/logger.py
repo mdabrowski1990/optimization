@@ -6,7 +6,7 @@ from yamlordereddictloader import Dumper
 from datetime import datetime
 
 
-__all__ = ["LoggingVerbosity", "Logger"]
+__all__ = ["LoggingVerbosity", "Logger", "SEALogger"]
 
 
 class LoggingVerbosity(Enum):
@@ -184,12 +184,12 @@ class SEALogger(Logger):
             optimization process.
         """
         if self.logging_verbosity >= LoggingVerbosity.AllSolutions:
-            directory_path = path.join(self.logs_location, self.LOG_DIRECTORY_PATTERN.format(sea_upper_iteration))
+            directory_path = path.join(self.logs_location, self.LOG_SAE_LOWER_DIRECTORY_PATTERN.format(sea_upper_iteration))
             if not path.isdir(directory_path):
                 mkdir(directory_path)
             _data_to_dump = {f"Iteration {sea_lower_iteration}":
                                  [solution.get_data_for_logging() for solution in solutions]}
             _mode = "a" if sea_lower_iteration else "w"
-            with open(file=path.join(self.logs_location, f"solution_of_sea_lower_{sea_lower_index}.yaml"), mode=_mode) \
+            with open(file=path.join(directory_path, f"solution_of_sea_lower_{sea_lower_index}.yaml"), mode=_mode) \
                     as solutions_file:
                 yaml_dump(data=_data_to_dump, stream=solutions_file, Dumper=Dumper)

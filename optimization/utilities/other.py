@@ -16,16 +16,16 @@ def binary_search(sorted_list: List[Any], value: Any, list_size: Optional[int] =
         sorted_list[i-1] < value <= sorted_list[i]
     """
     i_low = 0
-    i_high = len(sorted_list) if list_size is None else list_size
+    i_high = len(sorted_list) - 1 if list_size is None else list_size - 1
     if value > sorted_list[-1]:
         raise ValueError
     while i_low < i_high:
         i_mid = (i_low + i_high) // 2
         if sorted_list[i_mid] < value:
-            i_low = i_mid
-        elif sorted_list[i_mid-1] < value:
-            return i_mid
+            i_low = i_mid + 1
         else:
             i_high = i_mid
     return i_high
+
+
 

@@ -2,6 +2,7 @@ from typing import List, Tuple, Any, Iterator, Optional, Union
 from collections import OrderedDict
 
 from optimization.logging import Logger
+from optimization.optimization_problem import DecisionVariable
 from optimization.optimization_algorithms.algorithm_definition import OptimizationAlgorithm
 from optimization.optimization_algorithms.stop_conditions import StopCondition
 from optimization.optimization_algorithms.evolutionary_algorithms.selection import SelectionType, \
@@ -76,9 +77,12 @@ class EvolutionaryAlgorithm(OptimizationAlgorithm):
         return self.crossover_function(parents=parents, variables_number=self.optimized_variables_number,
                                        **self.crossover_params)
 
-    def _mutation(self) -> List[int]:
-        return self.mutation_function(variables_number=self.optimized_variables_number,
-                                      mutation_chance=self.mutation_chance, **self.mutation_params)
+    def _mutation(self, individual_values: OrderedDict) -> None:
+        decision_variables_list = list(self.optimization_problem.decision_variables.items())
+        for mutation_point in self.mutation_function(variables_number=self.optimized_variables_number,
+                                                     mutation_chance=self.mutation_chance, **self.mutation_params):
+            name, var = decision_variables_list[mutation_point]
+            individual_values[name] = var.generate_random_value()
 
     def _initial_iteration(self) -> List[AbstractSolution]:
         """
@@ -93,28 +97,23 @@ class EvolutionaryAlgorithm(OptimizationAlgorithm):
 
     def _following_iteration(self) -> List[AbstractSolution]:
         new_population = []
-        decision_variables_list = list(self.optimization_problem.decision_variables.items())
-        for parents_pair in self._selection(population=self.population):
+        for parent1, parent2 in self._selection(population=self.population):
             # crossover
-            child_1_values, child_2_values = self._crossover(parents=parents_pair)
-            # mutation child 1
-            for mutation_point in self._mutation():
-                name, var = decision_variables_list[mutation_point]
-                child_1_values[name] = var.generate_random_value()
-            # mutation child 2
-            for mutation_point in self._mutation():
-                name, var = decision_variables_list[mutation_point]
-                child_2_values[name] = var.generate_random_value()
+            child_1_values, child_2_values = self._crossover(parents=(parent1, parent2))
+            # mutation
+            self._mutation(child_1_values)
+            self._mutation(child_2_values)
             # create children object
             child1 = self.solution_type(**child_1_values)
             child2 = self.solution_type(**child_2_values)
             # update new population
             if self.apply_elitism:
-                parent1, parent2 = parents_pair
                 new_population.append(child1 if child1 >= parent1 else parent1)
                 new_population.append(child2 if child2 >= parent2 else parent2)
             else:
                 new_population.extend([child1, child2])
+        if not new_population:
+            raise ValueError
         self.sort_solutions(new_population)
         self.population = new_population
         return new_population

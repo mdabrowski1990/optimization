@@ -19,6 +19,9 @@ class CrossoverType(Enum):
     UNIFORM = "Uniform"
     ADAPTIVE = "Adaptive"
 
+    def __repr__(self):
+        return self.value
+
 
 ADDITIONAL_CROSSOVER_PARAMETERS = {
     CrossoverType.SINGLE_POINT.value: {},

@@ -188,5 +188,5 @@ class ChoiceVariable(DecisionVariable):
         """
         return {
             "type": "ChoiceVariable",
-            "possible_values": list(self.possible_values),
+            "possible_values": [val if isinstance(val, bool) else repr(val) for val in self.possible_values],
         }

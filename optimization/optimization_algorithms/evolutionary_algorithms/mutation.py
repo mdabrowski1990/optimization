@@ -15,6 +15,9 @@ class MutationType(Enum):
     MULTI_POINT = "Multi point"
     PROBABILISTIC = "Probabilistic"
 
+    def __repr__(self):
+        return self.value
+
 
 ADDITIONAL_MUTATION_PARAMETERS = {
     MutationType.SINGLE_POINT.value: {},

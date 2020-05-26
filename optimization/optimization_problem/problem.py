@@ -140,34 +140,22 @@ class AbstractSolution(ABC):
         self._objective_value = None
 
     def __eq__(self, other):
-        if isinstance(other, self.__class__):
-            return self.get_objective_value_with_penalty() == other.get_objective_value_with_penalty()
-        raise TypeError
+        return self.get_objective_value_with_penalty() == other.get_objective_value_with_penalty()
 
     def __ne__(self, other):
-        if isinstance(other, self.__class__):
-            return self.get_objective_value_with_penalty() != other.get_objective_value_with_penalty()
-        raise TypeError
+        return self.get_objective_value_with_penalty() != other.get_objective_value_with_penalty()
 
     def __le__(self, other):
-        if isinstance(other, self.__class__):
-            return self.get_objective_value_with_penalty() <= other.get_objective_value_with_penalty()
-        raise TypeError
+        return self.get_objective_value_with_penalty() <= other.get_objective_value_with_penalty()
 
     def __lt__(self, other):
-        if isinstance(other, self.__class__):
-            return self.get_objective_value_with_penalty() < other.get_objective_value_with_penalty()
-        raise TypeError
+        return self.get_objective_value_with_penalty() < other.get_objective_value_with_penalty()
 
     def __gt__(self, other):
-        if isinstance(other, self.__class__):
-            return self.get_objective_value_with_penalty() > other.get_objective_value_with_penalty()
-        raise TypeError
+        return self.get_objective_value_with_penalty() > other.get_objective_value_with_penalty()
 
     def __ge__(self, other):
-        if isinstance(other, self.__class__):
-            return self.get_objective_value_with_penalty() >= other.get_objective_value_with_penalty()
-        raise TypeError
+        return self.get_objective_value_with_penalty() >= other.get_objective_value_with_penalty()
 
     def _calculate_objective(self) -> float:
         """
