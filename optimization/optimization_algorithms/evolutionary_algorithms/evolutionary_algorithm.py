@@ -2,7 +2,6 @@ from typing import List, Tuple, Any, Iterator, Optional, Union
 from collections import OrderedDict
 
 from optimization.logging import Logger
-from optimization.optimization_problem import DecisionVariable
 from optimization.optimization_algorithms.algorithm_definition import OptimizationAlgorithm
 from optimization.optimization_algorithms.stop_conditions import StopCondition
 from optimization.optimization_algorithms.evolutionary_algorithms.selection import SelectionType, \
@@ -11,7 +10,7 @@ from optimization.optimization_algorithms.evolutionary_algorithms.crossover impo
     CROSSOVER_FUNCTIONS, ADDITIONAL_CROSSOVER_PARAMETERS
 from optimization.optimization_algorithms.evolutionary_algorithms.mutation import MutationType, \
     MUTATION_FUNCTIONS, ADDITIONAL_MUTATION_PARAMETERS
-from optimization.optimization_problem import OptimizationProblem, AbstractSolution
+from optimization.optimization_problem import OptimizationProblem, AbstractSolution, OptimizationType
 
 
 __all__ = ["EvolutionaryAlgorithm"]

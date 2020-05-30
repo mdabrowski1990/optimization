@@ -128,7 +128,7 @@ def ranking_selection(population_size: int, population: List[AbstractSolution], 
         # if value is additionally divided by population_size, we will received probability of selection
         return (2 - ranking_bias) + (2*rank*(ranking_bias-1) / (population_size-1))
 
-    roulette_wheel = list(accumulate((_get_scaled_rank(rank) for rank in range(population_size))))
+    roulette_wheel = list(accumulate((_get_scaled_rank(rank) for rank in range(population_size))))[::-1]
 
     def _get_individual():
         rand_value = generate_random_float(0., roulette_wheel[-1])

@@ -283,7 +283,7 @@ class SEA(EvolutionaryAlgorithm):
                          mutation_type=mutation_type, apply_elitism=False, mutation_chance=mutation_chance,
                          logger=logger, **other_params)
         # update stop condition for SEALower
-        sea_lower_time_limit = stop_condition.time_limit / (5*population_size*iterations_number)
+        sea_lower_time_limit = stop_condition.time_limit / (population_size*iterations_number)
         self.solution_type.stop_condition = StopCondition(time_limit=sea_lower_time_limit)
         self.solution_type.logger = logger
 

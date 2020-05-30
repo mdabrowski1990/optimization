@@ -146,16 +146,32 @@ class AbstractSolution(ABC):
         return self.get_objective_value_with_penalty() != other.get_objective_value_with_penalty()
 
     def __le__(self, other):
-        return self.get_objective_value_with_penalty() <= other.get_objective_value_with_penalty()
+        if self.optimization_problem.optimization_type == OptimizationType.Maximize:
+            return self.get_objective_value_with_penalty() <= other.get_objective_value_with_penalty()
+        if self.optimization_problem.optimization_type == OptimizationType.Minimize:
+            return self.get_objective_value_with_penalty() >= other.get_objective_value_with_penalty()
+        raise ValueError
 
     def __lt__(self, other):
-        return self.get_objective_value_with_penalty() < other.get_objective_value_with_penalty()
+        if self.optimization_problem.optimization_type == OptimizationType.Maximize:
+            return self.get_objective_value_with_penalty() < other.get_objective_value_with_penalty()
+        if self.optimization_problem.optimization_type == OptimizationType.Minimize:
+            return self.get_objective_value_with_penalty() > other.get_objective_value_with_penalty()
+        raise ValueError
 
     def __gt__(self, other):
-        return self.get_objective_value_with_penalty() > other.get_objective_value_with_penalty()
+        if self.optimization_problem.optimization_type == OptimizationType.Maximize:
+            return self.get_objective_value_with_penalty() > other.get_objective_value_with_penalty()
+        if self.optimization_problem.optimization_type == OptimizationType.Minimize:
+            return self.get_objective_value_with_penalty() < other.get_objective_value_with_penalty()
+        raise ValueError
 
     def __ge__(self, other):
-        return self.get_objective_value_with_penalty() >= other.get_objective_value_with_penalty()
+        if self.optimization_problem.optimization_type == OptimizationType.Maximize:
+            return self.get_objective_value_with_penalty() >= other.get_objective_value_with_penalty()
+        if self.optimization_problem.optimization_type == OptimizationType.Minimize:
+            return self.get_objective_value_with_penalty() <= other.get_objective_value_with_penalty()
+        raise ValueError
 
     def _calculate_objective(self) -> float:
         """

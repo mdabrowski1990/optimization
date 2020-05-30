@@ -1,4 +1,4 @@
-from typing import Any, Set
+from typing import Any, Set, Union
 from abc import ABC, abstractmethod
 
 from optimization.utilities import generate_random_int, generate_random_float, choose_random_value
@@ -97,7 +97,7 @@ class IntegerVariable(DecisionVariable):
 class FloatVariable(DecisionVariable):
     """Class for defining decision variable that carries float value."""
 
-    def __init__(self, min_value: float, max_value: float) -> None:
+    def __init__(self, min_value: Union[float, int], max_value: Union[float, int]) -> None:
         """
         Creates definition of Float Decision Variable.
 
