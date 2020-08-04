@@ -1,10 +1,10 @@
 from collections import OrderedDict
 from datetime import timedelta
 
-from optimization.logging import SEALogger
-from optimization.optimization_algorithms import SEA, SEAOptimizationProblem, SEAOptimizationType, StopCondition, \
+from optimization_old.logging import SEALogger
+from optimization_old.optimization_algorithms import SEA, SEAOptimizationProblem, SEAOptimizationType, StopCondition, \
     SelectionType, CrossoverType, MutationType
-from optimization.optimization_problem import OptimizationProblem, OptimizationType, IntegerVariable, FloatVariable, \
+from optimization_old.optimization_problem import OptimizationProblem, OptimizationType, IntegerVariable, FloatVariable, \
     ChoiceVariable
 
 logger = SEALogger(logs_location="E:\\MGR")

@@ -1,16 +1,16 @@
 from typing import List, Tuple, Any, Iterator, Optional, Union
 from collections import OrderedDict
 
-from optimization.logging import Logger
-from optimization.optimization_algorithms.algorithm_definition import OptimizationAlgorithm
-from optimization.optimization_algorithms.stop_conditions import StopCondition
-from optimization.optimization_algorithms.evolutionary_algorithms.selection import SelectionType, \
+from optimization_old.logging import Logger
+from optimization_old.optimization_algorithms.algorithm_definition import OptimizationAlgorithm
+from optimization_old.optimization_algorithms.stop_conditions import StopCondition
+from optimization_old.optimization_algorithms.evolutionary_algorithms.selection import SelectionType, \
     SELECTION_FUNCTIONS, ADDITIONAL_SELECTION_PARAMETERS
-from optimization.optimization_algorithms.evolutionary_algorithms.crossover import CrossoverType, \
+from optimization_old.optimization_algorithms.evolutionary_algorithms.crossover import CrossoverType, \
     CROSSOVER_FUNCTIONS, ADDITIONAL_CROSSOVER_PARAMETERS
-from optimization.optimization_algorithms.evolutionary_algorithms.mutation import MutationType, \
+from optimization_old.optimization_algorithms.evolutionary_algorithms.mutation import MutationType, \
     MUTATION_FUNCTIONS, ADDITIONAL_MUTATION_PARAMETERS
-from optimization.optimization_problem import OptimizationProblem, AbstractSolution, OptimizationType
+from optimization_old.optimization_problem import OptimizationProblem, AbstractSolution, OptimizationType
 
 
 __all__ = ["EvolutionaryAlgorithm"]
@@ -26,8 +26,8 @@ class EvolutionaryAlgorithm(OptimizationAlgorithm):
         """
         Initialization of evolutionary algorithm.
 
-        :param optimization_problem: Definition of optimization problem to solve.
-        :param stop_condition: Definition of condition when optimization should be stopped.
+        :param optimization_problem: Definition of optimization_old problem to solve.
+        :param stop_condition: Definition of condition when optimization_old should be stopped.
         :param population_size: Number of solutions generated in one iteration.
         :param selection_type: Type of selection function to be used by the algorithm.
             It can be either passed as name of selection function or selection function itself.
@@ -38,7 +38,7 @@ class EvolutionaryAlgorithm(OptimizationAlgorithm):
         :param apply_elitism: Flag whether elitism should be applied, that means:
             Children would only replace parents if they are better in terms of objective function.
         :param mutation_chance: Probability of mutation (~chance of mutating a single gen for a single individual).
-        :param logger: Configured logger that would report optimization process.
+        :param logger: Configured logger that would report optimization_old process.
         :param other_params: Parameters configuring selection, crossover and mutation functions.
 
         :raise ValueError: Parameter 'other_params' contains unused values.

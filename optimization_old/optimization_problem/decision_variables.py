@@ -1,14 +1,14 @@
 from typing import Any, Set, Union
 from abc import ABC, abstractmethod
 
-from optimization.utilities import generate_random_int, generate_random_float, choose_random_value
+from optimization_old.utilities import generate_random_int, generate_random_float, choose_random_value
 
 
 __all__ = ["DecisionVariable", "IntegerVariable", "FloatVariable", "ChoiceVariable"]
 
 
 class DecisionVariable(ABC):
-    """Abstract definition of decision variable that optimal value is searched during optimization process."""
+    """Abstract definition of decision variable that optimal value is searched during optimization_old process."""
 
     @abstractmethod
     def generate_random_value(self) -> Any:
@@ -150,7 +150,7 @@ class FloatVariable(DecisionVariable):
 class ChoiceVariable(DecisionVariable):
     """Class for defining decision variable that carries value from possible values pool."""
 
-    def __init__(self, possible_values: Set) -> None:
+    def __init__(self, possible_values: Set[Any]) -> None:
         """
         Creates definition of Choice Decision Variable.
 

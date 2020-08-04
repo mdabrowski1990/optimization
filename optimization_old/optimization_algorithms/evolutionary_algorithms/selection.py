@@ -2,8 +2,8 @@ from typing import Tuple, Iterator, List
 from enum import Enum
 from itertools import accumulate
 
-from optimization.utilities import choose_random_values, binary_search, generate_random_float, generate_random_int
-from optimization.optimization_problem import AbstractSolution, OptimizationType
+from optimization_old.utilities import choose_random_values, binary_search, generate_random_float, generate_random_int
+from optimization_old.optimization_problem import AbstractSolution, OptimizationType
 
 
 __all__ = ["SelectionType", "ADDITIONAL_SELECTION_PARAMETERS", "SELECTION_FUNCTIONS"]

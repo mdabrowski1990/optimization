@@ -2,9 +2,9 @@ from typing import Optional, List
 from abc import ABC, abstractmethod
 from datetime import datetime
 
-from optimization.logging import Logger
-from optimization.optimization_problem import OptimizationProblem, OptimizationType, AbstractSolution
-from optimization.optimization_algorithms.stop_conditions import StopCondition
+from optimization_old.logging import Logger
+from optimization_old.optimization_problem import OptimizationProblem, OptimizationType, AbstractSolution
+from optimization_old.optimization_algorithms.stop_conditions import StopCondition
 
 
 __all__ = ["OptimizationAlgorithm"]
@@ -17,15 +17,15 @@ class OptimizationAlgorithm(ABC):
     def __init__(self, optimization_problem: OptimizationProblem, stop_condition: StopCondition,
                  logger: Optional[Logger]) -> None:
         """
-        Common initialization of optimization algorithm.
+        Common initialization of optimization_old algorithm.
 
-        :param optimization_problem: Definition of optimization problem to solve.
-        :param stop_condition: Definition of condition when optimization should be stopped.
-        :param logger: Configured logger that would report optimization process.
+        :param optimization_problem: Definition of optimization_old problem to solve.
+        :param stop_condition: Definition of condition when optimization_old should be stopped.
+        :param logger: Configured logger that would report optimization_old process.
         :raise TypeError: When 'optimization_problem' parameter is not instance of 'OptimizationProblem' class or
             'stop_condition' parameter is not instance of 'StopCondition' class.
 
-        :return Optimization algorithm ready for the optimization process.
+        :return Optimization algorithm ready for the optimization_old process.
         """
         if not isinstance(optimization_problem, OptimizationProblem):
             raise TypeError(f"Provided value of 'optimization_problem' parameter has unexpected type. "
@@ -43,7 +43,7 @@ class OptimizationAlgorithm(ABC):
     @abstractmethod
     def _initial_iteration(self) -> List[AbstractSolution]:
         """
-        Abstract definition of a method that perform initial iteration of optimization process and creates initial
+        Abstract definition of a method that perform initial iteration of optimization_old process and creates initial
         population of solutions.
 
         :raise NotImplementedError: Abstract method was called.
@@ -54,7 +54,7 @@ class OptimizationAlgorithm(ABC):
     @abstractmethod
     def _following_iteration(self) -> List[AbstractSolution]:
         """
-        Abstract definition of a method that perform following iteration of optimization process.
+        Abstract definition of a method that perform following iteration of optimization_old process.
 
         :raise NotImplementedError: Abstract method was called.
         """
@@ -63,9 +63,9 @@ class OptimizationAlgorithm(ABC):
 
     def _is_stop_condition_achieved(self, solutions: list) -> bool:
         """
-        Checks whether stop condition was achieved in this iteration of the optimization process.
+        Checks whether stop condition was achieved in this iteration of the optimization_old process.
 
-        :param solutions: List of solutions that were created in last iteration of optimization process.
+        :param solutions: List of solutions that were created in last iteration of optimization_old process.
 
         :return: True when time limit restriction is exceeded, False if it is not.
         """
@@ -73,9 +73,9 @@ class OptimizationAlgorithm(ABC):
 
     def perform_optimization(self) -> AbstractSolution:
         """
-        Start and executed optimization process.
+        Start and executed optimization_old process.
 
-        :return: Best solution that was found for the optimization problem.
+        :return: Best solution that was found for the optimization_old problem.
         """
         # pre start
         if self.logger is not None:

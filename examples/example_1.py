@@ -1,9 +1,9 @@
 from collections import OrderedDict
 from datetime import timedelta
 
-from optimization.logging import Logger
-from optimization.optimization_algorithms import RandomAlgorithm, StopCondition
-from optimization.optimization_problem import OptimizationProblem, OptimizationType, IntegerVariable, FloatVariable, \
+from optimization_old.logging import Logger
+from optimization_old.optimization_algorithms import RandomAlgorithm, StopCondition
+from optimization_old.optimization_problem import OptimizationProblem, OptimizationType, IntegerVariable, FloatVariable, \
     ChoiceVariable
 
 logger = Logger(logs_location="E:\\MGR")

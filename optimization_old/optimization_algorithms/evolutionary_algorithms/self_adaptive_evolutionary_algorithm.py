@@ -4,17 +4,17 @@ from enum import Enum
 from collections import OrderedDict
 from abc import abstractmethod
 
-from optimization.logging import SEALogger
-from optimization.utilities import shuffled
-from optimization.optimization_algorithms.evolutionary_algorithms.evolutionary_algorithm import EvolutionaryAlgorithm
-from optimization.optimization_algorithms.stop_conditions import StopCondition
-from optimization.optimization_algorithms.evolutionary_algorithms.selection import SelectionType, SELECTION_FUNCTIONS, \
+from optimization_old.logging import SEALogger
+from optimization_old.utilities import shuffled
+from optimization_old.optimization_algorithms.evolutionary_algorithms.evolutionary_algorithm import EvolutionaryAlgorithm
+from optimization_old.optimization_algorithms.stop_conditions import StopCondition
+from optimization_old.optimization_algorithms.evolutionary_algorithms.selection import SelectionType, SELECTION_FUNCTIONS, \
     ADDITIONAL_SELECTION_PARAMETERS
-from optimization.optimization_algorithms.evolutionary_algorithms.crossover import CrossoverType, CROSSOVER_FUNCTIONS, \
+from optimization_old.optimization_algorithms.evolutionary_algorithms.crossover import CrossoverType, CROSSOVER_FUNCTIONS, \
     ADDITIONAL_CROSSOVER_PARAMETERS
-from optimization.optimization_algorithms.evolutionary_algorithms.mutation import MutationType, MUTATION_FUNCTIONS, \
+from optimization_old.optimization_algorithms.evolutionary_algorithms.mutation import MutationType, MUTATION_FUNCTIONS, \
     ADDITIONAL_MUTATION_PARAMETERS
-from optimization.optimization_problem import OptimizationProblem, AbstractSolution, \
+from optimization_old.optimization_problem import OptimizationProblem, AbstractSolution, \
     ChoiceVariable, FloatVariable, IntegerVariable
 
 
@@ -112,7 +112,7 @@ class SEALower(AbstractSolution, EvolutionaryAlgorithm):
     @abstractmethod
     def optimization_problem(self) -> SEAOptimizationProblem:
         """
-        Abstract definition of a property that stores reference to optimization problem.
+        Abstract definition of a property that stores reference to optimization_old problem.
 
         :raise NotImplementedError: Abstract method was called.
         """

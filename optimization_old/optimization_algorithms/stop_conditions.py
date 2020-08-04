@@ -1,7 +1,7 @@
 from typing import List, Optional
 from datetime import datetime, timedelta
 
-from optimization.optimization_problem import OptimizationType, AbstractSolution
+from optimization_old.optimization_problem import OptimizationType, AbstractSolution
 
 
 __all__ = ["StopCondition"]
@@ -10,8 +10,8 @@ __all__ = ["StopCondition"]
 class StopCondition:
     """
     Definition of Stop Condition for Optimization Algorithm.
-    It always contains definition of time restriction (time after which, optimization process should be stopped).
-    Additionally, it may stop optimization process under following conditions:
+    It always contains definition of time restriction (time after which, optimization_old process should be stopped).
+    Additionally, it may stop optimization_old process under following conditions:
       - satisfying solution found (with objective value better than predefined value)
       - no progress for some number of iteration (better solution was not found for predefined number of iterations)
       - no progress for some time (better solution was not found for some predefined time)
@@ -23,15 +23,15 @@ class StopCondition:
         """
         Creates definition of a stop condition.
 
-        :param time_limit: Time limit after which optimization shall be stopped.
+        :param time_limit: Time limit after which optimization_old shall be stopped.
         :param satisfying_objective_value: Boundary value of the objective function.
-            When solution with better or equal objective value is found, then optimization process is stopped.
+            When solution with better or equal objective value is found, then optimization_old process is stopped.
             It is not taken into account when equals None
         :param max_iterations_without_progress: Maximal number of iterations without progress.
-            After the number of iterations without progress is exceeded, then optimization process is stopped.
+            After the number of iterations without progress is exceeded, then optimization_old process is stopped.
             It is not taken into account when equals None
         :param max_time_without_progress: Maximal time without progress (no better solution found).
-            After the number of iterations without progress is exceeded, then optimization process is stopped.
+            After the number of iterations without progress is exceeded, then optimization_old process is stopped.
             It is not taken into account when equals None
         """
         if not isinstance(time_limit, timedelta):
@@ -68,9 +68,9 @@ class StopCondition:
 
     def _is_time_exceeded(self, start_time: datetime) -> bool:
         """
-        Check if optimization process lasts for longer than time limit.
+        Check if optimization_old process lasts for longer than time limit.
 
-        :param start_time: Time when optimization process was started.
+        :param start_time: Time when optimization_old process was started.
 
         :return: True if time exceeded, otherwise False.
         """
@@ -122,10 +122,10 @@ class StopCondition:
 
     def is_achieved(self, start_time: datetime, solutions: List) -> bool:
         """
-        Checks whether stop condition was achieved and optimization process should be stopped.
+        Checks whether stop condition was achieved and optimization_old process should be stopped.
 
-        :param start_time: Time when optimization process was started.
-        :param solutions: List of solutions that were created in last iteration of optimization process.
+        :param start_time: Time when optimization_old process was started.
+        :param solutions: List of solutions that were created in last iteration of optimization_old process.
 
         :return: True when time limit restriction is exceeded, False if it is not.
         """

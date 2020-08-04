@@ -1,7 +1,7 @@
 import pytest
 from mock import patch
 
-from optimization.optimization_problem.decision_variables import DecisionVariable,\
+from optimization_old.optimization_problem.decision_variables import DecisionVariable,\
     IntegerVariable, FloatVariable, ChoiceVariable, \
     generate_random_int, generate_random_float, choose_random_value
 from .conftest import EXAMPLE_VALUE_TYPES, NUMBER_OF_DECISION_VARIABLE_EXAMPLES, \
@@ -53,7 +53,7 @@ class TestIntegerVariableClass:
         with pytest.raises(TypeError):
             IntegerVariable(min_value=0, max_value=example_value)
 
-    @patch("optimization.optimization_problem.decision_variables.generate_random_int")
+    @patch("optimization_old.optimization_problem.decision_variables.generate_random_int")
     @pytest.mark.parametrize("example_integer_decision_variable", range(NUMBER_OF_INT_VARIABLE_EXAMPLES), indirect=True)
     def test_generate_random_value(self, mock_generate_random_int, example_integer_decision_variable):
         """
@@ -158,7 +158,7 @@ class TestFloatVariableClass:
         with pytest.raises(TypeError):
             FloatVariable(min_value=0., max_value=example_value)
 
-    @patch("optimization.optimization_problem.decision_variables.generate_random_float")
+    @patch("optimization_old.optimization_problem.decision_variables.generate_random_float")
     @pytest.mark.parametrize("example_float_decision_variable", range(NUMBER_OF_FLOAT_VARIABLE_EXAMPLES), indirect=True)
     def test_generate_random_value(self, mock_generate_random_float, example_float_decision_variable):
         """
@@ -241,7 +241,7 @@ class TestChoiceVariableClass:
         with pytest.raises(TypeError):
             ChoiceVariable(possible_values=example_value)
 
-    @patch("optimization.optimization_problem.decision_variables.choose_random_value")
+    @patch("optimization_old.optimization_problem.decision_variables.choose_random_value")
     @pytest.mark.parametrize("example_choice_decision_variable", range(NUMBER_OF_CHOICE_VARIABLE_EXAMPLES),
                              indirect=True)
     def test_generate_random_value(self, mock_choose_random_value, example_choice_decision_variable):

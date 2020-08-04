@@ -2,8 +2,8 @@ from typing import Tuple
 from enum import Enum
 from collections import OrderedDict
 
-from optimization.utilities import generate_random_int, choose_random_values
-from optimization.optimization_problem import AbstractSolution
+from optimization_old.utilities import generate_random_int, choose_random_values
+from optimization_old.optimization_problem import AbstractSolution
 
 
 __all__ = ["CrossoverType", "ADDITIONAL_CROSSOVER_PARAMETERS", "CROSSOVER_FUNCTIONS"]

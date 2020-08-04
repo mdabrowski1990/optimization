@@ -3,15 +3,15 @@ from enum import Enum
 from collections import OrderedDict
 from abc import ABC, abstractmethod
 
-from optimization.optimization_problem.decision_variables import DecisionVariable
-from optimization.logging import log_function_code
+from optimization_old.optimization_problem.decision_variables import DecisionVariable
+from optimization_old.logging import log_function_code
 
 
 __all__ = ["OptimizationType", "OptimizationProblem", "AbstractSolution"]
 
 
 class OptimizationType(Enum):
-    """Enum with types of optimization problems."""
+    """Enum with types of optimization_old problems."""
     Maximize = "Maximize"
     Minimize = "Minimize"
 
@@ -22,7 +22,7 @@ class OptimizationProblem:
     def __init__(self, decision_variables: OrderedDict, constraints: Dict[str, Callable], penalty_function: Callable,
                  objective_function: Callable, optimization_type: OptimizationType) -> None:
         """
-        Definition of optimization problem.
+        Definition of optimization_old problem.
 
         :param decision_variables: Dictionary with decision variables definitions.
             Keys: Names of decision variables.
@@ -33,7 +33,7 @@ class OptimizationProblem:
         :param penalty_function: Function for calculating penalty value of the solution
             (in case if constrains are not meet).
         :param objective_function: Function for calculating objective value of the solution (does not include penalty).
-        :param optimization_type: Type optimization problem (either looking for minimal or maximal value).
+        :param optimization_type: Type optimization_old problem (either looking for minimal or maximal value).
         :raise TypeError: Some parameter has incorrect type.
         :raise ValueError: Parameter 'decision_variables' or 'constraints has invalid value.
         """
@@ -87,7 +87,7 @@ class OptimizationProblem:
     def spawn_solution_definition(self) -> type:
         """
         Creates type (class) which is definition of the solutions to this problem. Each instance of the returned type
-        represents one solution of this optimization problem.
+        represents one solution of this optimization_old problem.
 
         :return: Definition of the solution type to this problem.
         """
@@ -97,13 +97,13 @@ class OptimizationProblem:
 
 
 class AbstractSolution(ABC):
-    """Abstract definition of optimization problem solution."""
+    """Abstract definition of optimization_old problem solution."""
 
     @property
     @abstractmethod
     def optimization_problem(self) -> OptimizationProblem:
         """
-        Abstract definition of a property that stores reference to optimization problem.
+        Abstract definition of a property that stores reference to optimization_old problem.
 
         :raise NotImplementedError: Abstract method was called.
         """
@@ -209,7 +209,7 @@ class AbstractSolution(ABC):
         """
         Method for determining value of objective function with penalty.
 
-        :return: Value calculated according to definition of optimization problem.
+        :return: Value calculated according to definition of optimization_old problem.
         """
         if self._objective_value is None:
             if self.optimization_problem.optimization_type == OptimizationType.Minimize:

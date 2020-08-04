@@ -1,9 +1,9 @@
 from typing import List, Dict, Optional
 
-from optimization.logging import Logger
-from optimization.optimization_algorithms.algorithm_definition import OptimizationAlgorithm
-from optimization.optimization_algorithms.stop_conditions import StopCondition
-from optimization.optimization_problem import OptimizationProblem, AbstractSolution
+from optimization_old.logging import Logger
+from optimization_old.optimization_algorithms.algorithm_definition import OptimizationAlgorithm
+from optimization_old.optimization_algorithms.stop_conditions import StopCondition
+from optimization_old.optimization_problem import OptimizationProblem, AbstractSolution
 
 
 __all__ = ["RandomAlgorithm"]
@@ -17,12 +17,12 @@ class RandomAlgorithm(OptimizationAlgorithm):
         """
         Initialization of random algorithm.
 
-        :param optimization_problem: Definition of optimization problem to solve.
-        :param stop_condition: Definition of condition when optimization should be stopped.
+        :param optimization_problem: Definition of optimization_old problem to solve.
+        :param stop_condition: Definition of condition when optimization_old should be stopped.
         :param population_size: Number of solutions generated in one iteration.
-        :param logger: Configured logger that would report optimization process.
+        :param logger: Configured logger that would report optimization_old process.
 
-        :return Random optimization algorithm ready for the optimization process.
+        :return Random optimization_old algorithm ready for the optimization_old process.
         """
         super().__init__(optimization_problem=optimization_problem, stop_condition=stop_condition, logger=logger)
         self.population_size = population_size

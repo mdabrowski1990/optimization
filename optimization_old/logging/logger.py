@@ -14,13 +14,13 @@ class LoggingVerbosity(Enum):
     Enum with possible logging levels that represent verbosity of the log.
 
     Options:
-        - BestSolution: Only the best solution of optimization problem will be logged.
-        - ProblemDefinition: Contains all logs from lower levels. Additionally, definition of optimization problem
+        - BestSolution: Only the best solution of optimization_old problem will be logged.
+        - ProblemDefinition: Contains all logs from lower levels. Additionally, definition of optimization_old problem
             will be logged.
-        - AlgorithmConfiguration: Contains all logs from lower levels. Additionally, configuration of used optimization
+        - AlgorithmConfiguration: Contains all logs from lower levels. Additionally, configuration of used optimization_old
             algorithm will be logged.
         - AllSolutions: Contains all logs from lower levels. Additionally, information about all solution found
-            during optimization process will be logged.
+            during optimization_old process will be logged.
     """
     BestSolution = 0
     ProblemDefinition = 10
@@ -60,7 +60,7 @@ class LoggingVerbosity(Enum):
 
 class Logger:
     """
-    Logger of optimization process.
+    Logger of optimization_old process.
     """
     LOG_DIRECTORY_PATTERN = "optimization_%Y-%m-%d_%H-%M-%S"
 
@@ -68,7 +68,7 @@ class Logger:
         """
         Defines how logging should be executed.
 
-        :param logging_verbosity: Defines how much details of optimization process should be logged.
+        :param logging_verbosity: Defines how much details of optimization_old process should be logged.
         :param logs_location: Path of directory in which log files will be created.
 
         :raise TypeError: When 'logging_verbosity' parameter is not instance of 'LoggingVerbosity' class
@@ -91,11 +91,11 @@ class Logger:
 
     def log_at_start(self, optimization_algorithm: "Algorithm") -> None:
         """
-        Logging method that should be executed at the start of the optimization process.
-        It logs information available before optimization process such as problem definition,
-        optimization algorithm configuration, etc.
+        Logging method that should be executed at the start of the optimization_old process.
+        It logs information available before optimization_old process such as problem definition,
+        optimization_old algorithm configuration, etc.
 
-        :param optimization_algorithm: Optimization algorithm used during optimization process.
+        :param optimization_algorithm: Optimization algorithm used during optimization_old process.
         """
         if self.logging_verbosity >= LoggingVerbosity.ProblemDefinition:
             with open(file=path.join(self.logs_location, "problem.yaml"), mode="w") as problem_file:
@@ -107,12 +107,12 @@ class Logger:
 
     def log_solutions(self, iteration: int, solutions: Iterable["Solution"]) -> None:
         """
-        Logging method that should be executed after each iteration of optimization algorithm.
+        Logging method that should be executed after each iteration of optimization_old algorithm.
         It logs information available about found solutions.
 
-        :param iteration: Index of the optimization process iteration.
-        :param solutions: Solutions of the optimization problem that were found during last iteration
-            of the optimization process.
+        :param iteration: Index of the optimization_old process iteration.
+        :param solutions: Solutions of the optimization_old problem that were found during last iteration
+            of the optimization_old process.
         """
         if self.logging_verbosity >= LoggingVerbosity.AllSolutions:
             _data_to_dump = {f"Iteration {iteration}": [solution.get_data_for_logging() for solution in solutions]}
@@ -122,10 +122,10 @@ class Logger:
 
     def log_at_end(self, best_solution: "Solution") -> None:
         """
-        Logging method that should be executed at the end of the optimization process.
-        It logs information available after optimization process is finished such as best solution found.
+        Logging method that should be executed at the end of the optimization_old process.
+        It logs information available after optimization_old process is finished such as best solution found.
 
-        :param best_solution: Best solution that was found by the optimization algorithm.
+        :param best_solution: Best solution that was found by the optimization_old algorithm.
         """
         if self.logging_verbosity >= LoggingVerbosity.BestSolution:
             with open(file=path.join(self.logs_location, "best_solution.yaml"), mode="w") as best_solution_file:
@@ -134,17 +134,17 @@ class Logger:
 
 class SEALogger(Logger):
     """
-    Logger of optimization process for Self-adaptive Evolutionary Algorithm.
+    Logger of optimization_old process for Self-adaptive Evolutionary Algorithm.
     """
     LOG_SAE_LOWER_DIRECTORY_PATTERN = "SAE_Iteration_{}"
 
     def log_at_start(self, sea: "SEA") -> None:
         """
-        Logging method that should be executed at the start of the optimization process.
-        It logs information available before optimization process such as problem definition,
-        optimization algorithm configuration, etc.
+        Logging method that should be executed at the start of the optimization_old process.
+        It logs information available before optimization_old process such as problem definition,
+        optimization_old algorithm configuration, etc.
 
-        :param sea: Self-adaptive Evolutionary Algorithm used during optimization process.
+        :param sea: Self-adaptive Evolutionary Algorithm used during optimization_old process.
         """
         if self.logging_verbosity >= LoggingVerbosity.ProblemDefinition:
             with open(file=path.join(self.logs_location, "adaptation_problem.yaml"), mode="w") as problem_file:
@@ -158,12 +158,12 @@ class SEALogger(Logger):
 
     def log_solutions(self, iteration: int, solutions: Iterable["SEALower"]) -> None:
         """
-        Logging method that should be executed after each iteration of SEA optimization algorithm.
+        Logging method that should be executed after each iteration of SEA optimization_old algorithm.
         It logs information available about found solutions (SEA Lower).
 
-        :param iteration: Index of the SEA optimization process iteration.
+        :param iteration: Index of the SEA optimization_old process iteration.
         :param solutions: Solutions of the adaptation problem that were found during last iteration of the
-            optimization process.
+            optimization_old process.
         """
         if self.logging_verbosity >= LoggingVerbosity.AllSolutions:
             _data_to_dump = {f"Iteration {iteration}": [solution.get_data_for_logging() for solution in solutions]}
@@ -174,14 +174,14 @@ class SEALogger(Logger):
     def log_sea_lower_solutions(self, sea_upper_iteration: int, sea_lower_index: int, sea_lower_iteration: int,
                                 solutions: Iterable["Solution"]) -> None:
         """
-        Logging method that should be executed after each iteration of SEA Lower optimization algorithm.
+        Logging method that should be executed after each iteration of SEA Lower optimization_old algorithm.
         It logs information available about found solutions (optimized problem).
 
-        :param sea_upper_iteration: Index of the SEA optimization process iteration.
+        :param sea_upper_iteration: Index of the SEA optimization_old process iteration.
         :param sea_lower_index: Ordinal number of the SEA Lower algorithm for which solutions are logged.
-        :param sea_lower_iteration: Index of the SEA Lower optimization process iteration.
-        :param solutions: Solutions of the optimization problem that were found during last iteration of the
-            optimization process.
+        :param sea_lower_iteration: Index of the SEA Lower optimization_old process iteration.
+        :param solutions: Solutions of the optimization_old problem that were found during last iteration of the
+            optimization_old process.
         """
         if self.logging_verbosity >= LoggingVerbosity.AllSolutions:
             directory_path = path.join(self.logs_location, self.LOG_SAE_LOWER_DIRECTORY_PATTERN.format(sea_upper_iteration))

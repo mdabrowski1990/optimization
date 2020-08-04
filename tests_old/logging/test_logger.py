@@ -1,9 +1,9 @@
 import pytest
 from mock import Mock, patch, call
 
-from optimization.logging import Logger, LoggingVerbosity
-from optimization.optimization_algorithms import OptimizationAlgorithm
-from optimization.optimization_problem import AbstractSolution
+from optimization_old.logging import Logger, LoggingVerbosity
+from optimization_old.optimization_algorithms import OptimizationAlgorithm
+from optimization_old.optimization_problem import AbstractSolution
 from .conftest import COMPARISON_FUNCTIONS, EXAMPLE_VALUE_TYPES, \
     VALID_COMPARISON_DATA_SETS, INVALID_COMPARISON_DATA_SETS
 
@@ -27,7 +27,7 @@ class TestLoggingVerbosity:
     @pytest.mark.parametrize("comparison_function, values_diff", VALID_COMPARISON_DATA_SETS)
     def test_comparison_valid(self, logging_verbosity, comparison_function, values_diff):
         """
-        Positive tests for comparison of 'LoggingVerbosity' instance with other 'LoggingVerbosity' instance.
+        Positive tests_old for comparison of 'LoggingVerbosity' instance with other 'LoggingVerbosity' instance.
 
         :param logging_verbosity: Instance of 'LoggingVerbosity' enum class.
         :param comparison_function: Any of comparison functions ('<', '<=', '==', ...).
@@ -44,7 +44,7 @@ class TestLoggingVerbosity:
     @pytest.mark.parametrize("comparison_function, values_diff", INVALID_COMPARISON_DATA_SETS)
     def test_comparison_invalid(self, logging_verbosity, comparison_function, values_diff):
         """
-        Negative tests for comparison of 'LoggingVerbosity' instance with other 'LoggingVerbosity' instance.
+        Negative tests_old for comparison of 'LoggingVerbosity' instance with other 'LoggingVerbosity' instance.
 
         :param logging_verbosity: Instance of 'LoggingVerbosity' enum class.
         :param comparison_function: Any of comparison functions ('<', '<=', '==', ...).
@@ -84,7 +84,7 @@ class TestLoggerInit:
         with pytest.raises(TypeError):
             Logger(logs_location=example_value, logging_verbosity=logging_verbosity)
 
-    @patch("optimization.logging.logger.path")
+    @patch("optimization_old.logging.logger.path")
     @pytest.mark.parametrize("logging_verbosity", LoggingVerbosity)
     def test_init_invalid_logs_location_value(self, mock_path, logging_verbosity, random_text):
         """
@@ -97,8 +97,8 @@ class TestLoggerInit:
         with pytest.raises(ValueError):
             Logger(logs_location=random_text, logging_verbosity=logging_verbosity)
 
-    @patch("optimization.logging.logger.path")
-    @patch("optimization.logging.logger.mkdir")
+    @patch("optimization_old.logging.logger.path")
+    @patch("optimization_old.logging.logger.mkdir")
     @pytest.mark.parametrize("logging_verbosity", LoggingVerbosity)
     def test_init_valid(self, mock_make_directory, mock_path, random_text, logging_verbosity):
         mock_path.isdir = Mock(return_value=True)
@@ -131,8 +131,8 @@ class TestLoggerMethods:
         with pytest.raises(TypeError):
             Logger.log_at_start(self=self.logger_instance_mock, optimization_algorithm=example_value)
 
-    @patch("optimization.logging.logger.open")
-    @patch("optimization.logging.logger.yaml_dump")
+    @patch("optimization_old.logging.logger.open")
+    @patch("optimization_old.logging.logger.yaml_dump")
     @pytest.mark.parametrize("verbosity_value", ["just_below_lower_value", "below_lower_value"])
     def test_log_at_start_valid_call_with_no_action(self, mock_yaml_dump, mock_open, verbosity_value):
         """
@@ -156,9 +156,9 @@ class TestLoggerMethods:
         mock_yaml_dump.assert_not_called()
         mock_open.assert_not_called()
 
-    @patch("optimization.logging.logger.path")
-    @patch("optimization.logging.logger.open")
-    @patch("optimization.logging.logger.yaml_dump")
+    @patch("optimization_old.logging.logger.path")
+    @patch("optimization_old.logging.logger.open")
+    @patch("optimization_old.logging.logger.yaml_dump")
     @pytest.mark.parametrize("verbosity_value", ["lower_value", "just_above_lower_value", "middle",
                                                  "just_below_higher_value"])
     @pytest.mark.parametrize("example_value", EXAMPLE_VALUE_TYPES, indirect=True)
@@ -198,9 +198,9 @@ class TestLoggerMethods:
         mock_open.assert_called_once_with(file=random_text, mode="w")
         mock_yaml_dump.assert_called_once_with(data=example_value, stream=mock_open().__enter__())
 
-    @patch("optimization.logging.logger.path")
-    @patch("optimization.logging.logger.open")
-    @patch("optimization.logging.logger.yaml_dump")
+    @patch("optimization_old.logging.logger.path")
+    @patch("optimization_old.logging.logger.open")
+    @patch("optimization_old.logging.logger.yaml_dump")
     @pytest.mark.parametrize("verbosity_value", ["higher_value", "above_higher_value"])
     @pytest.mark.parametrize("example_value", EXAMPLE_VALUE_TYPES, indirect=True)
     def test_log_at_start_valid_call_with_two_actions(self, mock_yaml_dump, mock_open, mock_path, verbosity_value,
@@ -247,8 +247,8 @@ class TestLoggerMethods:
         with pytest.raises(TypeError):
             Logger.log_solutions(self=self.logger_instance_mock, iteration=example_value, solutions=[])
 
-    @patch("optimization.logging.logger.open")
-    @patch("optimization.logging.logger.yaml_dump")
+    @patch("optimization_old.logging.logger.open")
+    @patch("optimization_old.logging.logger.yaml_dump")
     @pytest.mark.parametrize("verbosity_value", ["just_below", "below"])
     def test_log_found_solutions_valid_call_with_no_action(self, mock_yaml_dump, mock_open, verbosity_value,
                                                            random_int):
@@ -271,9 +271,9 @@ class TestLoggerMethods:
         mock_yaml_dump.assert_not_called()
         mock_open.assert_not_called()
 
-    @patch("optimization.logging.logger.path")
-    @patch("optimization.logging.logger.open")
-    @patch("optimization.logging.logger.yaml_dump")
+    @patch("optimization_old.logging.logger.path")
+    @patch("optimization_old.logging.logger.open")
+    @patch("optimization_old.logging.logger.yaml_dump")
     @pytest.mark.parametrize("verbosity_value", ["equal", "just_above", "above"])
     @pytest.mark.parametrize("some_values", [range(10), set("abcdef"), ["some", 1]])
     def test_log_found_solutions_valid_call_with_iteration_zero(self, mock_yaml_dump, mock_open, mock_path,
@@ -304,9 +304,9 @@ class TestLoggerMethods:
         mock_open.assert_called_once_with(file=random_text, mode="w")
         mock_yaml_dump.assert_called_once_with(data={"Iteration 0": list(some_values)}, stream=mock_open().__enter__())
 
-    @patch("optimization.logging.logger.path")
-    @patch("optimization.logging.logger.open")
-    @patch("optimization.logging.logger.yaml_dump")
+    @patch("optimization_old.logging.logger.path")
+    @patch("optimization_old.logging.logger.open")
+    @patch("optimization_old.logging.logger.yaml_dump")
     @pytest.mark.parametrize("verbosity_value", ["equal", "just_above", "above"])
     @pytest.mark.parametrize("some_values", [range(10), set("abcdef"), ["some", 1]])
     @pytest.mark.parametrize("iteration", [1, 100, 666, 987654321])
@@ -355,8 +355,8 @@ class TestLoggerMethods:
         with pytest.raises(TypeError):
             Logger.log_at_end(self=self.logger_instance_mock, best_solution=example_value)
 
-    @patch("optimization.logging.logger.open")
-    @patch("optimization.logging.logger.yaml_dump")
+    @patch("optimization_old.logging.logger.open")
+    @patch("optimization_old.logging.logger.yaml_dump")
     @pytest.mark.parametrize("verbosity_value", ["just_below", "below"])
     def test_log_at_end_valid_call_with_no_action(self, mock_yaml_dump, mock_open, verbosity_value):
         """
@@ -378,9 +378,9 @@ class TestLoggerMethods:
         mock_yaml_dump.assert_not_called()
         mock_open.assert_not_called()
 
-    @patch("optimization.logging.logger.path")
-    @patch("optimization.logging.logger.open")
-    @patch("optimization.logging.logger.yaml_dump")
+    @patch("optimization_old.logging.logger.path")
+    @patch("optimization_old.logging.logger.open")
+    @patch("optimization_old.logging.logger.yaml_dump")
     @pytest.mark.parametrize("verbosity_value", ["equal", "just_above", "above"])
     @pytest.mark.parametrize("example_value", EXAMPLE_VALUE_TYPES, indirect=True)
     def test_log_at_end_valid_call_with_action(self, mock_yaml_dump, mock_open, mock_path, verbosity_value,

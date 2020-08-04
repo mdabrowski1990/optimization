@@ -1,7 +1,7 @@
 from typing import List
 from enum import Enum
 
-from optimization.utilities import generate_random_float, choose_random_values
+from optimization_old.utilities import generate_random_float, choose_random_values
 
 
 __all__ = ["MutationType", "ADDITIONAL_MUTATION_PARAMETERS", "MUTATION_FUNCTIONS"]

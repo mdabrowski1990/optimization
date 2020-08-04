@@ -4,7 +4,7 @@ from functools import reduce
 
 from ..common_conftest import *
 
-from optimization.optimization_problem.decision_variables import IntegerVariable, FloatVariable, ChoiceVariable
+from optimization_old.optimization_problem.decision_variables import IntegerVariable, FloatVariable, ChoiceVariable
 
 
 # ------------------------------------------------ Decision Variables ------------------------------------------------ #

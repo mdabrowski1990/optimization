@@ -2,7 +2,7 @@ import pytest
 from mock import Mock, patch
 from datetime import timedelta
 
-from optimization.optimization_algorithms.stop_conditions import StopCondition, OptimizationType
+from optimization_old.optimization_algorithms.stop_conditions import StopCondition, OptimizationType
 from .conftest import EXAMPLE_VALUE_TYPES, EXAMPLE_VALID_MAX_ITERATIONS_WITHOUT_PROGRESS_VALUES, \
     EXAMPLE_VALID_MAX_TIME_WITHOUT_PROGRESS_VALUES, EXAMPLE_INVALID_MAX_ITERATIONS_WITHOUT_PROGRESS_VALUES, \
     EXAMPLE_VALID_SATISFYING_OBJECTIVE_VALUES
@@ -217,12 +217,12 @@ class TestStopConditionMethods:
 
     # _is_time_exceeded
 
-    @patch("optimization.optimization_algorithms.stop_conditions.datetime")
+    @patch("optimization_old.optimization_algorithms.stop_conditions.datetime")
     @pytest.mark.parametrize("diff, result", [(-100, False), (-0.0000001, False),
                                               (0, True), (0.0000001, True), (100, True)])
     def test_is_time_exceeded(self, mock_datetime, random_positive_int, random_float, diff, result):
         """
-        Boundary Value Analysis tests for '_is_time_exceeded' method.
+        Boundary Value Analysis tests_old for '_is_time_exceeded' method.
 
         :param mock_datetime: Mocked datetime class.
         :param random_positive_int: Value for 'time_limit' attribute of StopCondition object.
@@ -242,7 +242,7 @@ class TestStopConditionMethods:
                                               (0, True), (0.0000001, True), (100, True)])
     def test_is_satisfying_solution_found_minimize(self, random_float, diff, result):
         """
-        Boundary Value Analysis tests for '_is_satisfying_solution_found' method (minimization).
+        Boundary Value Analysis tests_old for '_is_satisfying_solution_found' method (minimization).
 
         :param random_float: Value to 'satisfying_objective_value' attribute of StopCondition object.
         :param diff: Distance from boundary value.
@@ -259,7 +259,7 @@ class TestStopConditionMethods:
                                               (0, True), (0.0000001, False), (100, False)])
     def test_is_satisfying_solution_found_maximize(self, random_float, diff, result):
         """
-        Boundary Value Analysis tests for '_is_satisfying_solution_found' method (maximization).
+        Boundary Value Analysis tests_old for '_is_satisfying_solution_found' method (maximization).
 
         :param random_float: Value to 'satisfying_objective_value' attribute of StopCondition object.
         :param diff: Distance from boundary value.
@@ -289,7 +289,7 @@ class TestStopConditionMethods:
     @pytest.mark.parametrize("max_iterations, result", [(-100, True), (-1, True), (0, False), (100, False)])
     def test_is_max_iteration_without_progress_exceeded_first(self, max_iterations, result):
         """
-        Boundary Value Analysis tests for '_is_max_iteration_without_progress_exceeded' method.
+        Boundary Value Analysis tests_old for '_is_max_iteration_without_progress_exceeded' method.
         Simulated first iteration (no solution is stored).
 
         :param max_iterations: Value to set in 'max_iterations_without_progress' attribute of StopCondition.
@@ -305,7 +305,7 @@ class TestStopConditionMethods:
     @pytest.mark.parametrize("max_iterations, result", [(-100, True), (-1, True), (0, False), (100, False)])
     def test_is_max_iteration_without_progress_exceeded_better_solution_found(self, max_iterations, result):
         """
-        Boundary Value Analysis tests for '_is_max_iteration_without_progress_exceeded' method.
+        Boundary Value Analysis tests_old for '_is_max_iteration_without_progress_exceeded' method.
         Simulated better solution is found.
 
         :param max_iterations: Value to set in 'max_iterations_without_progress' attribute of StopCondition.
@@ -326,7 +326,7 @@ class TestStopConditionMethods:
     def test_is_max_iteration_without_progress_exceeded_better_solution_not_found(self, random_positive_int,
                                                                                   diff, result):
         """
-        Boundary Value Analysis tests for '_is_max_iteration_without_progress_exceeded' method.
+        Boundary Value Analysis tests_old for '_is_max_iteration_without_progress_exceeded' method.
         Simulated better solution is not found.
 
         :param random_positive_int: Value to set in 'max_iterations_without_progress' attribute of StopCondition.
@@ -349,10 +349,10 @@ class TestStopConditionMethods:
     # _is_max_time_without_progress_exceeded
 
     @pytest.mark.parametrize("max_time, result", [(-100, True), (-1, True), (0, False), (100, False)])
-    @patch("optimization.optimization_algorithms.stop_conditions.datetime")
+    @patch("optimization_old.optimization_algorithms.stop_conditions.datetime")
     def test_is_max_time_without_progress_exceeded_first(self, mock_datetime, random_positive_int, max_time, result):
         """
-        Boundary Value Analysis tests for '_is_max_time_without_progress_exceeded' method.
+        Boundary Value Analysis tests_old for '_is_max_time_without_progress_exceeded' method.
         Simulated first iteration (no solution is stored).
 
         :param mock_datetime: Mock of datetime class in tested scope.
@@ -369,11 +369,11 @@ class TestStopConditionMethods:
         assert mock_stop_condition._last_progress_time == random_positive_int
 
     @pytest.mark.parametrize("max_time, result", [(-100, True), (-1, True), (0, False), (100, False)])
-    @patch("optimization.optimization_algorithms.stop_conditions.datetime")
+    @patch("optimization_old.optimization_algorithms.stop_conditions.datetime")
     def test_is_max_time_without_progress_exceeded_better_solution_found(self, mock_datetime, random_positive_int,
                                                                          max_time, result):
         """
-        Boundary Value Analysis tests for '_is_max_iteration_without_progress_exceeded' method.
+        Boundary Value Analysis tests_old for '_is_max_iteration_without_progress_exceeded' method.
         Simulated better solution is found.
 
         :param mock_datetime: Mock of datetime class in tested scope.
@@ -393,11 +393,11 @@ class TestStopConditionMethods:
         assert mock_stop_condition._last_progress_time == random_positive_int
 
     @pytest.mark.parametrize("diff, result", [(-100, True), (-1, True), (0, False), (100, False)])
-    @patch("optimization.optimization_algorithms.stop_conditions.datetime")
+    @patch("optimization_old.optimization_algorithms.stop_conditions.datetime")
     def test_is_max_time_without_progress_exceeded_better_solution_not_found(self, mock_datetime, random_positive_int,
                                                                              random_int, diff, result):
         """
-        Boundary Value Analysis tests for '_is_max_iteration_without_progress_exceeded' method.
+        Boundary Value Analysis tests_old for '_is_max_iteration_without_progress_exceeded' method.
         Simulated better solution is not found.
 
         :param mock_datetime: Mock of datetime class in tested scope.

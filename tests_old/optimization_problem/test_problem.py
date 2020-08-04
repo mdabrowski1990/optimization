@@ -1,8 +1,8 @@
 import pytest
 from mock import Mock, PropertyMock, patch, call
 
-from optimization.optimization_problem.decision_variables import choose_random_value
-from optimization.optimization_problem.problem import OptimizationProblem, OptimizationType, AbstractSolution
+from optimization_old.optimization_problem.decision_variables import choose_random_value
+from optimization_old.optimization_problem.problem import OptimizationProblem, OptimizationType, AbstractSolution
 from .conftest import EXAMPLE_VALUE_TYPES, DECISION_VARIABLES_GROUPS, NUMBER_OF_CONSTRAINTS_EXAMPLES, \
     NUMBER_OF_PENALTY_FUNCTIONS_EXAMPLES, NUMBER_OF_OBJECTIVE_FUNCTIONS_EXAMPLES, \
     EXAMPLE_OBJECTIVE_FUNCTION_VALUES, EXAMPLE_PENALTY_FUNCTION_VALUES, EXAMPLE_CONSTRAINTS_VALUES, \
@@ -27,7 +27,7 @@ class TestOptimizationProblem:
         :param example_constraints: Example valid value of constrains.
         :param example_penalty_function: Example valid value of penalty function.
         :param example_objective_function: Example valid value of objective function.
-        :param example_optimization_type: Example valid value of optimization type.
+        :param example_optimization_type: Example valid value of optimization_old type.
         """
         problem = OptimizationProblem(decision_variables=example_decision_variables,
                                       constraints=example_constraints,
@@ -57,7 +57,7 @@ class TestOptimizationProblem:
         :param example_constraints: Example valid value of constrains.
         :param example_penalty_function: Example valid value of penalty function.
         :param example_objective_function: Example valid value of objective function.
-        :param example_optimization_type: Example valid value of optimization type.
+        :param example_optimization_type: Example valid value of optimization_old type.
         """
         with pytest.raises(TypeError):
             OptimizationProblem(decision_variables=example_value,
@@ -81,7 +81,7 @@ class TestOptimizationProblem:
         :param example_value: Example value of constrains that has invalid type.
         :param example_penalty_function: Example valid value of penalty function.
         :param example_objective_function: Example valid value of objective function.
-        :param example_optimization_type: Example valid value of optimization type.
+        :param example_optimization_type: Example valid value of optimization_old type.
         """
         with pytest.raises(TypeError):
             OptimizationProblem(decision_variables=example_decision_variables,
@@ -105,7 +105,7 @@ class TestOptimizationProblem:
         :param example_constraints: Example valid value of constrains.
         :param example_value: Example value of penalty function variables that has invalid type.
         :param example_objective_function: Example valid value of objective function.
-        :param example_optimization_type: Example valid value of optimization type.
+        :param example_optimization_type: Example valid value of optimization_old type.
         """
         with pytest.raises(TypeError):
             OptimizationProblem(decision_variables=example_decision_variables,
@@ -129,7 +129,7 @@ class TestOptimizationProblem:
         :param example_constraints: Example valid value of constrains.
         :param example_penalty_function: Example valid value of penalty function.
         :param example_value: Example value of objective function that has invalid type.
-        :param example_optimization_type: Example valid value of optimization type.
+        :param example_optimization_type: Example valid value of optimization_old type.
         """
         with pytest.raises(TypeError):
             OptimizationProblem(decision_variables=example_decision_variables,
@@ -152,7 +152,7 @@ class TestOptimizationProblem:
         :param example_constraints: Example valid value of constrains.
         :param example_penalty_function: Example valid value of penalty function.
         :param example_objective_function: Example valid value of objective function.
-        :param example_value: Example value of optimization type that has invalid type.
+        :param example_value: Example value of optimization_old type that has invalid type.
         """
         with pytest.raises(TypeError):
             OptimizationProblem(decision_variables=example_decision_variables,
@@ -175,7 +175,7 @@ class TestOptimizationProblem:
         :param example_constraints: Example valid value of constrains.
         :param example_penalty_function: Example valid value of penalty function.
         :param example_objective_function: Example valid value of objective function.
-        :param example_optimization_type: Example valid value of optimization type.
+        :param example_optimization_type: Example valid value of optimization_old type.
         """
         with pytest.raises(ValueError):
             OptimizationProblem(decision_variables={},
@@ -201,7 +201,7 @@ class TestOptimizationProblem:
         :param example_constraints: Example valid value of constrains.
         :param example_penalty_function: Example valid value of penalty function.
         :param example_objective_function: Example valid value of objective function.
-        :param example_optimization_type: Example valid value of optimization type.
+        :param example_optimization_type: Example valid value of optimization_old type.
         """
         example_decision_variables[example_value] = list(example_decision_variables.values())[0]
         with pytest.raises(ValueError):
@@ -228,7 +228,7 @@ class TestOptimizationProblem:
         :param example_constraints: Example valid value of constrains.
         :param example_penalty_function: Example valid value of penalty function.
         :param example_objective_function: Example valid value of objective function.
-        :param example_optimization_type: Example valid value of optimization type.
+        :param example_optimization_type: Example valid value of optimization_old type.
         """
         example_decision_variables[list(example_decision_variables.keys())[0]] = example_value
         with pytest.raises(ValueError):
@@ -255,7 +255,7 @@ class TestOptimizationProblem:
         :param example_constraints: Example valid value of constrains.
         :param example_penalty_function: Example valid value of penalty function.
         :param example_objective_function: Example valid value of objective function.
-        :param example_optimization_type: Example valid value of optimization type.
+        :param example_optimization_type: Example valid value of optimization_old type.
         """
         example_constraints[example_value] = list(example_constraints.values())[0]
         with pytest.raises(ValueError):
@@ -282,7 +282,7 @@ class TestOptimizationProblem:
         :param example_constraints: Example valid value of constrains.
         :param example_penalty_function: Example valid value of penalty function.
         :param example_objective_function: Example valid value of objective function.
-        :param example_optimization_type: Example valid value of optimization type.
+        :param example_optimization_type: Example valid value of optimization_old type.
         """
         example_constraints[list(example_constraints.keys())[0]] = example_value
         with pytest.raises(ValueError):
@@ -294,7 +294,7 @@ class TestOptimizationProblem:
 
     # get_data_for_logging
 
-    @patch("optimization.optimization_problem.problem.log_function_code")
+    @patch("optimization_old.optimization_problem.problem.log_function_code")
     def test_get_data_for_logging_basic_check(self, mock_log_function_code):
         """
         Basic check for 'get_data_for_logging' method.
@@ -317,7 +317,7 @@ class TestOptimizationProblem:
         assert logging_data["constraints"] == {}
         mock_log_function_code.assert_has_calls([call(mock_penalty_function), call(mock_objective_function)])
 
-    @patch("optimization.optimization_problem.problem.log_function_code")
+    @patch("optimization_old.optimization_problem.problem.log_function_code")
     def test_get_data_for_logging_check_decision_variables(self, mock_log_function_code):
         """
         Check that 'decision_variables' attribute is logged using 'get_data_for_logging' method.
@@ -335,7 +335,7 @@ class TestOptimizationProblem:
         for var_mock in mock_problem.decision_variables.values():
             var_mock.get_data_for_logging.assert_called_once_with()
 
-    @patch("optimization.optimization_problem.problem.log_function_code")
+    @patch("optimization_old.optimization_problem.problem.log_function_code")
     def test_get_data_for_logging_check_constraints(self, mock_log_function_code):
         """
         Check that 'constraints' attribute is logged using 'get_data_for_logging' method.
@@ -468,7 +468,7 @@ class TestSolution:
 
     # _calculate_penalty
 
-    @patch("optimization.optimization_problem.problem.AbstractSolution._calculate_constraints")
+    @patch("optimization_old.optimization_problem.problem.AbstractSolution._calculate_constraints")
     @pytest.mark.parametrize("constraints_values", EXAMPLE_CONSTRAINTS_VALUES)
     @pytest.mark.parametrize("penalty_value", EXAMPLE_PENALTY_FUNCTION_VALUES)
     def test_calculate_penalty(self, mock_calculate_constraints, constraints_values, penalty_value):
@@ -518,8 +518,8 @@ class TestSolution:
         solution._objective_value = example_value
         assert solution.get_objective_value_with_penalty() == solution._objective_value == example_value
 
-    @patch("optimization.optimization_problem.problem.AbstractSolution._calculate_penalty")
-    @patch("optimization.optimization_problem.problem.AbstractSolution._calculate_objective")
+    @patch("optimization_old.optimization_problem.problem.AbstractSolution._calculate_penalty")
+    @patch("optimization_old.optimization_problem.problem.AbstractSolution._calculate_objective")
     @pytest.mark.parametrize("optimization_type", OptimizationType)
     @pytest.mark.parametrize("objective_value", EXAMPLE_OBJECTIVE_FUNCTION_VALUES)
     @pytest.mark.parametrize("penalty_value", EXAMPLE_PENALTY_FUNCTION_VALUES)
