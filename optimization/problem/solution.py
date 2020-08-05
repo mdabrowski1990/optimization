@@ -16,3 +16,5 @@ class AbstractSolution(ABC):
     def optimization_problem(self) -> OptimizationProblem:
         """Optimization problem for which this class is able to create solutions (as objects)."""
         ...
+
+    # todo: finish implementation and prepare tests

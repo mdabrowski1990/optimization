@@ -1,5 +1,6 @@
 # basic prospector settings
 
+output-format: grouped
 doc-warnings: true
 autodetect: true
 
