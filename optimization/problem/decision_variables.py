@@ -4,7 +4,7 @@ Decision variables are main part of optimization problem model.
 """
 
 __author__ = "Maciej Dąbrowski (maciek_dabrowski@o2.pl)"
-__all__ = ["IntegerVariable", "DiscreteVariable", "FloatVariable", "ChoiceVariable"]
+__all__ = ["DecisionVariable", "IntegerVariable", "DiscreteVariable", "FloatVariable", "ChoiceVariable"]
 
 
 from typing import Any, Union, Dict, Iterable
@@ -54,6 +54,7 @@ class IntegerVariable(DecisionVariable):
 
         :param min_value: Minimal value that this variable can store.
         :param max_value: Maximal value that this variable can store.
+
         :raise TypeError: Parameter 'min_value' or 'max_value' is not int type.
         :raise ValueError: Value of parameter 'min_value' is greater or equal value of 'max_value'.
         :return: None
@@ -108,7 +109,8 @@ class DiscreteVariable(DecisionVariable):
 
         :param min_value: Minimal value that this variable can store.
         :param max_value: Maximal value that this variable can store.
-        :param step:
+        :param step: Difference between following possible values.
+
         :raise TypeError: Parameter 'min_value' or 'max_value' is not int or float type.
         :raise ValueError: Value of parameter 'min_value' is greater or equal value of 'max_value'
             or 'step' is lower equal 0.
@@ -164,12 +166,13 @@ class FloatVariable(DecisionVariable):
     Float Decision Variable definition that can be any float in given range.
     """
 
-    def __init__(self, min_value: int, max_value: int) -> None:
+    def __init__(self, min_value: float, max_value: float) -> None:
         """
         Creates definition of Float Decision Variable.
 
         :param min_value: Minimal value that this variable can store.
         :param max_value: Maximal value that this variable can store.
+
         :raise TypeError: Parameter 'min_value' or 'max_value' is not float type.
         :raise ValueError: Value of parameter 'min_value' is greater  equal value of 'max_value'.
         :return: None
@@ -218,6 +221,7 @@ class ChoiceVariable(DecisionVariable):
         Creates definition of Choice Decision Variable.
 
         :param possible_values: Iterable with possible values to set for this Decision Variable.
+
         :return: None
         """
         self.possible_values = set(possible_values)
@@ -234,7 +238,7 @@ class ChoiceVariable(DecisionVariable):
         """
         return value in self.possible_values
 
-    def get_log_data(self) -> dict:
+    def get_log_data(self) -> Dict[str, str]:
         """
         Method which prepares data of the instance of this class for logging.
 
