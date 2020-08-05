@@ -20,7 +20,7 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements_tests.txt
-    - name: List with prospecter
+    - name: Static code analysis with prospector
       run: |
         prospector --profile prospector_profile.yaml -0 optimization
     - name: Test with pytest
