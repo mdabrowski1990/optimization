@@ -1,4 +1,4 @@
-# todo: update module docstring
+"""Helper functions for logging purposes."""
 
 __all__ = ["log_function_code"]
 

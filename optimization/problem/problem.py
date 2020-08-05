@@ -1,9 +1,7 @@
-"""
-Module with definition of mathematically described problem to be optimized.
-"""
+"""Module with definition of mathematically described problem to be optimized."""
 
-__author__ = "Maciej Dąbrowski (maciek_dabrowski@o2.pl)"
 __all__ = ["OptimizationType", "OptimizationProblem"]
+
 
 from typing import Union, Callable, Dict
 from typing import OrderedDict as OrderedDictTyping
@@ -15,7 +13,8 @@ from optimization.logging import log_function_code
 
 
 class OptimizationType(Enum):
-    """Enum with types of optimization_old problems."""
+    """Enum with types of optimization problems."""
+
     Maximize = "Maximize"
     Minimize = "Minimize"
 
@@ -24,7 +23,7 @@ class OptimizationProblem:
     """Class for defining the problem for which optimal solution to be searched."""
 
     def __init__(self,
-                 decision_variables: OrderedDictTyping[str, DecisionVariable],
+                 decision_variables: OrderedDictTyping[str, DecisionVariable],  # type: ignore
                  constraints: Dict[str, Callable],
                  penalty_function: Callable,
                  objective_function: Callable,
@@ -49,11 +48,11 @@ class OptimizationProblem:
         if not isinstance(decision_variables, OrderedDict):
             raise TypeError(f"Parameter 'decision_variables' is not OrderDict type. "
                             f"Actual value: {decision_variables}.")
-        if any([not isinstance(key, str) for key in decision_variables.keys()]):
-            raise ValueError(f"Some keys of 'decision_variables' are not str type. "
+        if any([not isinstance(key, str) for key in decision_variables.keys()]):  # type: ignore
+            raise ValueError(f"Some keys of 'decision_variables' are not str type. "  # type: ignore
                              f"Keys: {list(decision_variables.keys())}.")
-        if any([not isinstance(value, DecisionVariable) for value in decision_variables.values()]):
-            raise ValueError(f"Some values of 'decision_variables' are not DecisionVariable type. "
+        if any([not isinstance(value, DecisionVariable) for value in decision_variables.values()]):  # type: ignore
+            raise ValueError(f"Some values of 'decision_variables' are not DecisionVariable type. "  # type: ignore
                              f"Values: {list(decision_variables.values())}.")
         # check: constraints
         if not isinstance(constraints, dict):
@@ -72,7 +71,7 @@ class OptimizationProblem:
         if isinstance(optimization_type, OptimizationType):
             self.optimization_type = optimization_type
         elif isinstance(optimization_type, str):
-            self.optimization_type = OptimizationType.__getattr__(optimization_type)
+            self.optimization_type = OptimizationType[optimization_type]
         else:
             raise TypeError(f"Parameter 'optimization_type' is not str or OptimizationType type. "
                             f"Actual value: {OptimizationType}.")
@@ -92,7 +91,7 @@ class OptimizationProblem:
             "optimization_type": self.optimization_type.value,
             "decision_variables": [
                 {"name": name, "definition": decision_var.get_log_data()}
-                for name, decision_var in self.decision_variables.items()
+                for name, decision_var in self.decision_variables.items()  # type: ignore
             ],
             "constraints": {name: log_function_code(constraint) for name, constraint in self.constraints.items()},
             "penalty_function": log_function_code(self.penalty_function),

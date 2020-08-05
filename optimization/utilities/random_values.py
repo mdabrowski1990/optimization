@@ -5,19 +5,18 @@ Note: It uses built-in random package (it could have been used directly), but th
 abstraction layer that enables to easily change this implementation.
 """
 
-__author__ = "Maciej Dąbrowski (maciek_dabrowski@o2.pl)"
 __all__ = ["generate_random_int", "generate_random_float", "choose_random_value", "choose_random_values",
            "shuffle", "shuffled"]
 
 
-from typing import Any, Container, List, Iterable
+from typing import Any, Set, List, Iterable
 from random import randint as generate_random_int
 from random import uniform as generate_random_float
 from random import sample, shuffle
 from copy import deepcopy
 
 
-def choose_random_value(values_pool: Container[Any]) -> Any:
+def choose_random_value(values_pool: Set[Any]) -> Any:
     """
     Picks randomly chosen value from 'values_pool'.
 
@@ -28,7 +27,7 @@ def choose_random_value(values_pool: Container[Any]) -> Any:
     return sample(population=values_pool, k=1)[0]
 
 
-def choose_random_values(values_pool: Container[Any], values_number: int) -> List[Any]:
+def choose_random_values(values_pool: Set[Any], values_number: int) -> List[Any]:
     """
     Picks randomly chosen values from 'values_pool'.
 

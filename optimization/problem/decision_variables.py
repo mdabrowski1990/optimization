@@ -1,9 +1,10 @@
 """
-Module with definitions of decision variables (variables for which optimal values we are looking after).
+Decision variables definition.
+
+Decision variables are variables for which optimal values (in certain criteria) are searched.
 Decision variables are main part of optimization problem model.
 """
 
-__author__ = "Maciej Dąbrowski (maciek_dabrowski@o2.pl)"
 __all__ = ["DecisionVariable", "IntegerVariable", "DiscreteVariable", "FloatVariable", "ChoiceVariable"]
 
 
@@ -14,22 +15,16 @@ from optimization.utilities.random_values import generate_random_int, generate_r
 
 
 class DecisionVariable(ABC):
-    """
-    Abstract definition of decision variable.
-    """
+    """Abstract definition of decision variable."""
 
     @abstractmethod
     def generate_random_value(self) -> Any:
-        """
-        :return: Random value according to this Decision Variable definition.
-        """
+        """:return: Random value according to this Decision Variable definition."""
         ...
 
     @abstractmethod
     def is_proper_value(self, value: Any) -> bool:
-        """
-        :return: True if value is compatible with this Decision Variable definition, False otherwise.
-        """
+        """:return: True if value is compatible with this Decision Variable definition, False otherwise."""
         ...
 
     @abstractmethod
@@ -44,8 +39,9 @@ class DecisionVariable(ABC):
 
 class IntegerVariable(DecisionVariable):
     """
-    Integer Decision Variable definition that can be any integer in given range.
-    It is similar to 'DiscreteVariable', but for 'IntegerVariable' step is always 1.
+    Integer Decision Variable definition.
+
+    This class is Decision Variable type of variable that can only take integer value within given range with step 1.
     """
 
     def __init__(self, min_value: int, max_value: int) -> None:
@@ -64,20 +60,17 @@ class IntegerVariable(DecisionVariable):
         if not isinstance(max_value, int):
             raise TypeError(f"Value of 'max_value' parameter is not int type. Actual value: '{max_value}'.")
         if min_value >= max_value:
-            raise ValueError(f"Value of 'min_value' parameter is not less than value of 'max_value' parameter.")
+            raise ValueError(f"Value of 'min_value' parameter is not less than value of 'max_value' parameter. "
+                             f"Actual values: min_value={min_value}, max_value={max_value}.")
         self.min_value = min_value
         self.max_value = max_value
 
     def generate_random_value(self) -> int:
-        """
-        :return: Random value according to this Integer Variable definition.
-        """
+        """:return: Random value according to this Integer Variable definition."""
         return generate_random_int(self.min_value, self.max_value)
 
     def is_proper_value(self, value: Any) -> bool:
-        """
-        :return: True if value is compatible with this Integer Variable definition, False otherwise.
-        """
+        """:return: True if value is compatible with this Integer Variable definition, False otherwise."""
         return isinstance(value, int) and self.min_value <= value <= self.max_value
 
     def get_log_data(self) -> Dict[str, str]:
@@ -95,17 +88,28 @@ class IntegerVariable(DecisionVariable):
 
 class DiscreteVariable(DecisionVariable):
     """
-    Discrete Decision Variable definition that can be any integer or float in given range (with provided step).
-    It is similar to 'IntegerVariable', but its step can be different than 1.
+    Discrete Decision Variable definition.
 
-    !WARNING! This variable has precision issues, you can use 'IntegerVariable' and update objective function.
+    This class is Decision Variable type of variable that can take integer and/or float value within given range with
+    given step. Examples:
+        - odd integer in inclusive range 1-99 (1, 3, 5, ..., 97, 99):
+            min_value=1, max_value=99, step=2
+        - even integer in inclusive range 2-10 (2, 4, 6, 8, 10):
+            min_value=2, max_value=10, step=2
+        - one of values from arithmetic sequence 0, 0.1, 0.2, ..., 9.9, 10:
+            min_value=0, max_value=10, step=0.1
+
+    Note: If step==1 and min_value is int type, then 'IntegerVariable' can be used instead.
+    !WARNING! This variable has precision issues, you can use 'IntegerVariable' and update objective function to
+        properly recalculate the result.
     """
 
     def __init__(self, min_value: Union[int, float], max_value: Union[int, float], step: Union[int, float]) -> None:
         """
         Creates definition of Discrete Decision Variable.
+
         Possible value are equal: [min_value] + [i]*[step]
-        i such that: [min_value] + [i]*[step] <= [max_value]
+        where [i] such that: [min_value] + [i]*[step] <= [max_value]
 
         :param min_value: Minimal value that this variable can store.
         :param max_value: Maximal value that this variable can store.
@@ -130,18 +134,14 @@ class DiscreteVariable(DecisionVariable):
         self.min_value = min_value
         self.max_value = max_value
         self.step = step
-        self._max_rand = (self.max_value - self.min_value) // self.step
+        self._max_rand = int((self.max_value - self.min_value) // self.step)
 
     def generate_random_value(self) -> Union[int, float]:
-        """
-        :return: Random value according to this Discrete Variable definition.
-        """
+        """:return: Random value according to this Discrete Variable definition."""
         return self.min_value + generate_random_int(0, self._max_rand)*self.step
 
     def is_proper_value(self, value: Any) -> bool:
-        """
-        :return: True if value is compatible with this Discrete Variable definition, False otherwise.
-        """
+        """:return: True if value is compatible with this Discrete Variable definition, False otherwise."""
         if isinstance(value, (int, float)) and self.min_value <= value <= self.max_value:
             _rest = (value - self.min_value) % self.step
             return round(_rest, 15) in {self.step, 0.}
@@ -163,7 +163,9 @@ class DiscreteVariable(DecisionVariable):
 
 class FloatVariable(DecisionVariable):
     """
-    Float Decision Variable definition that can be any float in given range.
+    Float Decision Variable definition.
+
+    This class is Decision Variable type of variable that can only take float value within given range.
     """
 
     def __init__(self, min_value: float, max_value: float) -> None:
@@ -182,20 +184,17 @@ class FloatVariable(DecisionVariable):
         if not isinstance(max_value, float):
             raise TypeError(f"Value of 'max_value' parameter is not float type. Actual value: '{max_value}'.")
         if min_value >= max_value:
-            raise ValueError(f"Value of 'min_value' parameter is not less than value of 'max_value' parameter.")
+            raise ValueError(f"Value of 'min_value' parameter is not less than value of 'max_value' parameter. "
+                             f"Actual values: min_value={min_value}, max_value={max_value}.")
         self.min_value = min_value
         self.max_value = max_value
 
     def generate_random_value(self) -> float:
-        """
-        :return: Random value according to this Float Variable definition.
-        """
+        """:return: Random value according to this Float Variable definition."""
         return generate_random_float(self.min_value, self.max_value)
 
     def is_proper_value(self, value: Any) -> bool:
-        """
-        :return: True if value is compatible with this Float Variable definition, False otherwise.
-        """
+        """:return: True if value is compatible with this Float Variable definition, False otherwise."""
         return isinstance(value, float) and self.min_value <= value <= self.max_value
 
     def get_log_data(self) -> Dict[str, str]:
@@ -213,7 +212,9 @@ class FloatVariable(DecisionVariable):
 
 class ChoiceVariable(DecisionVariable):
     """
-    Choice Decision Variable definition that can be any (hashable) value from given iterable.
+    Choice Decision Variable definition.
+
+    This class is Decision Variable type of variable that can take any (hashable) value from given iterable.
     """
 
     def __init__(self, possible_values: Iterable[Any]) -> None:
@@ -227,15 +228,11 @@ class ChoiceVariable(DecisionVariable):
         self.possible_values = set(possible_values)
 
     def generate_random_value(self) -> Any:
-        """
-        :return: Random value according to this Choice Variable definition.
-        """
+        """:return: Random value according to this Choice Variable definition."""
         return choose_random_value(self.possible_values)
 
     def is_proper_value(self, value: Any) -> bool:
-        """
-        :return: True if value is compatible with this Choice Variable definition, False otherwise.
-        """
+        """:return: True if value is compatible with this Choice Variable definition, False otherwise."""
         return value in self.possible_values
 
     def get_log_data(self) -> Dict[str, str]:
