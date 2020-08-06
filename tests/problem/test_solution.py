@@ -23,8 +23,10 @@ class TestSolution:
         self.mock_solution_object_calculate_constraints = Mock()
         self.mock_solution_object_calculate_objective = Mock()
         self.mock_solution_object_calculate_penalty = Mock()
+        self.mock_solution_object_get_objective_value_with_penalty = Mock()
         self.mock_solution_object = Mock(spec=AbstractSolution,
                                          optimization_problem=self.mock_optimization_problem_object,
+                                         get_objective_value_with_penalty=self.mock_solution_object_get_objective_value_with_penalty,
                                          _calculate_objective=self.mock_solution_object_calculate_objective,
                                          _calculate_penalty=self.mock_solution_object_calculate_penalty,
                                          _calculate_constraints=self.mock_solution_object_calculate_constraints)
@@ -153,8 +155,8 @@ class TestSolution:
         self.mock_solution_object_calculate_objective.assert_not_called()
         self.mock_solution_object_calculate_penalty.assert_not_called()
 
-    @pytest.mark.parametrize("objective_value", [1, 2.34])  # todo: update
-    @pytest.mark.parametrize("penalty_value", [954, 534.132])  # todo: update
+    @pytest.mark.parametrize("objective_value", [1, 2.34])
+    @pytest.mark.parametrize("penalty_value", [954, 534.132])
     @pytest.mark.parametrize("optimization_type", [OptimizationType.Minimize, OptimizationType.Maximize])
     def test_get_objective_value_with_penalty__not_calculated(self, objective_value, penalty_value, optimization_type):
         """
@@ -176,3 +178,14 @@ class TestSolution:
         assert AbstractSolution.get_objective_value_with_penalty(self.mock_solution_object) \
             == expected_objective_with_penalty == self.mock_solution_object._objective_value_with_penalty
 
+    # get_log_data
+
+    @pytest.mark.parametrize("objective_value_with_penalty", [12, 6554.62456])
+    def test_get_log_data(self, example_decision_variables, objective_value_with_penalty):
+        self.mock_solution_object.decision_variables_values = example_decision_variables
+        self.mock_solution_object_get_objective_value_with_penalty.return_value = objective_value_with_penalty
+        log_data = AbstractSolution.get_log_data(self.mock_solution_object)
+        assert isinstance(log_data, dict)
+        assert log_data["decision_variables_values"] == example_decision_variables
+        assert log_data["objective_value_with_penalty"] == objective_value_with_penalty
+        self.mock_solution_object_get_objective_value_with_penalty.assert_called_once_with()

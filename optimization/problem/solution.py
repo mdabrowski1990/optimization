@@ -29,8 +29,6 @@ class AbstractSolution(ABC):
 
         :raise ValueError: Unknown decision variable (name of variable is not defined in the optimization problem) or
             incorrect value of decision variable was provided.
-
-        :return: None
         """
         # find values for all variables
         values_to_set = OrderedDict()
@@ -50,6 +48,8 @@ class AbstractSolution(ABC):
         # set attributes
         self.decision_variables_values = values_to_set
         self._objective_value_with_penalty = None
+
+    # todo: implement comparison methods
 
     def _calculate_objective(self) -> Union[float, int]:
         """:return: Value of solution objective without penalty."""
@@ -84,3 +84,14 @@ class AbstractSolution(ABC):
             else:  # only OptimizationType.Maximize value is possible here
                 self._objective_value_with_penalty = self._calculate_objective() - self._calculate_penalty()
         return self._objective_value_with_penalty
+
+    def get_log_data(self) -> Dict[str, Union[dict, int, float]]:
+        """
+        Gets data for logging purposes.
+
+        :return: Dictionary with this Integer Variable crucial data.
+        """
+        return {
+            "decision_variables_values": self.decision_variables_values,
+            "objective_value_with_penalty": self.get_objective_value_with_penalty(),
+        }
