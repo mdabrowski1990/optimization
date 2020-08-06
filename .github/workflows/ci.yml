@@ -12,17 +12,27 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+      -
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v1
       with:
         python-version: ${{ matrix.python-version }}
+
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements_tests.txt
+
     - name: Static code analysis with prospector
       run: |
         prospector --profile prospector_profile.yaml optimization
-    - name: Test with pytest
+
+    - name: Test with pytest and prepare coverage
       run: |
         pytest -m "not random" --cov-report term-missing --cov=optimization tests
+        make test-coverage
+
+    - name: Coveralls
+      uses: coverallsapp/github-action@master
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
