@@ -22,7 +22,7 @@ jobs:
         pip install -r requirements_tests.txt
     - name: Static code analysis with prospector
       run: |
-        prospector --profile prospector_profile.yaml -0 optimization
+        prospector --profile prospector_profile.yaml optimization
     - name: Test with pytest
       run: |
         pytest -m "not random" --cov-report term-missing --cov=optimization tests
