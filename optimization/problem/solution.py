@@ -34,7 +34,7 @@ class AbstractSolution(ABC):
         """
         # find values for all variables
         values_to_set = OrderedDict()
-        for variable_name, variable_definition in self.optimization_problem.decision_variables.items():
+        for variable_name, variable_definition in self.optimization_problem.decision_variables.items():  # type: ignore
             if variable_name in decision_variables_values:
                 value = decision_variables_values.pop(variable_name)
                 if not variable_definition.is_proper_value(value):
