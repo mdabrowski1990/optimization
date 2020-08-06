@@ -49,7 +49,77 @@ class AbstractSolution(ABC):
         self.decision_variables_values = values_to_set
         self._objective_value_with_penalty = None
 
-    # todo: implement comparison methods
+    def __eq__(self, other: Union["AbstractSolution", int, float]) -> bool:
+        """
+        :param other: Solution of the same subclass or value of objective value (int or float type) to compare.
+
+        :raise TypeError: Value of 'other' is not int, float or the same Solution subclass object.
+
+        :return: True if equal, False otherwise.
+        """
+        if isinstance(other, (int, float)):
+            return self.get_objective_value_with_penalty() == other
+        if isinstance(other, self.__class__):
+            return self.get_objective_value_with_penalty() == other.get_objective_value_with_penalty()
+        raise TypeError(f"Cannot compare '{self}' with '{other}'.")
+
+    def __ne__(self, other: Union["AbstractSolution", int, float]) -> bool:
+        """
+        :param other: Solution of the same subclass or value of objective value (int or float type) to compare.
+
+        :raise TypeError: Value of 'other' is not int, float or the same Solution subclass object.
+
+        :return: True if not equal, False otherwise.
+        """
+        return not self.__eq__(other)
+
+    def __le__(self, other: Union["AbstractSolution", int, float]) -> bool:
+        """
+        :param other: Solution of the same subclass or value of objective value (int or float type) to compare.
+
+        :raise TypeError: Value of 'other' is not int, float or the same Solution subclass object.
+
+        :return: True if less or equal than other, False otherwise.
+        """
+        if isinstance(other, (int, float)):
+            return self.get_objective_value_with_penalty() <= other
+        if isinstance(other, self.__class__):
+            return self.get_objective_value_with_penalty() <= other.get_objective_value_with_penalty()
+        raise TypeError(f"Cannot compare '{self}' with '{other}'.")
+
+    def __lt__(self, other: Union["AbstractSolution", int, float]) -> bool:
+        """
+        :param other: Solution of the same subclass or value of objective value (int or float type) to compare.
+
+        :raise TypeError: Value of 'other' is not int, float or the same Solution subclass object.
+
+        :return: True if less than other, False otherwise.
+        """
+        if isinstance(other, (int, float)):
+            return self.get_objective_value_with_penalty() < other
+        if isinstance(other, self.__class__):
+            return self.get_objective_value_with_penalty() < other.get_objective_value_with_penalty()
+        raise TypeError(f"Cannot compare '{self}' with '{other}'.")
+
+    def __ge__(self, other: Union["AbstractSolution", int, float]) -> bool:
+        """
+        :param other: Solution of the same subclass or value of objective value (int or float type) to compare.
+
+        :raise TypeError: Value of 'other' is not int, float or the same Solution subclass object.
+
+        :return: True if greater equal than other, False otherwise.
+        """
+        return not self.__lt__(other)
+
+    def __gt__(self, other: Union["AbstractSolution", int, float]) -> bool:
+        """
+        :param other: Solution of the same subclass or value of objective value (int or float type) to compare.
+
+        :raise TypeError: Value of 'other' is not int, float or the same Solution subclass object.
+
+        :return: True if greater than other, False otherwise.
+        """
+        return not self.__le__(other)
 
     def _calculate_objective(self) -> Union[float, int]:
         """:return: Value of solution objective without penalty."""

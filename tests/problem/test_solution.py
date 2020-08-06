@@ -48,7 +48,8 @@ class TestSolution:
         AbstractSolution.__init__(self=self.mock_solution_object)
         assert isinstance(self.mock_solution_object.decision_variables_values, OrderedDict)
         assert set(self.mock_solution_object.decision_variables_values.keys()) == set(decision_variables_names)
-        assert all([self.mock_solution_object.decision_variables_values[var_name] == self.mock_decision_variable_generate_random_value.return_value
+        assert all([self.mock_solution_object.decision_variables_values[
+                        var_name] == self.mock_decision_variable_generate_random_value.return_value
                     for var_name in decision_variables_names])
         assert self.mock_solution_object._objective_value_with_penalty is None
 
@@ -104,8 +105,10 @@ class TestSolution:
         :param decision_variables_values: Examples values of decision variables to be stored in solution object.
         """
         self.mock_solution_object.decision_variables_values = decision_variables_values
-        assert AbstractSolution._calculate_objective(self.mock_solution_object) == self.mock_optimization_problem_object.objective_function.return_value
-        self.mock_optimization_problem_object.objective_function.assert_called_once_with(**self.mock_solution_object.decision_variables_values)
+        assert AbstractSolution._calculate_objective(
+            self.mock_solution_object) == self.mock_optimization_problem_object.objective_function.return_value
+        self.mock_optimization_problem_object.objective_function.assert_called_once_with(
+            **self.mock_solution_object.decision_variables_values)
 
     # _calculate_constraints
 
@@ -137,7 +140,8 @@ class TestSolution:
         :param constraints_values: Values to be simulated as constraint values.
         """
         self.mock_solution_object_calculate_constraints.return_value = constraints_values
-        assert AbstractSolution._calculate_penalty(self.mock_solution_object) == self.mock_optimization_problem_object.penalty_function.return_value
+        assert AbstractSolution._calculate_penalty(
+            self.mock_solution_object) == self.mock_optimization_problem_object.penalty_function.return_value
         self.mock_optimization_problem_object.penalty_function.assert_called_once_with(**constraints_values)
 
     # get_objective_value_with_penalty
@@ -151,7 +155,8 @@ class TestSolution:
         :param objective_value_with_penalty: Simulated value of objective with penalty.
         """
         self.mock_solution_object._objective_value_with_penalty = objective_value_with_penalty
-        assert AbstractSolution.get_objective_value_with_penalty(self.mock_solution_object) == objective_value_with_penalty
+        assert AbstractSolution.get_objective_value_with_penalty(
+            self.mock_solution_object) == objective_value_with_penalty
         self.mock_solution_object_calculate_objective.assert_not_called()
         self.mock_solution_object_calculate_penalty.assert_not_called()
 
@@ -176,7 +181,7 @@ class TestSolution:
         else:
             expected_objective_with_penalty = objective_value + penalty_value
         assert AbstractSolution.get_objective_value_with_penalty(self.mock_solution_object) \
-            == expected_objective_with_penalty == self.mock_solution_object._objective_value_with_penalty
+               == expected_objective_with_penalty == self.mock_solution_object._objective_value_with_penalty
 
     # get_log_data
 
@@ -189,3 +194,134 @@ class TestSolution:
         assert log_data["decision_variables_values"] == example_decision_variables
         assert log_data["objective_value_with_penalty"] == objective_value_with_penalty
         self.mock_solution_object_get_objective_value_with_penalty.assert_called_once_with()
+
+
+class TestSolutionComparison:
+    """Tests for comparison methods of 'AbstractSolution' class."""
+
+    def setup(self):
+        self.mock_get_objective_value_with_penalty = Mock()
+        self.mock_eq = Mock()
+        self.mock_lt = Mock()
+        self.mock_le = Mock()
+        self.mock_solution_object = Mock(spec=AbstractSolution, __eq__=self.mock_eq, __le__ = self.mock_le,
+                                         __lt__=self.mock_lt,
+                                         get_objective_value_with_penalty=self.mock_get_objective_value_with_penalty)
+
+    # __eq__
+
+    @pytest.mark.parametrize("value", [-765, -564.321321, 0, 0., 1.1, 32])
+    def test_eq__same_vs_float_int(self, value):
+        self.mock_get_objective_value_with_penalty.return_value = value
+        assert AbstractSolution.__eq__(self.mock_solution_object, value) is True
+
+    @pytest.mark.parametrize("value", [-765, -564.321321, 0, 0., 1.1, 32])
+    def test_eq__same_vs_solution(self, value):
+        self.mock_get_objective_value_with_penalty.return_value = value
+        assert AbstractSolution.__eq__(self.mock_solution_object, self.mock_solution_object) is True
+
+    @pytest.mark.parametrize("solution_value_diff", [-321, -0.00000001, 0.00000001, 534])
+    @pytest.mark.parametrize("value", [-765, -564.321321, 0, 0., 1.1, 32])
+    def test_eq__other_vs_float_int(self, value, solution_value_diff):
+        self.mock_get_objective_value_with_penalty.return_value = value + solution_value_diff
+        assert AbstractSolution.__eq__(self.mock_solution_object, value) is False
+
+    @pytest.mark.parametrize("solution_value_diff", [-321, -0.00000001, 0.00000001, 534])
+    @pytest.mark.parametrize("value", [-765, -564.321321, 0, 0., 1.1, 32])
+    def test_eq__other_vs_solution(self, value, solution_value_diff):
+        self.mock_get_objective_value_with_penalty.side_effect = [value, value + solution_value_diff]
+        assert AbstractSolution.__eq__(self.mock_solution_object, self.mock_solution_object) is False
+
+    @pytest.mark.parametrize("other_type", [str, list, dict])
+    def test_eq__invalid_type(self, other_type):
+        with pytest.raises(TypeError):
+            AbstractSolution.__eq__(self.mock_solution_object, Mock(spec=other_type))
+
+    # __le__
+
+    @pytest.mark.parametrize("value", [-765, -564.321321, 0, 0., 1.1, 32])
+    @pytest.mark.parametrize("solution_value_diff", [-101, -5.654, -1, -0.000000000001, 0, 0.])
+    def test_le__less_equal_vs_float_int(self, value, solution_value_diff):
+        self.mock_get_objective_value_with_penalty.return_value = value + solution_value_diff
+        assert AbstractSolution.__le__(self.mock_solution_object, value) is True
+
+    @pytest.mark.parametrize("value", [-765, -564.321321, 0, 0., 1.1, 32])
+    @pytest.mark.parametrize("solution_value_diff", [-101, -5.654, -1, -0.000000000001, 0, 0.])
+    def test_le__less_equal_vs_solution(self, value, solution_value_diff):
+        self.mock_get_objective_value_with_penalty.side_effect = [value + solution_value_diff, value]
+        assert AbstractSolution.__le__(self.mock_solution_object, self.mock_solution_object) is True
+
+    @pytest.mark.parametrize("value", [-765, -564.321321, 0, 0., 1.1, 32])
+    @pytest.mark.parametrize("solution_value_diff", [0.000000000001, 1, 2.2131, 54324])
+    def test_le__greater_vs_float_int(self, value, solution_value_diff):
+        self.mock_get_objective_value_with_penalty.return_value = value + solution_value_diff
+        assert AbstractSolution.__le__(self.mock_solution_object, value) is False
+
+    @pytest.mark.parametrize("value", [-765, -564.321321, 0, 0., 1.1, 32])
+    @pytest.mark.parametrize("solution_value_diff", [0.000000000001, 1, 2.2131, 54324])
+    def test_le__greater_vs_solution(self, value, solution_value_diff):
+        self.mock_get_objective_value_with_penalty.side_effect = [value + solution_value_diff, value]
+        assert AbstractSolution.__le__(self.mock_solution_object, self.mock_solution_object) is False
+
+    @pytest.mark.parametrize("other_type", [str, list, dict])
+    def test_le__invalid_type(self, other_type):
+        with pytest.raises(TypeError):
+            AbstractSolution.__le__(self.mock_solution_object, Mock(spec=other_type))
+
+    # __lt__
+
+    @pytest.mark.parametrize("value", [-765, -564.321321, 0, 0., 1.1, 32])
+    @pytest.mark.parametrize("solution_value_diff", [-101, -5.654, -1, -0.000000000001])
+    def test_lt__less_vs_float_int(self, value, solution_value_diff):
+        self.mock_get_objective_value_with_penalty.return_value = value + solution_value_diff
+        assert AbstractSolution.__lt__(self.mock_solution_object, value) is True
+
+    @pytest.mark.parametrize("value", [-765, -564.321321, 0, 0., 1.1, 32])
+    @pytest.mark.parametrize("solution_value_diff", [-101, -5.654, -1, -0.000000000001])
+    def test_lt__less_vs_solution(self, value, solution_value_diff):
+        self.mock_get_objective_value_with_penalty.side_effect = [value + solution_value_diff, value]
+        assert AbstractSolution.__lt__(self.mock_solution_object, self.mock_solution_object) is True
+
+    @pytest.mark.parametrize("value", [-765, -564.321321, 0, 0., 1.1, 32])
+    @pytest.mark.parametrize("solution_value_diff", [0, 0., 0.000000000001, 1, 2.2131, 54324])
+    def test_lt__greater_equal_vs_float_int(self, value, solution_value_diff):
+        self.mock_get_objective_value_with_penalty.return_value = value + solution_value_diff
+        assert AbstractSolution.__lt__(self.mock_solution_object, value) is False
+
+    @pytest.mark.parametrize("value", [-765, -564.321321, 0, 0., 1.1, 32])
+    @pytest.mark.parametrize("solution_value_diff", [0, 0., 0.000000000001, 1, 2.2131, 54324])
+    def test_lt__greater_equal_vs_solution(self, value, solution_value_diff):
+        self.mock_get_objective_value_with_penalty.side_effect = [value + solution_value_diff, value]
+        assert AbstractSolution.__lt__(self.mock_solution_object, self.mock_solution_object) is False
+
+    @pytest.mark.parametrize("other_type", [str, list, dict])
+    def test_lt__invalid_type(self, other_type):
+        with pytest.raises(TypeError):
+            AbstractSolution.__lt__(self.mock_solution_object, Mock(spec=other_type))
+
+    # __ne__
+
+    @pytest.mark.parametrize("result", [True, False])
+    def test_ne(self, result):
+        self.mock_eq.return_value = not result
+        other = Mock()
+        assert AbstractSolution.__ne__(self.mock_solution_object, other) is result
+        self.mock_eq.assert_called_once_with(other)
+
+    # __ge__
+
+    @pytest.mark.parametrize("result", [True, False])
+    def test_ge(self, result):
+        self.mock_lt.return_value = not result
+        other = Mock()
+        assert AbstractSolution.__ge__(self.mock_solution_object, other) is result
+        self.mock_lt.assert_called_once_with(other)
+
+    # __gt__
+
+    @pytest.mark.parametrize("result", [True, False])
+    def test_gt(self, result):
+        self.mock_le.return_value = not result
+        other = Mock()
+        assert AbstractSolution.__gt__(self.mock_solution_object, other) is result
+        self.mock_le.assert_called_once_with(other)
