@@ -165,6 +165,17 @@ class TestDiscreteVariable:
             DiscreteVariable.__init__(self=self.mock_decision_variable_object,
                                       min_value=min_value, max_value=max_value, step=step)
 
+    @pytest.mark.parametrize("invalid_step", [-1, -0.1, 0])
+    def test_init__step_less_or_equal_zero(self, invalid_step):
+        """
+        Check that 'DiscreteVariable' raises ValueError during init if step <= 0.
+
+        :param invalid_step: Int or float value that is less or equal zero.
+        """
+        with pytest.raises(ValueError):
+            DiscreteVariable.__init__(self=self.mock_decision_variable_object,
+                                      min_value=0, max_value=100, step=invalid_step)
+
     @pytest.mark.parametrize("not_int_float", EXAMPLE_NOT_INT_FLOAT_VALUES)
     def test_init__min_value_invalid_type(self, not_int_float):
         """

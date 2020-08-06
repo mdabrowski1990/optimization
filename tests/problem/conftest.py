@@ -42,19 +42,26 @@ def example_decision_variable():
 
 @pytest.fixture
 def example_decision_variables():
-    """
-    :return: Example value of decision_variables OrderedDict.
-    """
+    """:return: Example value of decision_variables OrderedDict."""
     variables_number = randint(3, 5)
     return OrderedDict([(f"x{i}", example_decision_variable()) for i in range(variables_number)])
 
 
 @pytest.fixture()
-def invalid_decision_variables():
+def invalid_decision_variables__keys_not_str():
     """
-    :return: OrderedDict in similar format to decision_variables but containing invalid data.
+    :return: OrderedDict in similar format to decision_variables but containing invalid data (keys are not str type).
     """
-    return OrderedDict([(1, example_decision_variable()), ("var", 1)])
+    return OrderedDict([(1, example_integer_decision_variable()), (None, example_float_decision_variable())])
+
+
+@pytest.fixture()
+def invalid_decision_variables__values_not_decision_variable():
+    """
+    :return: OrderedDict in similar format to decision_variables but containing invalid data
+    (values are not DecisionVariable type).
+    """
+    return OrderedDict([("a", 1), ("b", 2.)])
 
 
 # ---------------------------------------------------- Constraints --------------------------------------------------- #
@@ -73,19 +80,21 @@ def example_constraint():
 
 @pytest.fixture
 def example_constraints():
-    """
-    :return: Example value of constrains dict.
-    """
+    """:return: Example value of constrains dict."""
     constraints_number = randint(2, 5)
     return {f"c{i}": example_constraint() for i in range(constraints_number)}
 
 
 @pytest.fixture
-def invalid_constraints():
-    """
-    :return: Dict in similar format to constrains but containing invalid data.
-    """
-    return {1: lambda **x: 0, "c": 1}
+def invalid_constraints__keys_not_str():
+    """:return: Dict in similar format to constrains but containing invalid data (keys are not str type)."""
+    return {1: lambda **x: 0, None: lambda **x: 1.}
+
+
+@pytest.fixture
+def invalid_constraints__values_not_callable():
+    """:return: Dict in similar format to constrains but containing invalid data (values are not callable)."""
+    return {"c1": 0, "c2": 1.}
 
 
 # ------------------------------------------------------ Penalty ----------------------------------------------------- #

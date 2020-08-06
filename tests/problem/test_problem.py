@@ -159,14 +159,14 @@ class TestOptimizationProblem:
                                          optimization_type=invalid_optimization_type)
 
     @pytest.mark.parametrize("optimization_type", [OptimizationType.Maximize, OptimizationType.Minimize.value])
-    def test_init__invalid_decision_variables_data(self, invalid_decision_variables, example_constraints,
-                                                   example_penalty_function, example_objective_function,
-                                                   optimization_type):
+    def test_init__invalid_decision_variables_data_1(self, invalid_decision_variables__keys_not_str,
+                                                     example_constraints, example_penalty_function,
+                                                     example_objective_function, optimization_type):
         """
         Test that during initialization of 'OptimizationProblem' will be raised ValueError if one of parameters
         contains valid data.
 
-        :param invalid_decision_variables: Invalid value of 'decision_variables' param.
+        :param invalid_decision_variables__keys_not_str: Invalid value of 'decision_variables' param (keys are not str type).
         :param example_constraints: Example value of 'constraints' param.
         :param example_penalty_function: Example value of 'penalty_function' param.
         :param example_objective_function: Example value of 'objective_function' param.
@@ -174,21 +174,43 @@ class TestOptimizationProblem:
         """
         with pytest.raises(ValueError):
             OptimizationProblem.__init__(self=self.mock_optimization_problem_object,
-                                         decision_variables=invalid_decision_variables,
+                                         decision_variables=invalid_decision_variables__keys_not_str,
                                          constraints=example_constraints, penalty_function=example_penalty_function,
                                          objective_function=example_objective_function,
                                          optimization_type=optimization_type)
 
     @pytest.mark.parametrize("optimization_type", [OptimizationType.Maximize, OptimizationType.Minimize.value])
-    def test_init__invalid_constraints_data(self, example_decision_variables, invalid_constraints,
-                                            example_penalty_function, example_objective_function,
-                                            optimization_type):
+    def test_init__invalid_decision_variables_data_2(self, invalid_decision_variables__values_not_decision_variable,
+                                                     example_constraints, example_penalty_function,
+                                                     example_objective_function, optimization_type):
+        """
+        Test that during initialization of 'OptimizationProblem' will be raised ValueError if one of parameters
+        contains valid data.
+
+        :param invalid_decision_variables__values_not_decision_variable: Invalid value of 'decision_variables' param
+            (values are not DecisionVaraible type).
+        :param example_constraints: Example value of 'constraints' param.
+        :param example_penalty_function: Example value of 'penalty_function' param.
+        :param example_objective_function: Example value of 'objective_function' param.
+        :param optimization_type: Example value of 'optimization_type' param.
+        """
+        with pytest.raises(ValueError):
+            OptimizationProblem.__init__(self=self.mock_optimization_problem_object,
+                                         decision_variables=invalid_decision_variables__values_not_decision_variable,
+                                         constraints=example_constraints, penalty_function=example_penalty_function,
+                                         objective_function=example_objective_function,
+                                         optimization_type=optimization_type)
+
+    @pytest.mark.parametrize("optimization_type", [OptimizationType.Maximize, OptimizationType.Minimize.value])
+    def test_init__invalid_constraints_data_1(self, example_decision_variables, invalid_constraints__keys_not_str,
+                                              example_penalty_function, example_objective_function,
+                                              optimization_type):
         """
         Test that during initialization of 'OptimizationProblem' will be raised ValueError if one of parameters
         contains valid data.
 
         :param example_decision_variables: Example value of 'decision_variables' param.
-        :param invalid_constraints: Invalid value of 'constraints' param.
+        :param invalid_constraints__keys_not_str: Invalid value of 'constraints' param (keys are not str type).
         :param example_penalty_function: Example value of 'penalty_function' param.
         :param example_objective_function: Example value of 'objective_function' param.
         :param optimization_type: Example value of 'optimization_type' param.
@@ -196,7 +218,31 @@ class TestOptimizationProblem:
         with pytest.raises(ValueError):
             OptimizationProblem.__init__(self=self.mock_optimization_problem_object,
                                          decision_variables=example_decision_variables,
-                                         constraints=invalid_constraints, penalty_function=example_penalty_function,
+                                         constraints=invalid_constraints__keys_not_str,
+                                         penalty_function=example_penalty_function,
+                                         objective_function=example_objective_function,
+                                         optimization_type=optimization_type)
+
+    @pytest.mark.parametrize("optimization_type", [OptimizationType.Maximize, OptimizationType.Minimize.value])
+    def test_init__invalid_constraints_data_2(self, example_decision_variables,
+                                              invalid_constraints__values_not_callable,
+                                              example_penalty_function, example_objective_function,
+                                              optimization_type):
+        """
+        Test that during initialization of 'OptimizationProblem' will be raised ValueError if one of parameters
+        contains valid data.
+
+        :param example_decision_variables: Example value of 'decision_variables' param.
+        :param invalid_constraints__values_not_callable: Invalid value of 'constraints' param (values are not callable).
+        :param example_penalty_function: Example value of 'penalty_function' param.
+        :param example_objective_function: Example value of 'objective_function' param.
+        :param optimization_type: Example value of 'optimization_type' param.
+        """
+        with pytest.raises(ValueError):
+            OptimizationProblem.__init__(self=self.mock_optimization_problem_object,
+                                         decision_variables=example_decision_variables,
+                                         constraints=invalid_constraints__values_not_callable,
+                                         penalty_function=example_penalty_function,
                                          objective_function=example_objective_function,
                                          optimization_type=optimization_type)
 
