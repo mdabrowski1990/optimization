@@ -3,7 +3,7 @@ name: Automatic tests execution
 on: [push, pull_request]
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
     strategy:
       matrix:
