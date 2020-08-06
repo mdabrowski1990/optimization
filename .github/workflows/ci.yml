@@ -9,7 +9,7 @@ jobs:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
         python-version: [3.7, 3.8]
-    
+
     steps:
     - uses: actions/checkout@v2
 
@@ -27,12 +27,23 @@ jobs:
       run: |
         prospector --profile prospector_profile.yaml optimization
 
-    - name: Test with pytest and prepare coverage
+    - name: Test with pytest
       run: |
         pytest -m "not random" --cov-report term-missing --cov=optimization tests
-        make test-coverage
 
     - name: Coveralls
       uses: coverallsapp/github-action@master
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
+        flag-name: ${{matrix.os}}-python-${{ matrix.python-version }}
+        parallel: true
+
+  finish:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Coveralls Finished
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          parallel-finished: true
