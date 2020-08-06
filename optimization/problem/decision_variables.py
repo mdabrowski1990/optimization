@@ -28,7 +28,7 @@ class DecisionVariable(ABC):
         ...
 
     @abstractmethod
-    def get_log_data(self) -> Dict[str, str]:
+    def get_log_data(self) -> Dict[str, Any]:
         """
         Gets data for logging purposes.
 

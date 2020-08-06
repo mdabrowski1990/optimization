@@ -49,7 +49,9 @@ class AbstractSolution(ABC):
         self.decision_variables_values = values_to_set
         self._objective_value_with_penalty = None
 
-    def __eq__(self, other: Union["AbstractSolution", int, float]) -> bool:
+    # TODO: Consider only the same type as valid in case of comparison: type(self) == type(other)
+
+    def __eq__(self, other: object) -> bool:
         """
         :param other: Solution of the same subclass or value of objective value (int or float type) to compare.
 
@@ -63,7 +65,7 @@ class AbstractSolution(ABC):
             return self.get_objective_value_with_penalty() == other.get_objective_value_with_penalty()
         raise TypeError(f"Cannot compare '{self}' with '{other}'.")
 
-    def __ne__(self, other: Union["AbstractSolution", int, float]) -> bool:
+    def __ne__(self, other: object) -> bool:
         """
         :param other: Solution of the same subclass or value of objective value (int or float type) to compare.
 
@@ -73,7 +75,7 @@ class AbstractSolution(ABC):
         """
         return not self.__eq__(other)
 
-    def __le__(self, other: Union["AbstractSolution", int, float]) -> bool:
+    def __le__(self, other: object) -> bool:
         """
         :param other: Solution of the same subclass or value of objective value (int or float type) to compare.
 
@@ -87,7 +89,7 @@ class AbstractSolution(ABC):
             return self.get_objective_value_with_penalty() <= other.get_objective_value_with_penalty()
         raise TypeError(f"Cannot compare '{self}' with '{other}'.")
 
-    def __lt__(self, other: Union["AbstractSolution", int, float]) -> bool:
+    def __lt__(self, other: object) -> bool:
         """
         :param other: Solution of the same subclass or value of objective value (int or float type) to compare.
 
@@ -101,7 +103,7 @@ class AbstractSolution(ABC):
             return self.get_objective_value_with_penalty() < other.get_objective_value_with_penalty()
         raise TypeError(f"Cannot compare '{self}' with '{other}'.")
 
-    def __ge__(self, other: Union["AbstractSolution", int, float]) -> bool:
+    def __ge__(self, other: object) -> bool:
         """
         :param other: Solution of the same subclass or value of objective value (int or float type) to compare.
 
@@ -111,7 +113,7 @@ class AbstractSolution(ABC):
         """
         return not self.__lt__(other)
 
-    def __gt__(self, other: Union["AbstractSolution", int, float]) -> bool:
+    def __gt__(self, other: object) -> bool:
         """
         :param other: Solution of the same subclass or value of objective value (int or float type) to compare.
 
