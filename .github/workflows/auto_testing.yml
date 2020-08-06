@@ -25,4 +25,4 @@ jobs:
         prospector --profile prospector_profile.yaml -0 optimization
     - name: Test with pytest
       run: |
-        pytest -m "not random" tests
+        pytest -m "not random" --cov-report term-missing --cov=optimization tests
