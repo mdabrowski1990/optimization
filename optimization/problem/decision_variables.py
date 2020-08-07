@@ -238,5 +238,5 @@ class ChoiceVariable(DecisionVariable):
         """
         return {
             "type": self.__class__.__name__,
-            "possible_values": ", ".join([str(value) for value in self.possible_values]),
+            "possible_values": ", ".join([repr(value) for value in self.possible_values]),
         }

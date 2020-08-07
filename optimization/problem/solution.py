@@ -169,7 +169,7 @@ class AbstractSolution(ABC):
         """
         Gets data for logging purposes.
 
-        :return: Dictionary with this Integer Variable crucial data.
+        :return: Dictionary with this Solution crucial data.
         """
         return {
             "decision_variables_values": self.decision_variables_values,

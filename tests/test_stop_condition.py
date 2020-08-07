@@ -347,3 +347,23 @@ class TestStopConditions:
         mock_start_time = Mock()
         assert StopCondition.is_achieved(self=self.mock_stop_condition_object, start_time=mock_start_time,
                                          best_solution=self.mock_solution_object) is expected_result
+
+    @pytest.mark.parametrize("time_limit", [timedelta(days=1), timedelta(hours=5)])
+    @pytest.mark.parametrize("satisfying_objective_value", [None, 0, 2.321, -453])
+    @pytest.mark.parametrize("max_iter_without_progress", [None, 1, 54])
+    @pytest.mark.parametrize("max_time_without_progress", [None, timedelta(seconds=5), timedelta(hours=1)])
+    def test_get_log_data(self, time_limit, satisfying_objective_value, max_iter_without_progress,
+                          max_time_without_progress):
+        """
+        Test 'log_data' return dictionary with proper data.
+        """
+        self.mock_stop_condition_object.time_limit = time_limit
+        self.mock_stop_condition_object.satisfying_objective_value = satisfying_objective_value
+        self.mock_stop_condition_object.max_iter_without_progress = max_iter_without_progress
+        self.mock_stop_condition_object.max_time_without_progress = max_time_without_progress
+        log_data = StopCondition.get_log_data(self.mock_stop_condition_object)
+        assert isinstance(log_data, dict)
+        assert "time_limit" in log_data
+        assert "satisfying_objective_value" in log_data
+        assert "max_iter_without_progress" in log_data
+        assert "max_time_without_progress" in log_data

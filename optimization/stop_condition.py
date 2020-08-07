@@ -2,7 +2,8 @@
 
 __all__ = ["StopCondition"]
 
-from typing import Optional, Union
+
+from typing import Optional, Union, Dict
 from datetime import timedelta, datetime
 
 from .problem.solution import AbstractSolution
@@ -132,3 +133,16 @@ class StopCondition:
         return any([self._is_time_exceeded(start_time=start_time),
                     self._is_satisfying_solution_found(best_solution=best_solution),
                     self._is_limit_without_progress_exceeded(best_solution=best_solution)])
+
+    def get_log_data(self) -> Dict[str, Union[str, int, float, None]]:
+        """
+        Gets data for logging purposes.
+
+        :return: Dictionary with this Stop Conditions crucial data.
+        """
+        return {
+            "time_limit": str(self.time_limit),
+            "satisfying_objective_value": self.satisfying_objective_value,
+            "max_iter_without_progress": self.max_iter_without_progress,
+            "max_time_without_progress": str(self.max_time_without_progress)
+        }
