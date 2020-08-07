@@ -31,3 +31,5 @@ pep257:
 
 mypy:
   run: true
+  options:
+    ignore-missing-imports: true

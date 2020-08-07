@@ -92,7 +92,7 @@ but also having in mind defined step. Examples:
     choice_var = optimization.ChoiceVariable(possible_values={0, 1.25, 6.5, 987})
     ```
 
-### Optimization algorithms stop conditions definition
+### Stop conditions
 Before we can start an optimization process, it is necessary to determine when to stop it.
 Using this package you can define stop conditions object that will help you to stop further optimization in one of 
 following cases that you can configure:
