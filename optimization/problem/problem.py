@@ -41,8 +41,6 @@ class OptimizationProblem:
 
         :raise TypeError: For some parameter a value has incorrect type.
         :raise ValueError: For some parameter a value is incorrect.
-
-        :return: None
         """
         # check: decision_variables
         if not isinstance(decision_variables, OrderedDict):

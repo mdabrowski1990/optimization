@@ -28,7 +28,7 @@ class DecisionVariable(ABC):
         ...
 
     @abstractmethod
-    def get_log_data(self) -> Dict[str, str]:
+    def get_log_data(self) -> Dict[str, Any]:
         """
         Gets data for logging purposes.
 
@@ -53,7 +53,6 @@ class IntegerVariable(DecisionVariable):
 
         :raise TypeError: Parameter 'min_value' or 'max_value' is not int type.
         :raise ValueError: Value of parameter 'min_value' is greater or equal value of 'max_value'.
-        :return: None
         """
         if not isinstance(min_value, int):
             raise TypeError(f"Value of 'min_value' parameter is not int type. Actual value: '{min_value}'.")
@@ -73,7 +72,7 @@ class IntegerVariable(DecisionVariable):
         """:return: True if value is compatible with this Integer Variable definition, False otherwise."""
         return isinstance(value, int) and self.min_value <= value <= self.max_value
 
-    def get_log_data(self) -> Dict[str, str]:
+    def get_log_data(self) -> Dict[str, Union[str, int]]:
         """
         Gets data for logging purposes.
 
@@ -81,8 +80,8 @@ class IntegerVariable(DecisionVariable):
         """
         return {
             "type": self.__class__.__name__,
-            "min_value": str(self.min_value),
-            "max_value": str(self.max_value),
+            "min_value": self.min_value,
+            "max_value": self.max_value,
         }
 
 
@@ -118,7 +117,6 @@ class DiscreteVariable(DecisionVariable):
         :raise TypeError: Parameter 'min_value' or 'max_value' is not int or float type.
         :raise ValueError: Value of parameter 'min_value' is greater or equal value of 'max_value'
             or 'step' is lower equal 0.
-        :return: None
         """
         if not isinstance(min_value, (int, float)):
             raise TypeError(f"Value of 'min_value' parameter is not int nor float type. Actual value: '{min_value}'.")
@@ -147,7 +145,7 @@ class DiscreteVariable(DecisionVariable):
             return round(_rest, 15) in {self.step, 0.}
         return False
 
-    def get_log_data(self) -> Dict[str, str]:
+    def get_log_data(self) -> Dict[str, Union[str, float, int]]:
         """
         Gets data for logging purposes.
 
@@ -155,9 +153,9 @@ class DiscreteVariable(DecisionVariable):
         """
         return {
             "type": self.__class__.__name__,
-            "min_value": str(self.min_value),
-            "max_value": str(self.max_value),
-            "step": str(self.step),
+            "min_value": self.min_value,
+            "max_value": self.max_value,
+            "step": self.step,
         }
 
 
@@ -177,7 +175,6 @@ class FloatVariable(DecisionVariable):
 
         :raise TypeError: Parameter 'min_value' or 'max_value' is not float type.
         :raise ValueError: Value of parameter 'min_value' is greater  equal value of 'max_value'.
-        :return: None
         """
         if not isinstance(min_value, float):
             raise TypeError(f"Value of 'min_value' parameter is not float type. Actual value: '{min_value}'.")
@@ -197,7 +194,7 @@ class FloatVariable(DecisionVariable):
         """:return: True if value is compatible with this Float Variable definition, False otherwise."""
         return isinstance(value, float) and self.min_value <= value <= self.max_value
 
-    def get_log_data(self) -> Dict[str, str]:
+    def get_log_data(self) -> Dict[str, Union[str, float]]:
         """
         Gets data for logging purposes.
 
@@ -205,8 +202,8 @@ class FloatVariable(DecisionVariable):
         """
         return {
             "type": self.__class__.__name__,
-            "min_value": str(self.min_value),
-            "max_value": str(self.max_value),
+            "min_value": self.min_value,
+            "max_value": self.max_value,
         }
 
 
@@ -222,8 +219,6 @@ class ChoiceVariable(DecisionVariable):
         Creates definition of Choice Decision Variable.
 
         :param possible_values: Iterable with possible values to set for this Decision Variable.
-
-        :return: None
         """
         self.possible_values = set(possible_values)
 
@@ -243,5 +238,5 @@ class ChoiceVariable(DecisionVariable):
         """
         return {
             "type": self.__class__.__name__,
-            "possible_values": ", ".join([str(value) for value in self.possible_values]),
+            "possible_values": ", ".join([repr(value) for value in self.possible_values]),
         }

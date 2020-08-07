@@ -14,3 +14,4 @@ __author__ = "Maciej Dąbrowski (maciek_dabrowski@o2.pl)"
 
 from .problem import OptimizationProblem, OptimizationType, IntegerVariable, DiscreteVariable, FloatVariable, \
     ChoiceVariable
+from .stop_condition import StopCondition
