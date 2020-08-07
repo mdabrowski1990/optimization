@@ -108,7 +108,7 @@ class StopCondition:
         :return: True if maximal number of iteration without progress exceeded, otherwise False.
         """
         return self.max_iter_without_progress is not None \
-            and self._iter_without_progress > self.max_iter_without_progress
+            and self._iter_without_progress > self.max_iter_without_progress  # type: ignore
 
     def _is_time_without_progress_exceeded(self) -> bool:
         """
@@ -117,7 +117,7 @@ class StopCondition:
         :return: True if maximal time without progress exceeded, otherwise False.
         """
         return self.max_time_without_progress is not None \
-            and datetime.now() - self._last_objective_progress_datetime > self.max_time_without_progress
+            and datetime.now() - self._last_objective_progress_datetime > self.max_time_without_progress  # type: ignore
 
     def is_achieved(self, start_time: datetime, best_solution: AbstractSolution) -> bool:
         """

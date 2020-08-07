@@ -204,97 +204,90 @@ class TestSolutionComparison:
         self.mock_eq = Mock()
         self.mock_lt = Mock()
         self.mock_le = Mock()
-        self.mock_solution_object = Mock(spec=AbstractSolution, __eq__=self.mock_eq, __le__ = self.mock_le,
-                                         __lt__=self.mock_lt,
+        self.mock_optimization_problem = Mock()
+        self.mock_solution_object = Mock(spec=AbstractSolution, __eq__=self.mock_eq, __le__=self.mock_le,
+                                         __lt__=self.mock_lt, optimization_problem=self.mock_optimization_problem,
                                          get_objective_value_with_penalty=self.mock_get_objective_value_with_penalty)
 
     # __eq__
 
-    @pytest.mark.parametrize("value", [-765, -564.321321, 0, 0., 1.1, 32])
-    def test_eq__same_vs_float_int(self, value):
-        self.mock_get_objective_value_with_penalty.return_value = value
-        assert AbstractSolution.__eq__(self.mock_solution_object, value) is True
-
-    @pytest.mark.parametrize("value", [-765, -564.321321, 0, 0., 1.1, 32])
-    def test_eq__same_vs_solution(self, value):
+    @pytest.mark.parametrize("value", [0, -100, -0.453, 0., 232, 432.432])
+    def test_eq__same(self, value):
         self.mock_get_objective_value_with_penalty.return_value = value
         assert AbstractSolution.__eq__(self.mock_solution_object, self.mock_solution_object) is True
 
-    @pytest.mark.parametrize("solution_value_diff", [-321, -0.00000001, 0.00000001, 534])
-    @pytest.mark.parametrize("value", [-765, -564.321321, 0, 0., 1.1, 32])
-    def test_eq__other_vs_float_int(self, value, solution_value_diff):
-        self.mock_get_objective_value_with_penalty.return_value = value + solution_value_diff
-        assert AbstractSolution.__eq__(self.mock_solution_object, value) is False
-
-    @pytest.mark.parametrize("solution_value_diff", [-321, -0.00000001, 0.00000001, 534])
-    @pytest.mark.parametrize("value", [-765, -564.321321, 0, 0., 1.1, 32])
-    def test_eq__other_vs_solution(self, value, solution_value_diff):
-        self.mock_get_objective_value_with_penalty.side_effect = [value, value + solution_value_diff]
+    @pytest.mark.parametrize("values", [(0, 1), (-100, -99.9), (-0.453, -0.454), (2, 1)])
+    def test_eq__other(self, values):
+        self.mock_get_objective_value_with_penalty.side_effect = values
         assert AbstractSolution.__eq__(self.mock_solution_object, self.mock_solution_object) is False
 
-    @pytest.mark.parametrize("other_type", [str, list, dict])
+    @pytest.mark.parametrize("other_type", [int, float, str, list, dict])
     def test_eq__invalid_type(self, other_type):
         with pytest.raises(TypeError):
             AbstractSolution.__eq__(self.mock_solution_object, Mock(spec=other_type))
 
     # __le__
 
-    @pytest.mark.parametrize("value", [-765, -564.321321, 0, 0., 1.1, 32])
-    @pytest.mark.parametrize("solution_value_diff", [-101, -5.654, -1, -0.000000000001, 0, 0.])
-    def test_le__less_equal_vs_float_int(self, value, solution_value_diff):
-        self.mock_get_objective_value_with_penalty.return_value = value + solution_value_diff
-        assert AbstractSolution.__le__(self.mock_solution_object, value) is True
-
-    @pytest.mark.parametrize("value", [-765, -564.321321, 0, 0., 1.1, 32])
-    @pytest.mark.parametrize("solution_value_diff", [-101, -5.654, -1, -0.000000000001, 0, 0.])
-    def test_le__less_equal_vs_solution(self, value, solution_value_diff):
-        self.mock_get_objective_value_with_penalty.side_effect = [value + solution_value_diff, value]
+    @pytest.mark.parametrize("optimization_type, values", [
+        (OptimizationType.Maximize, (0, 0)),
+        (OptimizationType.Maximize, (-123.456, -123.456)),
+        (OptimizationType.Maximize, (-9.54, -9.53)),
+        (OptimizationType.Maximize, (-12, 5.21)),
+        (OptimizationType.Minimize, (0, 0)),
+        (OptimizationType.Minimize, (-123.456, -123.456)),
+        (OptimizationType.Minimize, (-9.54, -9.55)),
+        (OptimizationType.Minimize, (12, -5.21)),
+    ])
+    def test_le__true(self, optimization_type, values):
+        self.mock_solution_object.optimization_problem.optimization_type = optimization_type
+        self.mock_get_objective_value_with_penalty.side_effect = values
         assert AbstractSolution.__le__(self.mock_solution_object, self.mock_solution_object) is True
 
-    @pytest.mark.parametrize("value", [-765, -564.321321, 0, 0., 1.1, 32])
-    @pytest.mark.parametrize("solution_value_diff", [0.000000000001, 1, 2.2131, 54324])
-    def test_le__greater_vs_float_int(self, value, solution_value_diff):
-        self.mock_get_objective_value_with_penalty.return_value = value + solution_value_diff
-        assert AbstractSolution.__le__(self.mock_solution_object, value) is False
-
-    @pytest.mark.parametrize("value", [-765, -564.321321, 0, 0., 1.1, 32])
-    @pytest.mark.parametrize("solution_value_diff", [0.000000000001, 1, 2.2131, 54324])
-    def test_le__greater_vs_solution(self, value, solution_value_diff):
-        self.mock_get_objective_value_with_penalty.side_effect = [value + solution_value_diff, value]
+    @pytest.mark.parametrize("optimization_type, values", [
+        (OptimizationType.Maximize, (-123.456, -123.457)),
+        (OptimizationType.Maximize, (5.21, -12)),
+        (OptimizationType.Minimize, (-9.54, -9.53)),
+        (OptimizationType.Minimize, (-5.21, 12)),
+    ])
+    def test_le__false(self, optimization_type, values):
+        self.mock_solution_object.optimization_problem.optimization_type = optimization_type
+        self.mock_get_objective_value_with_penalty.side_effect = values
         assert AbstractSolution.__le__(self.mock_solution_object, self.mock_solution_object) is False
 
-    @pytest.mark.parametrize("other_type", [str, list, dict])
+    @pytest.mark.parametrize("other_type", [int, float, str, list, dict])
     def test_le__invalid_type(self, other_type):
         with pytest.raises(TypeError):
             AbstractSolution.__le__(self.mock_solution_object, Mock(spec=other_type))
 
     # __lt__
 
-    @pytest.mark.parametrize("value", [-765, -564.321321, 0, 0., 1.1, 32])
-    @pytest.mark.parametrize("solution_value_diff", [-101, -5.654, -1, -0.000000000001])
-    def test_lt__less_vs_float_int(self, value, solution_value_diff):
-        self.mock_get_objective_value_with_penalty.return_value = value + solution_value_diff
-        assert AbstractSolution.__lt__(self.mock_solution_object, value) is True
-
-    @pytest.mark.parametrize("value", [-765, -564.321321, 0, 0., 1.1, 32])
-    @pytest.mark.parametrize("solution_value_diff", [-101, -5.654, -1, -0.000000000001])
-    def test_lt__less_vs_solution(self, value, solution_value_diff):
-        self.mock_get_objective_value_with_penalty.side_effect = [value + solution_value_diff, value]
+    @pytest.mark.parametrize("optimization_type, values", [
+        (OptimizationType.Maximize, (-9.54, -9.53)),
+        (OptimizationType.Maximize, (-12, 5.21)),
+        (OptimizationType.Minimize, (-9.54, -9.55)),
+        (OptimizationType.Minimize, (12, -5.21)),
+    ])
+    def test_lt__true(self, optimization_type, values):
+        self.mock_solution_object.optimization_problem.optimization_type = optimization_type
+        self.mock_get_objective_value_with_penalty.side_effect = values
         assert AbstractSolution.__lt__(self.mock_solution_object, self.mock_solution_object) is True
 
-    @pytest.mark.parametrize("value", [-765, -564.321321, 0, 0., 1.1, 32])
-    @pytest.mark.parametrize("solution_value_diff", [0, 0., 0.000000000001, 1, 2.2131, 54324])
-    def test_lt__greater_equal_vs_float_int(self, value, solution_value_diff):
-        self.mock_get_objective_value_with_penalty.return_value = value + solution_value_diff
-        assert AbstractSolution.__lt__(self.mock_solution_object, value) is False
-
-    @pytest.mark.parametrize("value", [-765, -564.321321, 0, 0., 1.1, 32])
-    @pytest.mark.parametrize("solution_value_diff", [0, 0., 0.000000000001, 1, 2.2131, 54324])
-    def test_lt__greater_equal_vs_solution(self, value, solution_value_diff):
-        self.mock_get_objective_value_with_penalty.side_effect = [value + solution_value_diff, value]
+    @pytest.mark.parametrize("optimization_type, values", [
+        (OptimizationType.Maximize, (0, 0)),
+        (OptimizationType.Maximize, (-123.456, -123.456)),
+        (OptimizationType.Maximize, (-123.456, -123.457)),
+        (OptimizationType.Maximize, (5.21, -12)),
+        (OptimizationType.Minimize, (0, 0)),
+        (OptimizationType.Minimize, (-123.456, -123.456)),
+        (OptimizationType.Minimize, (-9.54, -9.53)),
+        (OptimizationType.Minimize, (-5.21, 12)),
+    ])
+    def test_lt__false(self, optimization_type, values):
+        self.mock_solution_object.optimization_problem.optimization_type = optimization_type
+        self.mock_get_objective_value_with_penalty.side_effect = values
         assert AbstractSolution.__lt__(self.mock_solution_object, self.mock_solution_object) is False
 
-    @pytest.mark.parametrize("other_type", [str, list, dict])
+    @pytest.mark.parametrize("other_type", [int, float, str, list, dict])
     def test_lt__invalid_type(self, other_type):
         with pytest.raises(TypeError):
             AbstractSolution.__lt__(self.mock_solution_object, Mock(spec=other_type))

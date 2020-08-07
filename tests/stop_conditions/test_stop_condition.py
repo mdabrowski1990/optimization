@@ -11,7 +11,17 @@ class TestStopConditions:
     SCRIPT_LOCATION = "optimization.stop_condition"
 
     def setup(self):
-        self.mock_stop_condition_object = Mock(spec=StopCondition)
+        self.mock_is_time_exceeded = Mock()
+        self.mock_is_satisfying_solution_found = Mock()
+        self.mock_is_iter_without_progress_exceeded = Mock()
+        self.mock_is_time_without_progress_exceeded = Mock()
+        self.mock_is_limit_without_progress_exceeded = Mock()
+        self.mock_stop_condition_object = Mock(spec=StopCondition,
+                                               _is_time_exceeded=self.mock_is_time_exceeded,
+                                               _is_satisfying_solution_found=self.mock_is_satisfying_solution_found,
+                                               _is_iter_without_progress_exceeded=self.mock_is_iter_without_progress_exceeded,
+                                               _is_time_without_progress_exceeded=self.mock_is_time_without_progress_exceeded,
+                                               _is_limit_without_progress_exceeded=self.mock_is_limit_without_progress_exceeded)
         self.mock_get_objective_value_with_penalty = Mock()
         self.mock_solution_object = Mock(get_objective_value_with_penalty=self.mock_get_objective_value_with_penalty)
         self.mock_datetime_now = Mock()
@@ -91,8 +101,16 @@ class TestStopConditions:
             StopCondition.__init__(self=self.mock_stop_condition_object, time_limit=mock_time_limit,
                                    max_iter_without_progress=invalid_max_iter_without_progress)
 
+    @pytest.mark.parametrize("invalid_max_iter_without_progress", [0, -1, -10])
+    def test_init__max_iter_without_progress_incorrect_value(self, invalid_max_iter_without_progress):
+        """Test 'StopCondition' initialization with invalid value of 'max_iter_without_progress' parameter."""
+        mock_time_limit = Mock(spec=timedelta, __le__=Mock(return_value=False))
+        with pytest.raises(ValueError):
+            StopCondition.__init__(self=self.mock_stop_condition_object, time_limit=mock_time_limit,
+                                   max_iter_without_progress=invalid_max_iter_without_progress)
+
     @pytest.mark.parametrize("invalid_max_time_without_progress", ["some value", 0, 1.1])
-    def test_init__max_iter_without_progress_incorrect_type(self, invalid_max_time_without_progress):
+    def test_init__max_time_without_progress_incorrect_type(self, invalid_max_time_without_progress):
         """Test 'StopCondition' initialization with invalid type of 'max_time_without_progress' parameter."""
         mock_time_limit = Mock(spec=timedelta, __le__=Mock(return_value=False))
         with pytest.raises(TypeError):
@@ -224,12 +242,108 @@ class TestStopConditions:
         assert StopCondition._is_limit_without_progress_exceeded(self=self.mock_stop_condition_object,
                                                                  best_solution=Mock()) is False
 
-    def test_is_limit_without_progress_exceeded__better_solution_found(self):
-        # todo: prepare the test
+    @pytest.mark.parametrize("max_iter_without_progress, max_time_without_progress", [(2, None), (None, 2), (10, 10)])
+    @pytest.mark.parametrize("best_objective_found, new_objective", [(None, -10), (-231, -230.999), (1.1, 2321)])
+    @pytest.mark.parametrize("is_iter_exceeded, is_time_exceeded, expected_result", [
+        (True, True, True),
+        (True, False, True),
+        (False, True, True),
+        (False, False, False)
+    ])
+    def test_is_limit_without_progress_exceeded__better_solution_found(self, max_iter_without_progress,
+                                                                       max_time_without_progress, best_objective_found,
+                                                                       new_objective, is_iter_exceeded,
+                                                                       is_time_exceeded, expected_result):
+        """
+        Test '_is_limit_without_progress_exceeded' when better solution is found in this iteration.
+
+        :param max_iter_without_progress: Example value of 'max_iter_without_progress'.
+        :param max_time_without_progress: Example value of 'max_time_without_progress'.
+        :param best_objective_found: Example value of currently best solution.
+        :param new_objective: Value of newly found best solution.
+        :param is_iter_exceeded: Value to be returned by '_is_iter_without_progress_exceeded' method.
+        :param is_time_exceeded: Value to be returned by '_is_time_without_progress_exceeded' method.
+        :param expected_result: Expected result from '_is_limit_without_progress_exceeded' method.
+        """
+        self.mock_stop_condition_object.max_iter_without_progress = max_iter_without_progress
+        self.mock_stop_condition_object.max_time_without_progress = max_time_without_progress
+        self.mock_stop_condition_object._best_objective_found = best_objective_found
+        self.mock_get_objective_value_with_penalty.return_value = new_objective
+        self.mock_is_iter_without_progress_exceeded.return_value = is_iter_exceeded
+        self.mock_is_time_without_progress_exceeded.return_value = is_time_exceeded
+        assert StopCondition._is_limit_without_progress_exceeded(self=self.mock_stop_condition_object,
+                                                                 best_solution=self.mock_solution_object) is expected_result
         assert self.mock_stop_condition_object._iter_without_progress == 0
         assert self.mock_stop_condition_object._last_objective_progress_datetime == self.mock_datetime_now.return_value
         assert self.mock_stop_condition_object._best_objective_found == self.mock_get_objective_value_with_penalty.return_value
 
-    def test_is_limit_without_progress_exceeded__better_solution_not_found(self):
-        # todo: prepare the test
-        pass
+    @pytest.mark.parametrize("max_iter_without_progress, max_time_without_progress", [(2, None), (None, 2), (10, 10)])
+    @pytest.mark.parametrize("iter_without_progress", [0, 1, 5])
+    @pytest.mark.parametrize("last_progress_time", ["some date", 0])
+    @pytest.mark.parametrize("best_objective_found, new_objective", [(-231, -231), (1.1, 1.09999), (0.12345, -9387)])
+    @pytest.mark.parametrize("is_iter_exceeded, is_time_exceeded, expected_result", [
+        (True, True, True),
+        (True, False, True),
+        (False, True, True),
+        (False, False, False)
+    ])
+    def test_is_limit_without_progress_exceeded__better_solution_not_found(self, max_iter_without_progress,
+                                                                           max_time_without_progress,
+                                                                           iter_without_progress, last_progress_time,
+                                                                           best_objective_found, new_objective,
+                                                                           is_iter_exceeded, is_time_exceeded,
+                                                                           expected_result):
+        """
+        Test '_is_limit_without_progress_exceeded' when better solution is not found in this iteration.
+
+        :param max_iter_without_progress: Example value of 'max_iter_without_progress'.
+        :param max_time_without_progress: Example value of 'max_time_without_progress'.
+        :param iter_without_progress: Example value of '_iter_without_progress'.
+        :param last_progress_time: Example value of '_last_objective_progress_datetime'.
+        :param best_objective_found: Example value of currently best solution.
+        :param new_objective: Value of newly found best solution.
+        :param is_iter_exceeded: Value to be returned by '_is_iter_without_progress_exceeded' method.
+        :param is_time_exceeded: Value to be returned by '_is_time_without_progress_exceeded' method.
+        :param expected_result: Expected result from '_is_limit_without_progress_exceeded' method.
+        """
+        self.mock_stop_condition_object.max_iter_without_progress = max_iter_without_progress
+        self.mock_stop_condition_object.max_time_without_progress = max_time_without_progress
+        self.mock_stop_condition_object._iter_without_progress = iter_without_progress
+        self.mock_stop_condition_object._last_objective_progress_datetime = last_progress_time
+        self.mock_stop_condition_object._best_objective_found = best_objective_found
+        self.mock_get_objective_value_with_penalty.return_value = new_objective
+        self.mock_is_iter_without_progress_exceeded.return_value = is_iter_exceeded
+        self.mock_is_time_without_progress_exceeded.return_value = is_time_exceeded
+        assert StopCondition._is_limit_without_progress_exceeded(self=self.mock_stop_condition_object,
+                                                                 best_solution=self.mock_solution_object) is expected_result
+        assert self.mock_stop_condition_object._iter_without_progress == iter_without_progress + 1
+        assert self.mock_stop_condition_object._best_objective_found == best_objective_found
+        assert self.mock_stop_condition_object._last_objective_progress_datetime == last_progress_time
+
+    # is_achieved
+
+    @pytest.mark.parametrize("is_time_exceeded, is_satisfying_solution_found, is_limit_without_progress_exceeded, "
+                             "expected_result", [
+                                 (True, True, True, True),
+                                 (True, False, False, True),
+                                 (False, True, False, True),
+                                 (False, False, True, True),
+                                 (False, False, False, False),
+                             ])
+    def test_is_achieved(self, is_time_exceeded, is_satisfying_solution_found, is_limit_without_progress_exceeded,
+                         expected_result):
+        """
+        Test 'is_achieved' method returns outcome of '_is_time_exceeded', '_is_satisfying_solution_found'
+        and '_is_limit_without_progress_exceeded' methods.
+
+        :param is_time_exceeded: Simulated return value of '_is_time_exceeded' method.
+        :param is_satisfying_solution_found: Simulated return value of '_is_satisfying_solution_found' method.
+        :param is_limit_without_progress_exceeded: Simulated return value of '_is_limit_without_progress_exceeded' method.
+        :param expected_result: Expected return value of 'is_achieved' method.
+        """
+        self.mock_is_time_exceeded.return_value = is_time_exceeded
+        self.mock_is_satisfying_solution_found.return_value = is_satisfying_solution_found
+        self.mock_is_limit_without_progress_exceeded.return_value = is_limit_without_progress_exceeded
+        mock_start_time = Mock()
+        assert StopCondition.is_achieved(self=self.mock_stop_condition_object, start_time=mock_start_time,
+                                         best_solution=self.mock_solution_object) is expected_result

@@ -49,27 +49,27 @@ class AbstractSolution(ABC):
         self.decision_variables_values = values_to_set
         self._objective_value_with_penalty = None
 
-    # TODO: Consider only the same type as valid in case of comparison: type(self) == type(other)
-
     def __eq__(self, other: object) -> bool:
         """
-        :param other: Solution of the same subclass or value of objective value (int or float type) to compare.
+        Checks if the solutions have the same quality.
 
-        :raise TypeError: Value of 'other' is not int, float or the same Solution subclass object.
+        :param other: Solution of the same subclass to compare.
+
+        :raise TypeError: Value of 'other' is not Solution subclass object.
 
         :return: True if equal, False otherwise.
         """
-        if isinstance(other, (int, float)):
-            return self.get_objective_value_with_penalty() == other
         if isinstance(other, self.__class__):
             return self.get_objective_value_with_penalty() == other.get_objective_value_with_penalty()
         raise TypeError(f"Cannot compare '{self}' with '{other}'.")
 
     def __ne__(self, other: object) -> bool:
         """
-        :param other: Solution of the same subclass or value of objective value (int or float type) to compare.
+        Checks if the solutions have different quality.
 
-        :raise TypeError: Value of 'other' is not int, float or the same Solution subclass object.
+        :param other: Solution of the same subclass to compare.
+
+        :raise TypeError: Value of 'other' is not Solution subclass object.
 
         :return: True if not equal, False otherwise.
         """
@@ -77,37 +77,43 @@ class AbstractSolution(ABC):
 
     def __le__(self, other: object) -> bool:
         """
-        :param other: Solution of the same subclass or value of objective value (int or float type) to compare.
+        Checks if this solution have less or equal quality than other.
 
-        :raise TypeError: Value of 'other' is not int, float or the same Solution subclass object.
+        :param other: Solution of the same subclass to compare.
+
+        :raise TypeError: Value of 'other' is not Solution subclass object.
 
         :return: True if less or equal than other, False otherwise.
         """
-        if isinstance(other, (int, float)):
-            return self.get_objective_value_with_penalty() <= other
         if isinstance(other, self.__class__):
-            return self.get_objective_value_with_penalty() <= other.get_objective_value_with_penalty()
+            if self.optimization_problem.optimization_type == OptimizationType.Maximize:
+                return self.get_objective_value_with_penalty() <= other.get_objective_value_with_penalty()
+            return self.get_objective_value_with_penalty() >= other.get_objective_value_with_penalty()
         raise TypeError(f"Cannot compare '{self}' with '{other}'.")
 
     def __lt__(self, other: object) -> bool:
         """
-        :param other: Solution of the same subclass or value of objective value (int or float type) to compare.
+        Checks if this solution have less quality than other.
 
-        :raise TypeError: Value of 'other' is not int, float or the same Solution subclass object.
+        :param other: Solution of the same subclass to compare.
+
+        :raise TypeError: Value of 'other' is not Solution subclass object.
 
         :return: True if less than other, False otherwise.
         """
-        if isinstance(other, (int, float)):
-            return self.get_objective_value_with_penalty() < other
         if isinstance(other, self.__class__):
-            return self.get_objective_value_with_penalty() < other.get_objective_value_with_penalty()
+            if self.optimization_problem.optimization_type == OptimizationType.Maximize:
+                return self.get_objective_value_with_penalty() < other.get_objective_value_with_penalty()
+            return self.get_objective_value_with_penalty() > other.get_objective_value_with_penalty()
         raise TypeError(f"Cannot compare '{self}' with '{other}'.")
 
     def __ge__(self, other: object) -> bool:
         """
-        :param other: Solution of the same subclass or value of objective value (int or float type) to compare.
+        Checks if this solution have greater or equal quality than other.
 
-        :raise TypeError: Value of 'other' is not int, float or the same Solution subclass object.
+        :param other: Solution of the same subclass to compare.
+
+        :raise TypeError: Value of 'other' is not Solution subclass object.
 
         :return: True if greater equal than other, False otherwise.
         """
@@ -115,9 +121,11 @@ class AbstractSolution(ABC):
 
     def __gt__(self, other: object) -> bool:
         """
-        :param other: Solution of the same subclass or value of objective value (int or float type) to compare.
+        Checks if this solution have greater quality than other.
 
-        :raise TypeError: Value of 'other' is not int, float or the same Solution subclass object.
+        :param other: Solution of the same subclass to compare.
+
+        :raise TypeError: Value of 'other' is not Solution subclass object.
 
         :return: True if greater than other, False otherwise.
         """
