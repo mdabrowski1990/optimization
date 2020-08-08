@@ -149,6 +149,23 @@ class CustomLogger(optimization.AbstractLogger):
 ```
 
 
+### Optimization algorithms
+In order to execute optimization process, you must select and optimization algorithm, configure it and execute 
+optimization process.
+
+#### Random algorithm
+Random algorithm is searching for optimal solution by simply checking random solution.
+It is advised to use it only for research, comparison or education purposes. Example use:
+```python
+import optimization
+
+stop_conditions = optimization.StopConditions(...)  # look above to learn how to configure it properly
+problem = optimization.OptimizationProblem(...)  # look above to learn how to configure it properly
+
+random_algorithm = optimization.RandomAlgorithm(stop_conditions=stop_conditions, problem=problem)
+random_algorithm.perform_optimization()
+```
+
 ### Optimization knowledge base
 https://www.extremeoptimization.com/Documentation/Mathematics/Optimization/Default.aspx
 https://en.wikipedia.org/wiki/Constrained_optimization

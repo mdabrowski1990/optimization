@@ -16,3 +16,4 @@ from .problem import OptimizationProblem, OptimizationType, IntegerVariable, Dis
     ChoiceVariable
 from .stop_conditions import StopConditions
 from .logging import AbstractLogger, Logger, LoggingFormat, LoggingVerbosity
+from .algorithms import RandomAlgorithm

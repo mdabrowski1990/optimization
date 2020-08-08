@@ -133,7 +133,7 @@ class TestAbstractOptimizationAlgorithm:
         """
         assert AbstractOptimizationAlgorithm.sorted_solutions(solutions=solutions, descending=descending) \
             == self.mock_sorted.return_value
-        self.mock_sorted.assert_called_once()
+        self.mock_sorted.assert_called_once_with(solutions, reverse=descending)
 
     # perform_optimization
 

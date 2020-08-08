@@ -3,7 +3,7 @@
 __all__ = ["AbstractOptimizationAlgorithm"]
 
 
-from typing import Optional, Iterable, List, Dict, Union
+from typing import Optional, Iterable, List, Dict, Any
 from abc import ABC, abstractmethod
 from datetime import datetime
 
@@ -51,12 +51,12 @@ class AbstractOptimizationAlgorithm(ABC):
             - (only if this is self adaptation algorithm) execution of 'self.logger.log_lower_level_iteration'
                 method after each iteration of lower algorithm
 
-        :param iteration_index: Number of iteration of the optimization algorithm
+        :param iteration_index: Index number (counted from 0) of optimization algorithm iteration.
         """
         ...
 
     @abstractmethod
-    def get_log_data(self) -> Dict[str, Union[str, float, int, dict, list]]:
+    def get_log_data(self) -> Dict[str, Any]:
         """
         Gets data for logging purposes.
 
@@ -87,7 +87,7 @@ class AbstractOptimizationAlgorithm(ABC):
 
         :return: Sorted list with optimization solution.
         """
-        return sorted(solutions, key=lambda solution: solution.get_objective_value_with_penalty(), reverse=descending)
+        return sorted(solutions, reverse=descending)
 
     def perform_optimization(self) -> AbstractSolution:
         """
