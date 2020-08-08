@@ -15,7 +15,7 @@ from typing import Iterable, Optional
 from abc import ABC, abstractmethod
 from enum import IntEnum, Enum
 from os import path, mkdir
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from yaml import dump as yaml_dump
 from yamlordereddictloader import Dumper as YamlDumper
@@ -32,6 +32,8 @@ class LoggingVerbosity(IntEnum):
             Contains all logs from lower levels.
         - AlgorithmConfiguration: Reports optimization algorithm configuration to separate file 'algorithm'.
             Contains all logs from lower levels.
+        - OptimizationTime: Reports duration time of optimization process.
+            Contains all logs from lower levels.
         - AllSolutions: Reports all solution found during optimization search to 'solutions' file.
             Contains all logs from lower levels.
     """
@@ -39,7 +41,8 @@ class LoggingVerbosity(IntEnum):
     BestSolution = 0
     ProblemDefinition = 10
     AlgorithmConfiguration = 20
-    AllSolutions = 30
+    OptimizationTime = 30
+    AllSolutions = 40
 
     def __eq__(self, other: object) -> bool:
         """
@@ -150,11 +153,12 @@ class AbstractLogger(ABC):
         ...
 
     @abstractmethod
-    def log_at_end(self, best_solution):
+    def log_at_end(self, best_solution, optimization_time: timedelta):
         """
         Logging method that will be called at the end of optimization process.
 
         :param best_solution: The best solution found by the optimization algorithm.
+        :param optimization_time: Optimization process duration time.
         """
         ...
 
@@ -313,18 +317,26 @@ class Logger(AbstractLogger):
                 with open(file_path, mode) as json_file:
                     json_dump(data_to_log, json_file)
 
-    def log_at_end(self, best_solution) -> None:
+    def log_at_end(self, best_solution, optimization_time: timedelta) -> None:
         """
         Logging method that will be called at the end of optimization process.
 
         :param best_solution: The best solution found by the optimization algorithm.
+        :param optimization_time: Optimization process duration time.
         """
+        # assess data to log
+        log_data = {}
+        if self.verbosity >= LoggingVerbosity.OptimizationTime:
+            log_data["optimization_duration"] = str(optimization_time)
         if self.verbosity >= LoggingVerbosity.BestSolution:
+            log_data["best_solution"] = best_solution.get_log_data()
+        # log to file
+        if log_data:
             if self.log_format == LoggingFormat.YAML:
                 file_path = path.join(self.optimization_process_dir, "best_solution.yaml")  # type: ignore
                 with open(file_path, "w") as yaml_file:
-                    yaml_dump(best_solution.get_log_data(), yaml_file, YamlDumper)
+                    yaml_dump(log_data, yaml_file, YamlDumper)
             elif self.log_format == LoggingFormat.JSON:
                 file_path = path.join(self.optimization_process_dir, "best_solution.json")  # type: ignore
                 with open(file_path, "w") as json_file:
-                    json_dump(best_solution.get_log_data(), json_file)
+                    json_dump(log_data, json_file)

@@ -1,2 +1,1 @@
-# noqa
-from .abstract_algorithm import AbstractOptimizationAlgorithm
+"""Optimization algorithms implementation."""
