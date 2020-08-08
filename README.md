@@ -131,7 +131,7 @@ stop_conditions = optimization.StopCondition(time_limit=datetime.timedelta(days=
 
 
 ### Logging
-If you are interested in logging optimization process progress, you can:
+If you are interested in logging optimization process, you can:
 - use ```Logger``` (build-in functionality) 
 ```python
 import optimization
@@ -140,7 +140,7 @@ optimization.Logger(logs_dir="path\\to\\directory\\where\\you\\want\\to\\have\\l
                     verbosity=optimization.LoggingVerbosity.AllSolutions,  # level of logs verbosity you want
                     log_format=optimization.LoggingFormat.YAML)  # format in which logs to be created
 ```
-- create your own logged basin on ```AbstractLogger```
+- create your own logged basing on ```AbstractLogger```
 ```python
 import optimization
 
