@@ -110,4 +110,3 @@ class AbstractOptimizationAlgorithm(ABC):
         if self.logger is not None:
             self.logger.log_at_end(best_solution=self._best_solution, optimization_time=self._end_time-self._start_time)
         return self._best_solution  # type: ignore
-
