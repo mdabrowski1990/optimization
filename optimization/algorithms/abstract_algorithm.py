@@ -40,15 +40,6 @@ class AbstractOptimizationAlgorithm(ABC):
         self._end_time: Optional[datetime] = None
         self._best_solution: Optional[AbstractSolution] = None
 
-    def _is_stop_achieved(self) -> bool:
-        """
-        Checks whether stop conditions of optimization process were achieved.
-
-        :return: True if stop conditions are achieved, False otherwise.
-        """
-        return self.stop_conditions.is_achieved(start_time=self._start_time,  # type: ignore
-                                                best_solution=self._best_solution)  # type: ignore
-
     @abstractmethod
     def _perform_iteration(self, iteration_index: int) -> None:
         """
@@ -63,6 +54,26 @@ class AbstractOptimizationAlgorithm(ABC):
         :param iteration_index: Number of iteration of the optimization algorithm
         """
         ...
+
+    @abstractmethod
+    def get_log_data(self) -> Dict[str, Union[str, float, int, dict, list]]:
+        """
+        Gets data for logging purposes.
+
+        :return: Dictionary with this Optimization Algorithm crucial data.
+        """
+        return {
+            "type": self.__class__.__name__,
+        }
+
+    def _is_stop_achieved(self) -> bool:
+        """
+        Checks whether stop conditions of optimization process were achieved.
+
+        :return: True if stop conditions are achieved, False otherwise.
+        """
+        return self.stop_conditions.is_achieved(start_time=self._start_time,  # type: ignore
+                                                best_solution=self._best_solution)  # type: ignore
 
     @staticmethod
     def sorted_solutions(solutions: Iterable[AbstractSolution], descending: bool = True) -> List[AbstractSolution]:
@@ -100,13 +111,3 @@ class AbstractOptimizationAlgorithm(ABC):
             self.logger.log_at_end(best_solution=self._best_solution, optimization_time=self._end_time-self._start_time)
         return self._best_solution  # type: ignore
 
-    @abstractmethod
-    def get_log_data(self) -> Dict[str, Union[str, float, int, dict, list]]:
-        """
-        Gets data for logging purposes.
-
-        :return: Dictionary with this Optimization Algorithm crucial data.
-        """
-        return {
-            "type": self.__class__.__name__,
-        }
