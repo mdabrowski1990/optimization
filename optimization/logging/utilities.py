@@ -2,18 +2,24 @@
 
 __all__ = ["log_function_code"]
 
+
 from typing import Callable
 import inspect
 
 
 def log_function_code(func_to_log: Callable) -> str:
     """
-    Extracts function code to 'str' so it can be logged to external file.
+    Extracts function code into str.
 
-    :param func_to_log: Function which code to be extracted.
+    It is used for preparing functions code to be logged into external files.
+
+    :param func_to_log: Function object which code to be extracted.
 
     :return: Code of the function.
     """
-    # todo: optimize output to be readable
+    if not callable(func_to_log):
+        TypeError(f"Parameter 'func_to_log' is not function. Actual value: {func_to_log}.")
     function_definition = inspect.getsource(func_to_log)
-    return function_definition.strip().replace("\n", " ").replace("\r", " ").replace("  ", " ").rstrip(",")
+    if function_definition.startswith("return "):
+        function_definition = function_definition[7:]
+    return repr(function_definition.strip())
