@@ -1,8 +1,8 @@
 """
-Package for performing optimization with any of (currently implemented) optimization algorithms.
+Package for performing optimization with any of heuristic algorithms.
 
 Current supported list of optimization algorithms:
-    - Evolutionary Algorithms (https://en.wikipedia.org/wiki/Evolutionary_algorithm)
+    - Evolutionary Algorithms
     - Self-adaptive Evolutionary Algorithm (similar to Evolutionary Algorithms, but during optimization process,
         evolutionary algorithm searching method is also optimized)
     - Random Algorithm
@@ -14,4 +14,5 @@ __author__ = "Maciej Dąbrowski (maciek_dabrowski@o2.pl)"
 
 from .problem import OptimizationProblem, OptimizationType, IntegerVariable, DiscreteVariable, FloatVariable, \
     ChoiceVariable
-from .stop_condition import StopCondition
+from .stop_conditions import StopConditions
+from .logging import AbstractLogger, Logger, LoggingFormat, LoggingVerbosity

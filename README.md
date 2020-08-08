@@ -92,7 +92,7 @@ but also having in mind defined step. Examples:
     choice_var = optimization.ChoiceVariable(possible_values={0, 1.25, 6.5, 987})
     ```
 
-### Optimization algorithms stop conditions definition
+### Stop conditions
 Before we can start an optimization process, it is necessary to determine when to stop it.
 Using this package you can define stop conditions object that will help you to stop further optimization in one of 
 following cases that you can configure:
@@ -128,6 +128,26 @@ stop_conditions = optimization.StopCondition(time_limit=datetime.timedelta(days=
                                              max_iter_without_progress=1000,
                                              max_time_without_progress=datetime.timedelta(hours=2))
 ```
+
+
+### Logging
+If you are interested in logging optimization process, you can:
+- use ```Logger``` (build-in functionality) 
+```python
+import optimization
+
+optimization.Logger(logs_dir="path\\to\\directory\\where\\you\\want\\to\\have\\logs",
+                    verbosity=optimization.LoggingVerbosity.AllSolutions,  # level of logs verbosity you want
+                    log_format=optimization.LoggingFormat.YAML)  # format in which logs to be created
+```
+- create your own logged basing on ```AbstractLogger```
+```python
+import optimization
+
+class CustomLogger(optimization.AbstractLogger):
+    ...  # your custom implementation here with all abstract methods implemented
+```
+
 
 ### Optimization knowledge base
 https://www.extremeoptimization.com/Documentation/Mathematics/Optimization/Default.aspx

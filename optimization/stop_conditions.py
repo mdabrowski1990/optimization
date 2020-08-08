@@ -1,6 +1,6 @@
 """Definition of stop condition for optimization process."""
 
-__all__ = ["StopCondition"]
+__all__ = ["StopConditions"]
 
 
 from typing import Optional, Union, Dict
@@ -9,7 +9,7 @@ from datetime import timedelta, datetime
 from .problem.solution import AbstractSolution
 
 
-class StopCondition:
+class StopConditions:
     """Definition of stop condition which causes the end of optimization process."""
 
     def __init__(self, time_limit: timedelta, satisfying_objective_value: Optional[Union[float, int]] = None,
