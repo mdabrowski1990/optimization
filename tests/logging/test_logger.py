@@ -113,8 +113,8 @@ class TestLogger:
         assert self.mock_logger_object.optimization_process_dir is None
 
     @pytest.mark.parametrize("logs_dir", EXAMPLE_LOGS_DIR)
-    @pytest.mark.parametrize("verbosity", list(LoggingVerbosity))
-    @pytest.mark.parametrize("log_format", list(LoggingFormat))
+    @pytest.mark.parametrize("verbosity", list(LoggingVerbosity) + [item.name for item in list(LoggingVerbosity)])
+    @pytest.mark.parametrize("log_format", list(LoggingFormat) + [item.name for item in list(LoggingFormat)])
     def test_init__valid_all_params(self, logs_dir, verbosity, log_format):
         """
         Tests that 'Logger' class can be initialized with only a proper value of 'logs_dir' param.
@@ -124,8 +124,8 @@ class TestLogger:
         self.mock_path_isdir.return_value = True
         Logger.__init__(self=self.mock_logger_object, logs_dir=logs_dir, verbosity=verbosity, log_format=log_format)
         assert self.mock_logger_object.main_dir == logs_dir
-        assert self.mock_logger_object.verbosity == verbosity
-        assert self.mock_logger_object.log_format == log_format
+        assert self.mock_logger_object.verbosity in LoggingVerbosity
+        assert self.mock_logger_object.log_format in LoggingFormat
         assert self.mock_logger_object.optimization_process_dir is None
 
     @pytest.mark.parametrize("invalid_logs_dir", [1, None, 43., []])
@@ -139,7 +139,7 @@ class TestLogger:
             Logger.__init__(self=self.mock_logger_object, logs_dir=invalid_logs_dir)
 
     @pytest.mark.parametrize("logs_dir", EXAMPLE_LOGS_DIR)
-    @pytest.mark.parametrize("invalid_verbosity", [1, None, 43., [], "verbosity"])
+    @pytest.mark.parametrize("invalid_verbosity", [1, None, 43., []])
     def test_init__invalid_verbosity_type(self, logs_dir, invalid_verbosity):
         """
         Tests that during init of 'Logger' class TypeError will be raise if 'verbosity' parameter is not
@@ -152,7 +152,7 @@ class TestLogger:
             Logger.__init__(self=self.mock_logger_object, logs_dir=logs_dir, verbosity=invalid_verbosity)
 
     @pytest.mark.parametrize("logs_dir", EXAMPLE_LOGS_DIR)
-    @pytest.mark.parametrize("invalid_format", [1, None, 43., [], "format"])
+    @pytest.mark.parametrize("invalid_format", [1, None, 43., []])
     def test_init__invalid_format_type(self, logs_dir, invalid_format):
         """
         Tests that during init of 'Logger' class TypeError will be raise if 'verbosity' parameter is not

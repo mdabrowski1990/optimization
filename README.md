@@ -129,6 +129,26 @@ stop_conditions = optimization.StopCondition(time_limit=datetime.timedelta(days=
                                              max_time_without_progress=datetime.timedelta(hours=2))
 ```
 
+
+### Logging
+If you are interested in logging optimization process progress, you can:
+- use ```Logger``` (build-in functionality) 
+```python
+import optimization
+
+optimization.Logger(logs_dir="path\\to\\directory\\where\\you\\want\\to\\have\\logs",
+                    verbosity=optimization.LoggingVerbosity.AllSolutions,  # level of logs verbosity you want
+                    log_format=optimization.LoggingFormat.YAML)  # format in which logs to be created
+```
+- create your own logged basin on ```AbstractLogger```
+```python
+import optimization
+
+class CustomLogger(optimization.AbstractLogger):
+    ...  # your custom implementation here with all abstract methods implemented
+```
+
+
 ### Optimization knowledge base
 https://www.extremeoptimization.com/Documentation/Mathematics/Optimization/Default.aspx
 https://en.wikipedia.org/wiki/Constrained_optimization

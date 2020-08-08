@@ -13,7 +13,7 @@ def log_function_code(func_to_log: Callable) -> str:
 
     It is used for preparing functions code to be logged into external files.
 
-    :param func_to_log: Function object which code to be extracted.
+    :param func_to_log: Function object for which code to be extracted.
 
     :return: Code of the function.
     """

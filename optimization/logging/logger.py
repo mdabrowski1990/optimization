@@ -1,7 +1,11 @@
 """
 Optimization process logger.
 
-You will find
+In this file you can find:
+- AbstractLogger - abstract definition of Logger that you can use to create your own logger
+- Logger - build-in logger for recording optimization process
+- LoggingVerbosity - enum with available 'Logger' verbosity level
+- LoggingFormat - enum with available 'Logger' output files formats
 """
 
 __all__ = ["AbstractLogger", "LoggingVerbosity", "LoggingFormat", "Logger"]
@@ -94,8 +98,8 @@ class LoggingVerbosity(IntEnum):
 class LoggingFormat(Enum):
     """Enum with currently supported log formats."""
 
-    YAML = "yaml"
-    JSON = "json"
+    YAML = "YAML"
+    JSON = "JSON"
 
 
 class AbstractLogger(ABC):
@@ -173,10 +177,18 @@ class Logger(AbstractLogger):
             raise TypeError(f"Parameter 'logs_dir' is not str type. Actual value: {logs_dir}.")
         if not path.isdir(logs_dir):
             raise ValueError(f"Directory '{logs_dir}' is not a valid path to existing directory.")
-        if not isinstance(verbosity, LoggingVerbosity):
-            raise TypeError(f"Parameter 'verbosity' is not LoggingVerbosity type. Actual value: {verbosity}.")
-        if not isinstance(log_format, LoggingFormat):
-            raise TypeError(f"Parameter 'log_format' is not LoggingFormat type. Actual value: {log_format}.")
+        if isinstance(verbosity, LoggingVerbosity):
+            pass
+        elif isinstance(verbosity, str):
+            verbosity = getattr(LoggingVerbosity, verbosity)
+        else:
+            raise TypeError(f"Parameter 'verbosity' is not LoggingVerbosity or str type. Actual value: {verbosity}.")
+        if isinstance(log_format, LoggingFormat):
+            pass
+        elif isinstance(log_format, str):
+            log_format = getattr(LoggingFormat, log_format)
+        else:
+            raise TypeError(f"Parameter 'log_format' is not LoggingFormat or str type. Actual value: {log_format}.")
         self.main_dir = logs_dir
         self.verbosity = verbosity
         self.log_format = log_format
