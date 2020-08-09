@@ -1,13 +1,14 @@
 """
-Selection function that are available for Evolutionary Algorithms.
+Selection functions implementation that are used by Evolutionary Algorithms.
 
-Code is basing on 'Introduction to Evolutionary Computing. Second edition.' Eiben, A.E., Smith, James E.
+Code is basing on  information from:
+'Introduction to Evolutionary Computing. Second edition.' Eiben, A.E., Smith, James E.
 """
 
-__all__ = ["SelectionType", "uniform_selection", "tournament_selection", "double_tournament_selection",
-           "roulette_selection", "ranking_selection"]
+__all__ = ["SelectionType"]
 
-from typing import List, Iterator, Sequence, Union, Tuple
+
+from typing import List, Iterator, Union, Tuple
 from enum import Enum
 
 from ...problem import AbstractSolution
@@ -17,7 +18,7 @@ from ...utilities import choose_random_values, choose_random_value_with_weights
 # selection utilities
 
 
-SelectionOutput = Iterator[Sequence[AbstractSolution]]
+SelectionOutput = Iterator[Tuple[AbstractSolution, AbstractSolution]]
 
 
 def calculate_roulette_scaling(best_solution: AbstractSolution,
@@ -106,7 +107,7 @@ def uniform_selection(population_size: int,
     :return: Generator producing individual pairs.
     """
     for _ in range(population_size // 2):
-        yield choose_random_values(values_pool=population, values_number=2)
+        yield tuple(choose_random_values(values_pool=population, values_number=2))  # type: ignore
 
 
 def tournament_selection(population_size: int,
