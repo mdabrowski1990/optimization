@@ -57,7 +57,9 @@ def get_scaled_objective(solution: AbstractSolution,
 
 def get_scaled_ranking(rank: int, population_size: int, ranking_bias: Union[float, int]) -> Union[float, int]:
     """
-    Calculates scaled value of ranking according to algorithm proposed by Eiben, A.E., Smith, James E in
+    Calculates scaled value of ranking.
+
+    Algorithm used is proposed by Eiben, A.E., Smith, James E in
     'Introduction to Evolutionary Computing. Second edition.' (page 82).
     Note: Division by 'population_size' was skipped to reduce code complexity.
 
@@ -131,8 +133,10 @@ def double_tournament_selection(population_size: int,
                                 population: List[AbstractSolution],
                                 tournament_group_size: int) -> SelectionOutput:
     """
-    Double tournament selection function that picks the best individual from a small random group as new a parent.
-    Second parent is determined in the same way (process reoccurs).
+    Double tournament selection function similar to tournament selection.
+
+    Double tournament differs from classic tournament selection due to the fact that only one parent is picked
+    from a single tournament group. Second parent is determined in similar way as the first one (process reoccurs).
 
     :param population_size: Size of the population (number of parents to pick).
     :param population: List with individuals (solutions) from which parents to be selected.
@@ -152,8 +156,10 @@ def roulette_selection(population_size: int,
                        population: List[AbstractSolution],
                        roulette_bias: float) -> SelectionOutput:
     """
-    Roulette selection function which picks new parent with proportional probability to
-    their fitness (level of adaptation) value.
+    Roulette selection function.
+
+    Each parent provided by this function is picked with probability proportional to their
+    fitness (level of adaptation) value.
 
     Note: Scaling of objective value is needed. More information in the topic can be found in the book:
     'Introduction to Evolutionary Computing. Second edition.' Eiben, A.E., Smith, James E., pages 80-81.
