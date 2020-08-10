@@ -112,8 +112,8 @@ class TestSelectionFunctions:
     # uniform_selection
 
     @pytest.mark.parametrize("population_size, random_output", [
-        (2, ["output1"]),
-        (4, ["x1", "x2"]),
+        (2, [("a", "b")]),
+        (4, [("1 value 1", "1 value 2"), ("2 value 1", "2 value 2")]),
         (10, [(1, 11), (2, 22), (3, 33), (4, 44), (5, 55)]),
     ])
     @pytest.mark.parametrize("population", ["some population", range(10)])

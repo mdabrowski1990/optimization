@@ -1,4 +1,5 @@
 import pytest
+from mock import patch
 from copy import deepcopy
 from string import printable
 
@@ -13,6 +14,15 @@ class TestRandomFunctions:
     TODO: It is worth considering whether randomness test would be beneficial here:
         https://en.wikipedia.org/wiki/Randomness_tests
     """
+
+    SCRIPT_LOCATION = "optimization.utilities.random_values"
+
+    def setup(self):
+        self._patcher_shuffle = patch(f"{self.SCRIPT_LOCATION}.shuffle")
+        self.mock_shuffle = self._patcher_shuffle.start()
+
+    def teardown(self):
+        self._patcher_shuffle.stop()
 
     @pytest.mark.parametrize("min_value, max_value, samples", [(1, 10, 100), (-100, 100, 2000)])
     def test_generate_random_int__value_in_range(self, min_value, max_value, samples):
@@ -114,3 +124,13 @@ class TestRandomFunctions:
         output_values = shuffled(values)
         assert copy_input_values == values, "Input were unchanged"
         assert set(values) == set(output_values) and type(values) == type(output_values) and values != output_values
+
+    @pytest.mark.parametrize("values", ["abcdef", range(10)])
+    def test_shuffled(self, values):
+        """
+        Check that 'shuffled' function calls 'shuffle' function and returns different object.
+
+        :param values: Example input to 'shuffled' function.
+        """
+        assert shuffled(values) is not values
+        self.mock_shuffle.assert_called_once_with(list(values))
