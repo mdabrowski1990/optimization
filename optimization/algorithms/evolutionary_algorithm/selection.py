@@ -5,10 +5,10 @@ Code is basing on  information from:
 'Introduction to Evolutionary Computing. Second edition.' Eiben, A.E., Smith, James E.
 """
 
-__all__ = ["SelectionType"]
+__all__ = ["SelectionType", "SELECTION_FUNCTIONS", "SELECTION_ADDITIONAL_PARAMS", "check_selection_parameters"]
 
 
-from typing import List, Iterator, Union, Tuple
+from typing import List, Iterator, Union, Tuple, Dict, Callable, Any
 from enum import Enum
 
 from ...problem import AbstractSolution
@@ -76,24 +76,57 @@ def get_scaled_ranking(rank: int, population_size: int, ranking_bias: Union[floa
     return 2 - ranking_bias + (2 * rank * (ranking_bias - 1) / (population_size - 1))
 
 
+def check_tournament_group_size(tournament_group_size: int) -> None:
+    """
+    Checks if 'tournament_group_size' has proper value.
+
+    :param tournament_group_size: Size of a random groups for
+        'tournament_selection' or 'double_tournament_selection' function.
+
+    :raise TypeError: Value of parameter is not int type.
+    :raise ValueError: Value of parameter is not in proper range.
+    """
+    if not isinstance(tournament_group_size, int):
+        raise TypeError(f"Parameter 'tournament_group_size' is not int type. Actual value: {tournament_group_size}.")
+    if not 3 <= tournament_group_size <= 8:
+        raise ValueError(f"Parameter 'tournament_group_size' has invalid value. "
+                         f"Expected value: 3 <= tournament_group_size <= 8. Actual value: {tournament_group_size}.")
+
+
+def check_roulette_bias(roulette_bias: Union[float, int]) -> None:
+    """
+    Checks if 'roulette_bias' has proper value.
+
+    :param roulette_bias: Bias towards promoting better adopted individuals for 'roulette_selection' function.
+
+    :raise TypeError: Value of parameter is not int nor float type.
+    :raise ValueError: Value of parameter is not in proper range.
+    """
+    if not isinstance(roulette_bias, (int, float)):
+        raise TypeError(f"Parameter 'roulette_bias' is not int nor float type. Actual value: {roulette_bias}.")
+    if not 1 < roulette_bias <= 100:
+        raise ValueError(f"Parameter 'roulette_bias' has invalid value. Expected value: 1 < roulette_bias <= 100. "
+                         f"Actual value: {roulette_bias}.")
+
+
+def check_ranking_bias(ranking_bias: float) -> None:
+    """
+    Checks if 'ranking_bias' has proper value.
+
+    :param ranking_bias: Bias that represents selection pressure (the higher the value the higher the pressure)
+        for 'ranking_Selection' function.
+
+    :raise TypeError: Value of parameter is not float type.
+    :raise ValueError: Value of parameter is not in proper range.
+    """
+    if not isinstance(ranking_bias, float):
+        raise TypeError(f"Parameter 'ranking_bias' is not float type. Actual value: {ranking_bias}.")
+    if not 1 < ranking_bias <= 2:
+        raise ValueError(f"Parameter 'ranking_bias' has invalid value. Expected value: 1 < ranking_bias <= 2. "
+                         f"Actual value: {ranking_bias}.")
+
+
 # selection implementation
-
-
-class SelectionType(Enum):
-    """
-    Enum with available selection functions types.
-
-    Options:
-        - Uniform - Each individual has the same chance to be selected as parent.
-        - Tournament - Each parents pair is the best best adapted individuals from a small random group.
-        - Tournament - Each parent is the best best adapted individual from a small random group.
-    """
-
-    Uniform = "Uniform"
-    Tournament = "Tournament"
-    DoubleTournament = "DoubleTournament"
-    Roulette = "Roulette"
-    Ranking = "Ranking"
 
 
 def uniform_selection(population_size: int,
@@ -155,7 +188,7 @@ def double_tournament_selection(population_size: int,
 
 def roulette_selection(population_size: int,
                        population: List[AbstractSolution],
-                       roulette_bias: float) -> SelectionOutput:
+                       roulette_bias: Union[float, int]) -> SelectionOutput:
     """
     Roulette selection function.
 
@@ -220,3 +253,57 @@ def ranking_selection(population_size: int,
 
     for _ in range(population_size // 2):
         yield _get_individual(), _get_individual()
+
+
+# outputs (visible outside)
+
+
+class SelectionType(Enum):
+    """
+    Enum with available selection functions types.
+
+    Options:
+        - Uniform - Each individual has the same chance to be selected as parent.
+        - Tournament - Each parents pair is the best best adapted individuals from a small random group.
+        - Tournament - Each parent is the best best adapted individual from a small random group.
+    """
+
+    Uniform = "Uniform"
+    Tournament = "Tournament"
+    DoubleTournament = "DoubleTournament"
+    Roulette = "Roulette"
+    Ranking = "Ranking"
+
+
+SELECTION_FUNCTIONS: Dict[str, Callable] = {
+    # selection type: selection function
+    SelectionType.Uniform.value: uniform_selection,
+    SelectionType.Tournament.value: tournament_selection,
+    SelectionType.DoubleTournament.value: double_tournament_selection,
+    SelectionType.Roulette.value: roulette_selection,
+    SelectionType.Ranking.value: ranking_selection,
+}
+
+
+SELECTION_ADDITIONAL_PARAMS: Dict[str, Tuple[str, ...]] = {
+    # selection type: (parameter 1 name, parameter 2 name, ...)
+    SelectionType.Uniform.value: (),
+    SelectionType.Tournament.value: ("tournament_group_size", ),
+    SelectionType.DoubleTournament.value: ("tournament_group_size", ),
+    SelectionType.Roulette.value: ("roulette_bias", ),
+    SelectionType.Ranking.value: ("ranking_bias", ),
+}
+
+
+def check_selection_parameters(**selection_params: Any) -> None:
+    """
+    Checks whether additional selection parameters (selection function specific) have proper value.
+
+    :param selection_params: Values of additional selection parameters.
+    """
+    if "tournament_group_size" in selection_params:
+        check_tournament_group_size(selection_params["tournament_group_size"])
+    if "roulette_bias" in selection_params:
+        check_roulette_bias(selection_params["roulette_bias"])
+    if "ranking_bias" in selection_params:
+        check_ranking_bias(selection_params["ranking_bias"])

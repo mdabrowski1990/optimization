@@ -5,7 +5,8 @@ from types import GeneratorType
 
 from optimization.algorithms.evolutionary_algorithm.selection import uniform_selection, tournament_selection, \
     double_tournament_selection, roulette_selection, ranking_selection, \
-    get_scaled_ranking, get_scaled_objective, calculate_roulette_scaling
+    get_scaled_ranking, get_scaled_objective, calculate_roulette_scaling, \
+    check_selection_parameters
 
 
 class TestUtilities:
@@ -79,6 +80,66 @@ class TestUtilities:
         :param expected_result: Expected result ffrom the function.
         """
         assert get_scaled_ranking(rank=rank, population_size=population_size, ranking_bias=ranking_bias) == expected_result
+
+    # check_selection_parameters
+
+    @pytest.mark.parametrize("selection_params", [
+        {},
+        {"tournament_group_size": 3},
+        {"tournament_group_size": 8},
+        {"roulette_bias": 2},
+        {"roulette_bias": 1.0001},
+        {"roulette_bias": 100},
+        {"roulette_bias": 100.},
+        {"ranking_bias": 1.0001},
+        {"ranking_bias": 2.},
+        {"tournament_group_size": 5, "roulette_bias": 4.232, "ranking_bias": 1.5}
+    ])
+    def test_check_selection_parameters__valid(self, selection_params):
+        """
+        Test that 'check_ranking_bias' raises no exception when valid parameter values are provided.
+
+        :param selection_params: Example valid values of selection parameters.
+        """
+        assert check_selection_parameters(**selection_params) is None
+
+    @pytest.mark.parametrize("selection_params", [
+        {"tournament_group_size": 4.2},
+        {"tournament_group_size": "4"},
+        {"roulette_bias": "some bias"},
+        {"roulette_bias": [0, 1]},
+        {"ranking_bias": False},
+        {"ranking_bias": "some incorrect value"},
+        {"tournament_group_size": 6., "roulette_bias": "something stupid", "ranking_bias": 1}
+    ])
+    def test_check_selection_parameters__invalid_type(self, selection_params):
+        """
+        Test that 'check_ranking_bias' raises TypeError when value of incorrect type is provided.
+
+        :param selection_params: Example invalid values (wrong type) of selection parameters.
+        """
+        with pytest.raises(TypeError):
+            check_selection_parameters(**selection_params)
+
+    @pytest.mark.parametrize("selection_params", [
+        {"tournament_group_size": 2},
+        {"tournament_group_size": 9},
+        {"roulette_bias": 1},
+        {"roulette_bias": 1.},
+        {"roulette_bias": 101},
+        {"roulette_bias": 100.001},
+        {"ranking_bias": 1.},
+        {"ranking_bias": 2.001},
+        {"tournament_group_size": 0, "roulette_bias": 0, "ranking_bias": 0}
+    ])
+    def test_check_selection_parameters__invalid_value(self, selection_params):
+        """
+        Test that 'check_ranking_bias' raises ValueError when invalid value is provided.
+
+        :param selection_params: Example invalid values (wrong value) of selection parameters.
+        """
+        with pytest.raises(ValueError):
+            check_selection_parameters(**selection_params)
 
 
 class TestSelectionFunctions:
