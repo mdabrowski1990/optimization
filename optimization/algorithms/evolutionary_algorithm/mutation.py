@@ -31,12 +31,12 @@ def single_point_mutation(variables_number: int,
                           mutation_chance: float) -> MutationPointsTyping:
     """
     Single point mutation function.
-    
+
     Having in mind 'mutation_chance', selects a single (or none) decision variable to be mutated.
-        
+
     :param variables_number: Number of decision variables (genes).
     :param mutation_chance: Probability of single decision variable (gene) mutation.
-    
+
     :return: List of decision variables (genes) positions to be mutated.
     """
     scaled_mutation_chance = variables_number * mutation_chance
@@ -50,7 +50,7 @@ def multi_point_mutation(variables_number: int,
                          mutation_points_number: int) -> MutationPointsTyping:
     """
     Multi point mutation function.
-    
+
     Having in mind 'mutation_chance', selects [mutation_points_number] (or none) decision variables to be mutated.
 
     :param variables_number: Number of decision variables (genes).
