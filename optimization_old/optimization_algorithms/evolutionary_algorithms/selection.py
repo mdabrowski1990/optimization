@@ -9,7 +9,7 @@ from optimization_old.optimization_problem import AbstractSolution, Optimization
 __all__ = ["SelectionType", "ADDITIONAL_SELECTION_PARAMETERS", "SELECTION_FUNCTIONS"]
 
 
-SelectionOutput = Iterator[Tuple[AbstractSolution, AbstractSolution]]
+SelectionOutputTyping = Iterator[Tuple[AbstractSolution, AbstractSolution]]
 
 
 class SelectionType(Enum):
@@ -30,7 +30,8 @@ ADDITIONAL_SELECTION_PARAMETERS = {
 }
 
 
-def stochastic_selection(population_size: int, population: List[AbstractSolution]) -> SelectionOutput:
+def stochastic_selection(population_size: int,
+                         population: List[AbstractSolution]) -> SelectionOutputTyping:
     """
     Creates generator that can be used as selection function.
     Selection is performed according to stochastic selection.
@@ -44,8 +45,9 @@ def stochastic_selection(population_size: int, population: List[AbstractSolution
         yield choose_random_values(values_pool=population, values_number=2)
 
 
-def tournament_selection(population_size: int, population: List[AbstractSolution],
-                         tournament_group_size: int) -> SelectionOutput:
+def tournament_selection(population_size: int,
+                         population: List[AbstractSolution],
+                         tournament_group_size: int) -> SelectionOutputTyping:
     """
     Creates generator that can be used as selection function.
     Selection is performed according to tournament selection.
@@ -69,8 +71,9 @@ def tournament_selection(population_size: int, population: List[AbstractSolution
         yield _get_individual(), _get_individual()
 
 
-def roulette_selection(population_size: int, population: List[AbstractSolution],
-                       roulette_bias: float) -> SelectionOutput:
+def roulette_selection(population_size: int,
+                       population: List[AbstractSolution],
+                       roulette_bias: float) -> SelectionOutputTyping:
     """
     Creates generator that can be used as selection function.
     Selection is performed according to roulette selection.
@@ -107,7 +110,9 @@ def roulette_selection(population_size: int, population: List[AbstractSolution],
             yield _get_individual(), _get_individual()
 
 
-def ranking_selection(population_size: int, population: List[AbstractSolution], ranking_bias: float) -> SelectionOutput:
+def ranking_selection(population_size: int,
+                      population: List[AbstractSolution],
+                      ranking_bias: float) -> SelectionOutputTyping:
     """
     Creates generator that can be used as selection function.
     Selection is performed according to ranking selection with bias

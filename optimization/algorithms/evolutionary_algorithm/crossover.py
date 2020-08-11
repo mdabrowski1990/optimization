@@ -11,7 +11,7 @@ from ...problem import AbstractSolution
 from ...utilities import generate_random_int, choose_random_values
 
 
-ChildrenValues = Tuple[OrderedDict, OrderedDict]
+ChildrenValuesTyping = Tuple[OrderedDict, OrderedDict]
 
 
 class CrossoverType(Enum):
@@ -31,7 +31,8 @@ class CrossoverType(Enum):
     Uniform = "Uniform"
 
 
-def single_point_crossover(parents: Tuple[AbstractSolution, AbstractSolution], variables_number: int) -> ChildrenValues:
+def single_point_crossover(parents: Tuple[AbstractSolution, AbstractSolution],
+                           variables_number: int) -> ChildrenValuesTyping:
     """
     Single point crossover function.
 
@@ -51,8 +52,9 @@ def single_point_crossover(parents: Tuple[AbstractSolution, AbstractSolution], v
     return child_1_values, child_2_values
 
 
-def multi_point_crossover(parents: Tuple[AbstractSolution, AbstractSolution], variables_number: int,
-                          crossover_points_number: int) -> ChildrenValues:
+def multi_point_crossover(parents: Tuple[AbstractSolution, AbstractSolution],
+                          variables_number: int,
+                          crossover_points_number: int) -> ChildrenValuesTyping:
     """
     Multi point crossover function.
 
@@ -82,8 +84,9 @@ def multi_point_crossover(parents: Tuple[AbstractSolution, AbstractSolution], va
     return child_1_values, child_2_values
 
 
-def adaptive_crossover(parents: Tuple[AbstractSolution, AbstractSolution], variables_number: int,
-                       crossover_pattern: int) -> ChildrenValues:
+def adaptive_crossover(parents: Tuple[AbstractSolution, AbstractSolution],
+                       variables_number: int,
+                       crossover_pattern: int) -> ChildrenValuesTyping:
     """
     Adaptive crossover function.
 
@@ -107,7 +110,8 @@ def adaptive_crossover(parents: Tuple[AbstractSolution, AbstractSolution], varia
     return child_1_values, child_2_values
 
 
-def uniform_crossover(parents: Tuple[AbstractSolution, AbstractSolution], variables_number: int) -> ChildrenValues:
+def uniform_crossover(parents: Tuple[AbstractSolution, AbstractSolution],
+                      variables_number: int) -> ChildrenValuesTyping:
     """
     Uniform crossover function.
 
