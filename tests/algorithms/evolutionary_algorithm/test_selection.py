@@ -97,7 +97,7 @@ class TestUtilities:
     ])
     def test_check_selection_parameters__valid(self, selection_params):
         """
-        Test that 'check_ranking_bias' raises no exception when valid parameter values are provided.
+        Test that 'check_selection_parameters' raises no exception when valid parameter values are provided.
 
         :param selection_params: Example valid values of selection parameters.
         """
@@ -114,7 +114,7 @@ class TestUtilities:
     ])
     def test_check_selection_parameters__invalid_type(self, selection_params):
         """
-        Test that 'check_ranking_bias' raises TypeError when value of incorrect type is provided.
+        Test that 'check_selection_parameters' raises TypeError when value of incorrect type is provided.
 
         :param selection_params: Example invalid values (wrong type) of selection parameters.
         """
@@ -134,7 +134,7 @@ class TestUtilities:
     ])
     def test_check_selection_parameters__invalid_value(self, selection_params):
         """
-        Test that 'check_ranking_bias' raises ValueError when invalid value is provided.
+        Test that 'check_selection_parameters' raises ValueError when invalid value is provided.
 
         :param selection_params: Example invalid values (wrong value) of selection parameters.
         """

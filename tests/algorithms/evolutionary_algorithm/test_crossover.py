@@ -2,7 +2,73 @@ import pytest
 from mock import Mock, patch, call
 
 from optimization.algorithms.evolutionary_algorithm.crossover import single_point_crossover, multi_point_crossover, \
-    adaptive_crossover, uniform_crossover
+    adaptive_crossover, uniform_crossover, check_crossover_parameters
+
+
+class TestUtilities:
+    """Tests for utilities functions"""
+
+    # check_crossover_parameters
+
+    @pytest.mark.parametrize("variables_number, crossover_params", [
+        (1, {}),
+        (8, {}),
+        (3, {"crossover_points_number": 2}),
+        (8, {"crossover_points_number": 2}),
+        (8, {"crossover_points_number": 5}),
+        (8, {"crossover_points_number": 7}),
+        (3, {"crossover_pattern": 1}),
+        (3, {"crossover_pattern": 6}),
+        (8, {"crossover_pattern": 1}),
+        (8, {"crossover_pattern": 254}),
+    ])
+    def test_check_crossover_parameters__valid(self, variables_number, crossover_params):
+        """
+        Test that 'check_crossover_parameters' raises no exception when valid parameter values are provided.
+
+        :param variables_number: Example value of 'variables_number'.
+        :param crossover_params: Example valid values of crossover parameters.
+        """
+        assert check_crossover_parameters(variables_number=variables_number, **crossover_params) is None
+
+    @pytest.mark.parametrize("variables_number, crossover_params", [
+        (3, {"crossover_points_number": 2.1}),
+        (8, {"crossover_points_number": "3"}),
+        (8, {"crossover_points_number": None}),
+        (3, {"crossover_pattern": 4.3}),
+        (3, {"crossover_pattern": None}),
+        (100, {"crossover_points_number": [], "crossover_pattern": ()}),
+    ])
+    def test_check_crossover_parameters__invalid_type(self, variables_number, crossover_params):
+        """
+        Test that 'check_crossover_parameters' raises TypeError when value of incorrect type is provided.
+
+        :param variables_number: Example value of 'variables_number'.
+        :param crossover_params: Example invalid values (wrong type) of crossover parameters.
+        """
+        with pytest.raises(TypeError):
+            assert check_crossover_parameters(variables_number=variables_number, **crossover_params) is None
+
+    @pytest.mark.parametrize("variables_number, crossover_params", [
+        (3, {"crossover_points_number": 1}),
+        (3, {"crossover_points_number": 3}),
+        (8, {"crossover_points_number": 1}),
+        (8, {"crossover_points_number": 8}),
+        (3, {"crossover_pattern": 0}),
+        (3, {"crossover_pattern": 7}),
+        (8, {"crossover_pattern": 0}),
+        (8, {"crossover_pattern": 255}),
+        (10, {"crossover_points_number": -1, "crossover_pattern": -1}),
+    ])
+    def test_check_crossover_parameters__invalid_value(self, variables_number, crossover_params):
+        """
+        Test that 'check_crossover_parameters' raises ValueError when invalid value is provided.
+
+        :param variables_number: Example value of 'variables_number'.
+        :param crossover_params: Example invalid values (wrong value) of crossover parameters.
+        """
+        with pytest.raises(ValueError):
+            assert check_crossover_parameters(variables_number=variables_number, **crossover_params) is None
 
 
 class TestCrossoverFunctions:

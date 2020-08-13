@@ -126,7 +126,7 @@ def check_ranking_bias(ranking_bias: float) -> None:
                          f"Actual value: {ranking_bias}.")
 
 
-# selection implementation
+# selection functions
 
 
 def uniform_selection(population_size: int,

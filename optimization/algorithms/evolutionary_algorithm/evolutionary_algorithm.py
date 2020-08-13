@@ -10,7 +10,7 @@ from ...problem import OptimizationProblem
 from ...stop_conditions import StopConditions
 from ...logging import AbstractLogger
 from .selection import SelectionType, SELECTION_FUNCTIONS, SELECTION_ADDITIONAL_PARAMS, check_selection_parameters
-from .crossover import CrossoverType
+from .crossover import CrossoverType, CROSSOVER_FUNCTIONS, CROSSOVER_ADDITIONAL_PARAMS, check_crossover_parameters
 from .mutation import MutationType
 
 
@@ -83,10 +83,15 @@ class EvolutionaryAlgorithm(AbstractOptimizationAlgorithm):
         self.mutation_chance = mutation_chance
         self.apply_elitism = apply_elitism
         self.selection_function = SELECTION_FUNCTIONS[self.selection_type]
+        self.selection_function = CROSSOVER_FUNCTIONS[self.crossover_type]
+        # self.selection_function = MUTATION_FUNCTIONS[self.mutation_type]
         self.selection_params: Dict[str, Any] = {}
         self.crossover_params: Dict[str, Any] = {}
         self.mutation_params: Dict[str, Any] = {}
         for selection_param in SELECTION_ADDITIONAL_PARAMS[self.selection_type]:
             self.selection_params[selection_param] = other_params.pop(selection_param)
         check_selection_parameters(**self.selection_params)
+        for crossover_param in CROSSOVER_ADDITIONAL_PARAMS[self.crossover_type]:
+            self.crossover_params[crossover_param] = other_params.pop(crossover_param)
+        check_crossover_parameters(variables_number=len(self.problem.decision_variables), **self.crossover_params)
         # todo: extract selection_params, crossover_params, mutation_params and raise meaningful exception if not there
