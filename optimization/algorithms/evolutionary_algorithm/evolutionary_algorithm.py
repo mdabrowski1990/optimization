@@ -11,7 +11,7 @@ from ...stop_conditions import StopConditions
 from ...logging import AbstractLogger
 from .selection import SelectionType, SELECTION_FUNCTIONS, SELECTION_ADDITIONAL_PARAMS, check_selection_parameters
 from .crossover import CrossoverType, CROSSOVER_FUNCTIONS, CROSSOVER_ADDITIONAL_PARAMS, check_crossover_parameters
-from .mutation import MutationType
+from .mutation import MutationType, MUTATION_FUNCTIONS, MUTATION_ADDITIONAL_PARAMS, check_mutation_parameters
 
 
 class EvolutionaryAlgorithm(AbstractOptimizationAlgorithm):
@@ -84,7 +84,7 @@ class EvolutionaryAlgorithm(AbstractOptimizationAlgorithm):
         self.apply_elitism = apply_elitism
         self.selection_function = SELECTION_FUNCTIONS[self.selection_type]
         self.selection_function = CROSSOVER_FUNCTIONS[self.crossover_type]
-        # self.selection_function = MUTATION_FUNCTIONS[self.mutation_type]
+        self.selection_function = MUTATION_FUNCTIONS[self.mutation_type]
         self.selection_params: Dict[str, Any] = {}
         self.crossover_params: Dict[str, Any] = {}
         self.mutation_params: Dict[str, Any] = {}
@@ -94,4 +94,8 @@ class EvolutionaryAlgorithm(AbstractOptimizationAlgorithm):
         for crossover_param in CROSSOVER_ADDITIONAL_PARAMS[self.crossover_type]:
             self.crossover_params[crossover_param] = other_params.pop(crossover_param)
         check_crossover_parameters(variables_number=len(self.problem.decision_variables), **self.crossover_params)
-        # todo: extract selection_params, crossover_params, mutation_params and raise meaningful exception if not there
+        for mutation_param in MUTATION_ADDITIONAL_PARAMS[self.mutation_type]:
+            self.mutation_params[mutation_param] = other_params.pop(mutation_param)
+        check_mutation_parameters(variables_number=len(self.problem.decision_variables), **self.mutation_params)
+        if other_params:
+            raise ValueError(f"Unexpected 'other_params' received: {other_params}.")
