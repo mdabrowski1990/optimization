@@ -2,7 +2,63 @@ import pytest
 from mock import patch, Mock, call
 
 from optimization.algorithms.evolutionary_algorithm.mutation import single_point_mutation, multi_point_mutation, \
-    probabilistic_mutation
+    probabilistic_mutation, check_mutation_parameters
+
+
+class TestUtilities:
+    """Tests for utilities functions"""
+
+    # check_crossover_parameters
+
+    @pytest.mark.parametrize("variables_number, mutation_params", [
+        (1, {}),
+        (8, {}),
+        (3, {"mutation_points_number": 2}),
+        (8, {"mutation_points_number": 2}),
+        (8, {"mutation_points_number": 5}),
+        (8, {"mutation_points_number": 7}),
+    ])
+    def test_check_mutation_parameters__valid(self, variables_number, mutation_params):
+        """
+        Test that 'check_mutation_parameters' raises no exception when valid parameter values are provided.
+
+        :param variables_number: Example value of 'variables_number'.
+        :param mutation_params: Example valid values of mutation parameters.
+        """
+        assert check_mutation_parameters(variables_number=variables_number, **mutation_params) is None
+
+    @pytest.mark.parametrize("variables_number, mutation_params", [
+        (3, {"mutation_points_number": 2.1}),
+        (8, {"mutation_points_number": "3"}),
+        (8, {"mutation_points_number": None}),
+    ])
+    def test_check_crossover_parameters__invalid_type(self, variables_number, mutation_params):
+        """
+        Test that 'check_mutation_parameters' raises TypeError when value of incorrect type is provided.
+
+        :param variables_number: Example value of 'variables_number'.
+        :param mutation_params: Example invalid values (wrong type) of mutation parameters.
+        """
+        with pytest.raises(TypeError):
+            check_mutation_parameters(variables_number=variables_number, **mutation_params)
+
+    @pytest.mark.parametrize("variables_number, mutation_params", [
+        (3, {"mutation_points_number": 1}),
+        (3, {"mutation_points_number": 3}),
+        (8, {"mutation_points_number": 1}),
+        (8, {"mutation_points_number": 8}),
+        (8, {"mutation_points_number": 0}),
+        (8, {"mutation_points_number": -3}),
+    ])
+    def test_check_crossover_parameters__invalid_value(self, variables_number, mutation_params):
+        """
+        Test that 'check_mutation_parameters' raises ValueError when value of incorrect value is provided.
+
+        :param variables_number: Example value of 'variables_number'.
+        :param mutation_params: Example invalid values (wrong value) of mutation parameters.
+        """
+        with pytest.raises(ValueError):
+            check_mutation_parameters(variables_number=variables_number, **mutation_params)
 
 
 class TestMutationFunctions:

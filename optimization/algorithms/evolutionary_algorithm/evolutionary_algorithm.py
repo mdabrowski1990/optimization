@@ -22,12 +22,12 @@ class EvolutionaryAlgorithm(AbstractOptimizationAlgorithm):
     for given optimization problem.
     """
 
-    def __init__(self, problem: OptimizationProblem,  # pylint: disable=too-many-arguments
+    def __init__(self, problem: OptimizationProblem,  # pylint: disable=too-many-arguments, too-many-branches
                  stop_conditions: StopConditions,
                  population_size: int,
                  selection_type: Union[SelectionType, str],
                  crossover_type: Union[CrossoverType, str],
-                 mutation_type: Union[CrossoverType, str],
+                 mutation_type: Union[MutationType, str],
                  mutation_chance: float,
                  apply_elitism: bool,
                  logger: Optional[AbstractLogger] = None,

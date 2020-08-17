@@ -47,7 +47,7 @@ class TestUtilities:
         :param crossover_params: Example invalid values (wrong type) of crossover parameters.
         """
         with pytest.raises(TypeError):
-            assert check_crossover_parameters(variables_number=variables_number, **crossover_params) is None
+            check_crossover_parameters(variables_number=variables_number, **crossover_params)
 
     @pytest.mark.parametrize("variables_number, crossover_params", [
         (3, {"crossover_points_number": 1}),
@@ -68,7 +68,7 @@ class TestUtilities:
         :param crossover_params: Example invalid values (wrong value) of crossover parameters.
         """
         with pytest.raises(ValueError):
-            assert check_crossover_parameters(variables_number=variables_number, **crossover_params) is None
+            check_crossover_parameters(variables_number=variables_number, **crossover_params)
 
 
 class TestCrossoverFunctions:
