@@ -39,7 +39,6 @@ class TestRandomAlgorithm:
         RandomAlgorithm.__init__(self=self.mock_random_algorithm_object, stop_conditions=stop_conditions,
                                  problem=problem, logger=logger, population_size=population_size)
         assert self.mock_random_algorithm_object.population_size == population_size
-        assert self.mock_random_algorithm_object.SolutionClass.optimization_problem == problem
         self.mock_abstract_algorithm_class_init.assert_called_once_with(problem=problem,
                                                                         stop_conditions=stop_conditions, logger=logger)
 

@@ -5,7 +5,8 @@ Code is basing on  information from:
 'Introduction to Evolutionary Computing. Second edition.' Eiben, A.E., Smith, James E.
 """
 
-__all__ = ["SelectionType", "SELECTION_FUNCTIONS", "SELECTION_ADDITIONAL_PARAMS", "check_selection_parameters"]
+__all__ = ["SelectionType", "SELECTION_FUNCTIONS", "SELECTION_ADDITIONAL_PARAMS", "check_selection_parameters",
+           "SelectionOutput"]
 
 
 from typing import List, Iterator, Union, Tuple, Dict, Callable, Any

@@ -1,6 +1,7 @@
 """Crossover functions implementation that are used by Evolutionary Algorithms."""
 
-__all__ = ["CrossoverType", "CROSSOVER_FUNCTIONS", "CROSSOVER_ADDITIONAL_PARAMS", "check_crossover_parameters"]
+__all__ = ["CrossoverType", "CROSSOVER_FUNCTIONS", "CROSSOVER_ADDITIONAL_PARAMS", "check_crossover_parameters",
+           "ChildrenValuesTyping"]
 
 
 from typing import Tuple, Dict, Callable, Any
