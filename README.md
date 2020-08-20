@@ -168,7 +168,7 @@ random_algorithm.perform_optimization()
 ```
 
 #### Evolutionary Algorithm
-Evolutionary algorithm simulates mechanisms that takes place in nature (evolution and natural selection). 
+Evolutionary algorithm simulates mechanisms that takes place in nature (biological evolution, natural selection, reproduction, mutation etc.). 
 Each solution is considered an individual and a group of solutions is considered a population.
 In following iterations of this algorithm a population is evolving in order to produce the best adjusted individuals.
 Evolution process consists of 3 stages:
