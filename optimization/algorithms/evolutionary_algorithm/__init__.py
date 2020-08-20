@@ -3,10 +3,14 @@ Evolutionary algorithms.
 
 In this package, you can find following algorithms:
 - EvolutionaryAlgorithm - classic Evolutionary algorithm
-- SelfAdaptiveEvolutionaryAlgorithm - Evolutionary Algorithm that optimizes both optimized problem and
-    optimization process.
-Additionally, it is available code for following functions that are part of evolutionary optimization process:
-- Selection - functions that selects individuals that would will become parents for new population
-- Crossover - functions that mixes attributes of two individuals in order to create two new children
-- Mutation - functions that provides mutation to children genes in order to perform search in adjacent areas
+
+Additionally, there enums with implemented and possible to choose selection, crossover and mutation functions:
+- SelectionType - enum with all implemented selection types supported by EvolutionaryAlgorithm
+- CrossoverType - enum with all implemented crossover types supported by EvolutionaryAlgorithm
+- MutationType - enum with all implemented mutation types supported by EvolutionaryAlgorithm
 """
+
+from .evolutionary_algorithm import EvolutionaryAlgorithm
+from .selection import SelectionType
+from .crossover import CrossoverType
+from .mutation import MutationType
