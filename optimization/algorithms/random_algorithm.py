@@ -6,7 +6,7 @@ __all__ = ["RandomAlgorithm"]
 from typing import Optional, Dict, Union
 
 from .abstract_algorithm import AbstractOptimizationAlgorithm
-from ..problem import OptimizationProblem, AbstractSolution
+from ..problem import OptimizationProblem
 from ..stop_conditions import StopConditions
 from ..logging import AbstractLogger
 
@@ -38,13 +38,6 @@ class RandomAlgorithm(AbstractOptimizationAlgorithm):
                              f"Actual value: {population_size}.")
         super().__init__(problem=problem, stop_conditions=stop_conditions, logger=logger)
         self.population_size = population_size
-
-        class Solution(AbstractSolution):
-            """Solution class for given optimization problem."""
-
-            optimization_problem = problem
-
-        self.SolutionClass = Solution
 
     def _perform_iteration(self, iteration_index: int) -> None:
         """

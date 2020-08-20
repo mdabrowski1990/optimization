@@ -2,7 +2,7 @@ import pytest
 from mock import Mock, patch, call
 
 from optimization.algorithms.abstract_algorithm import AbstractOptimizationAlgorithm, \
-    OptimizationProblem, StopConditions, AbstractLogger
+    OptimizationProblem, StopConditions, AbstractLogger, AbstractSolution
 
 
 class TestAbstractOptimizationAlgorithm:
@@ -81,6 +81,8 @@ class TestAbstractOptimizationAlgorithm:
                                                stop_conditions=self.mock_stop_conditions_object)
         assert self.mock_algorithm_object.problem == self.mock_problem_object
         assert self.mock_algorithm_object.stop_conditions == self.mock_stop_conditions_object
+        assert issubclass(self.mock_algorithm_object.SolutionClass, AbstractSolution)
+        assert self.mock_algorithm_object.SolutionClass.optimization_problem == self.mock_problem_object
         assert self.mock_algorithm_object.logger is None
         assert self.mock_algorithm_object._start_time is None
         assert self.mock_algorithm_object._end_time is None
@@ -95,6 +97,8 @@ class TestAbstractOptimizationAlgorithm:
                                                logger=self.mock_logger_object)
         assert self.mock_algorithm_object.problem == self.mock_problem_object
         assert self.mock_algorithm_object.stop_conditions == self.mock_stop_conditions_object
+        assert issubclass(self.mock_algorithm_object.SolutionClass, AbstractSolution)
+        assert self.mock_algorithm_object.SolutionClass.optimization_problem == self.mock_problem_object
         assert self.mock_algorithm_object.logger == self.mock_logger_object
         assert self.mock_algorithm_object._start_time is None
         assert self.mock_algorithm_object._end_time is None

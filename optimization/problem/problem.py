@@ -78,6 +78,7 @@ class OptimizationProblem:
         self.constraints = constraints
         self.penalty_function = penalty_function
         self.objective_function = objective_function
+        self.variables_number = len(self.decision_variables)
 
     def get_log_data(self) -> Dict[str, Union[str, dict, list]]:
         """

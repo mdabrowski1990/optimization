@@ -40,6 +40,13 @@ class AbstractOptimizationAlgorithm(ABC):
         self._end_time: Optional[datetime] = None
         self._best_solution: Optional[AbstractSolution] = None
 
+        class Solution(AbstractSolution):
+            """Solution class for given optimization problem."""
+
+            optimization_problem = problem
+
+        self.SolutionClass = Solution
+
     @abstractmethod
     def _perform_iteration(self, iteration_index: int) -> None:
         """

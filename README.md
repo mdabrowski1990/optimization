@@ -154,8 +154,9 @@ In order to execute optimization process, you must select and optimization algor
 optimization process.
 
 #### Random algorithm
-Random algorithm is searching for optimal solution by simply checking random solution.
-It is advised to use it only for research, comparison or education purposes. Example use:
+Random algorithm searches for optimal solution by simply checking totally random solutions.
+It is advised to use it only for research, comparison or education purposes.  
+Example use:
 ```python
 import optimization
 
@@ -166,15 +167,31 @@ random_algorithm = optimization.RandomAlgorithm(stop_conditions=stop_conditions,
 random_algorithm.perform_optimization()
 ```
 
+#### Evolutionary Algorithm
+Evolutionary algorithm simulates mechanisms that takes place in nature (biological evolution, natural selection, reproduction, mutation etc.). 
+Each solution is considered an individual and a group of solutions is considered a population.
+In following iterations of this algorithm a population is evolving in order to produce the best adjusted individuals.
+Evolution process consists of 3 stages:
+- selection - pairs of individuals are chosen to be parents
+- crossover - parents genes (decision variables values) are mixed and passed for two new children (two new solutions are created)
+- mutation - random gene(s) (decision variables values) of each child might be changed  
+
+Example use:
+```python
+import optimization
+
+stop_conditions = optimization.StopConditions(...)  # look above to learn how to configure it properly
+problem = optimization.OptimizationProblem(...)  # look above to learn how to configure it properly
+
+evolutionary_algorithm = optimization.EvolutionaryAlgorithm(stop_conditions=stop_conditions, problem=problem,
+    population_size=100, selection_type=optimization.SelectionType.Uniform, 
+    crossover_type=optimization.CrossoverType.SinglePoint, mutation_type=optimization.MutationType.Probabilistic, 
+    mutation_chance=0.1, apply_elitism=False)
+evolutionary_algorithm.perform_optimization()
+```
+
 ### Optimization knowledge base
 https://www.extremeoptimization.com/Documentation/Mathematics/Optimization/Default.aspx
 https://en.wikipedia.org/wiki/Constrained_optimization
 https://en.wikipedia.org/wiki/Penalty_method
 https://en.wikipedia.org/wiki/Multi-objective_optimization
-
-
-### Development
-This part is restricted for development information
-
-##### Static code analysis:
-prospector --profile prospector_profile.yaml optimization
