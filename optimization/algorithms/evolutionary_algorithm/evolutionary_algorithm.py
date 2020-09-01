@@ -123,6 +123,17 @@ class EvolutionaryAlgorithm(AbstractOptimizationAlgorithm):
         check_crossover_parameters(variables_number=self.problem.variables_number, **self.crossover_params)
         check_mutation_parameters(variables_number=self.problem.variables_number, **self.mutation_params)
 
+    def _log_iteration(self, iteration_index: int) -> None:
+        """
+        Logs population data in given algorithm's iteration.
+
+        :param iteration_index: Index number (counted from 0) of optimization algorithm iteration.
+
+        :return: None
+        """
+        if self.logger is not None:
+            self.logger.log_iteration(iteration=iteration_index, solutions=self._population)
+
     def _generate_random_population(self) -> None:
         """
         Creates initial random population of solutions. To be called as initial iteration.
@@ -199,8 +210,7 @@ class EvolutionaryAlgorithm(AbstractOptimizationAlgorithm):
             self._evolution_iteration()
         self._best_solution = max(*self._population) if self._best_solution is None \
             else max(*self._population, self._best_solution)
-        if self.logger is not None:
-            self.logger.log_iteration(iteration=iteration_index, solutions=self._population)
+        self._log_iteration(iteration_index=iteration_index)
 
     def get_log_data(self) -> Dict[str, Any]:
         """

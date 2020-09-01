@@ -31,6 +31,7 @@ class TestEvolutionaryAlgorithm:
         self.mock_perform_mutation = Mock()
         self.mock_generate_random_population = Mock()
         self.mock_evolution_iteration = Mock()
+        self.mock_log_iteration = Mock()
         self.mock_evolutionary_algorithm_object = Mock(spec=EvolutionaryAlgorithm,
                                                        _check_init_input=self.mock_check_init_input,
                                                        _check_additional_parameters=self.mock_check_additional_parameters,
@@ -38,7 +39,8 @@ class TestEvolutionaryAlgorithm:
                                                        _perform_crossover=self.mock_perform_crossover,
                                                        _perform_mutation=self.mock_perform_mutation,
                                                        _generate_random_population=self.mock_generate_random_population,
-                                                       _evolution_iteration=self.mock_evolution_iteration)
+                                                       _evolution_iteration=self.mock_evolution_iteration,
+                                                       _log_iteration=self.mock_log_iteration)
         # patching
         self._patcher_abstract_algorithm_init = patch(f"{self.SCRIPT_LOCATION}.AbstractOptimizationAlgorithm.__init__")
         self.mock_abstract_algorithm_class_init = self._patcher_abstract_algorithm_init.start()
@@ -320,6 +322,34 @@ class TestEvolutionaryAlgorithm:
         self.mock_check_crossover_parameters.assert_called_once_with(variables_number=variables_number, **crossover_params)
         self.mock_check_mutation_parameters.assert_called_once_with(variables_number=variables_number, **mutation_params)
 
+    # _log_iteration
+
+    @pytest.mark.parametrize("index", [0, 10, 54254])
+    def test_log_iteration_no_logger(self, index):
+        """
+        Test '_log_iteration' method without logger.
+
+        :param index: Number of algorithm's iteration.
+        """
+        self.mock_evolutionary_algorithm_object.logger = None
+        EvolutionaryAlgorithm._log_iteration(self=self.mock_evolutionary_algorithm_object, iteration_index=index)
+
+    @pytest.mark.parametrize("index", [0, 10, 54254])
+    @pytest.mark.parametrize("population", [range(10), "abcdefg"])
+    def test_log_iteration_no_logger(self, index, population):
+        """
+        Test '_log_iteration' method with logger.
+
+        :param index: Number of algorithm's iteration.
+        :param population: Example algorithm's population.
+        :return:
+        """
+        logger_mock = Mock()
+        self.mock_evolutionary_algorithm_object.logger = logger_mock
+        self.mock_evolutionary_algorithm_object._population = population
+        EvolutionaryAlgorithm._log_iteration(self=self.mock_evolutionary_algorithm_object, iteration_index=index)
+        logger_mock.log_iteration.assert_called_once_with(iteration=index, solutions=population)
+
     # _generate_random_population
 
     @pytest.mark.parametrize("population_size, solutions", [
@@ -498,9 +528,9 @@ class TestEvolutionaryAlgorithm:
 
     @pytest.mark.parametrize("current_best", [None, - 5, 13, 2.53])
     @pytest.mark.parametrize("population", [range(-10, -6), range(-5, 10, 2)])
-    def test_perform_iteration__iteration_zero_without_logger(self, current_best, population):
+    def test_perform_iteration__iteration_zero(self, current_best, population):
         """
-        Test '_perform_iteration' method for iteration 0 and no logger.
+        Test '_perform_iteration' method for iteration 0.
 
         :param current_best: Currently best solution.
         :param population: Generated population.
@@ -515,33 +545,12 @@ class TestEvolutionaryAlgorithm:
             assert self.mock_evolutionary_algorithm_object._best_solution == max(population)
         else:
             assert self.mock_evolutionary_algorithm_object._best_solution == max(*population, current_best)
-
-    @pytest.mark.parametrize("current_best", [None, - 5, 13, 2.53])
-    @pytest.mark.parametrize("population", [range(-10, -6), range(-5, 10, 2)])
-    def test_perform_iteration__iteration_zero_with_logger(self, current_best, population):
-        """
-        Test '_perform_iteration' method for iteration 0 and logger.
-
-        :param current_best: Currently best solution.
-        :param population: Generated population.
-        """
-        logger = Mock()
-        self.mock_evolutionary_algorithm_object.logger = logger
-        self.mock_evolutionary_algorithm_object._best_solution = current_best
-        self.mock_evolutionary_algorithm_object._population = population
-        EvolutionaryAlgorithm._perform_iteration(self=self.mock_evolutionary_algorithm_object, iteration_index=0)
-        self.mock_generate_random_population.assert_called_once_with()
-        self.mock_evolution_iteration.assert_not_called()
-        logger.log_iteration.assert_called_once_with(iteration=0, solutions=population)
-        if current_best is None:
-            assert self.mock_evolutionary_algorithm_object._best_solution == max(population)
-        else:
-            assert self.mock_evolutionary_algorithm_object._best_solution == max(*population, current_best)
+        self.mock_log_iteration.assert_called_once_with(iteration_index=0)
 
     @pytest.mark.parametrize("iteration", [1, 323])
     @pytest.mark.parametrize("current_best", [None, - 5, 13, 2.53])
     @pytest.mark.parametrize("population", [range(-10, -6), range(-5, 10, 2)])
-    def test_perform_iteration__following_iteration_without_logger(self, current_best, population, iteration):
+    def test_perform_iteration__following_iteration(self, current_best, population, iteration):
         """
         Test '_perform_iteration' method for following iteration (non zero) and no logger.
 
@@ -559,30 +568,7 @@ class TestEvolutionaryAlgorithm:
             assert self.mock_evolutionary_algorithm_object._best_solution == max(population)
         else:
             assert self.mock_evolutionary_algorithm_object._best_solution == max(*population, current_best)
-
-    @pytest.mark.parametrize("iteration", [1, 323])
-    @pytest.mark.parametrize("current_best", [None, - 5, 13, 2.53])
-    @pytest.mark.parametrize("population", [range(-10, -6), range(-5, 10, 2)])
-    def test_perform_iteration__following_iteration_with_logger(self, current_best, population, iteration):
-        """
-        Test '_perform_iteration' method for following iteration (non zero) and logger.
-
-        :param current_best: Currently best solution.
-        :param population: Generated population.
-        :param iteration: Example index of iteration.
-        """
-        logger = Mock()
-        self.mock_evolutionary_algorithm_object.logger = logger
-        self.mock_evolutionary_algorithm_object._best_solution = current_best
-        self.mock_evolutionary_algorithm_object._population = population
-        EvolutionaryAlgorithm._perform_iteration(self=self.mock_evolutionary_algorithm_object, iteration_index=iteration)
-        self.mock_generate_random_population.assert_not_called()
-        self.mock_evolution_iteration.assert_called_once_with()
-        logger.log_iteration.assert_called_once_with(iteration=iteration, solutions=population)
-        if current_best is None:
-            assert self.mock_evolutionary_algorithm_object._best_solution == max(population)
-        else:
-            assert self.mock_evolutionary_algorithm_object._best_solution == max(*population, current_best)
+        self.mock_log_iteration.assert_called_once_with(iteration_index=iteration)
 
     # get_log_data
 
