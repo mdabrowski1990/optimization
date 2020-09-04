@@ -43,7 +43,7 @@ class EvolutionaryAlgorithm(OptimizationAlgorithm):
 
         :raise ValueError: Parameter 'other_params' contains unused values.
         """
-        super().__init__(optimization_problem=optimization_problem, stop_condition=stop_condition, logger=logger)
+        super(EvolutionaryAlgorithm, self).__init__(optimization_problem=optimization_problem, stop_condition=stop_condition, logger=logger)
         self.population_size = population_size
         # selection configuration
         self.selection_type = selection_type if isinstance(selection_type, str) else selection_type.value
@@ -118,7 +118,7 @@ class EvolutionaryAlgorithm(OptimizationAlgorithm):
         return new_population
 
     def get_data_for_logging(self):
-        data = super().get_data_for_logging()
+        data = super(EvolutionaryAlgorithm, self).get_data_for_logging()
         data.update({
             # selection
             "selection_params": self.selection_params, "selection_type": self.selection_type,

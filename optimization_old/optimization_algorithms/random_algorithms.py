@@ -24,7 +24,7 @@ class RandomAlgorithm(OptimizationAlgorithm):
 
         :return Random optimization_old algorithm ready for the optimization_old process.
         """
-        super().__init__(optimization_problem=optimization_problem, stop_condition=stop_condition, logger=logger)
+        super(RandomAlgorithm, self).__init__(optimization_problem=optimization_problem, stop_condition=stop_condition, logger=logger)
         self.population_size = population_size
 
     def _initial_iteration(self) -> List[AbstractSolution]:
@@ -51,6 +51,6 @@ class RandomAlgorithm(OptimizationAlgorithm):
 
         :return: Crucial data of this object.
         """
-        data = super().get_data_for_logging()
+        data = super(RandomAlgorithm, self).get_data_for_logging()
         data["population_size"] = repr(self.population_size)
         return data

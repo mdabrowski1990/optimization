@@ -2,7 +2,7 @@ import pytest
 from mock import Mock, patch
 
 from optimization.algorithms.evolutionary_algorithm.adaptive_evolutionary_algorithm import AdaptiveEvolutionaryAlgorithm, \
-    _LowerAdaptiveEvolutionaryAlgorithm
+    LowerAdaptiveEvolutionaryAlgorithm
 
 
 class TestLowerAdaptiveEvolutionaryAlgorithm:
@@ -10,7 +10,7 @@ class TestLowerAdaptiveEvolutionaryAlgorithm:
     SCRIPT_LOCATION = "optimization.algorithms.evolutionary_algorithm.adaptive_evolutionary_algorithm"
 
     def setup(self):
-        self.mock_lower_evolutionary_algorithm_object = Mock(spec=_LowerAdaptiveEvolutionaryAlgorithm)
+        self.mock_lower_evolutionary_algorithm_object = Mock(spec=LowerAdaptiveEvolutionaryAlgorithm)
         # patching
         self._patcher_evolutionary_algorithm_init = patch(f"{self.SCRIPT_LOCATION}.EvolutionaryAlgorithm.__init__")
         self.mock_evolutionary_algorithm_init = self._patcher_evolutionary_algorithm_init.start()
@@ -31,8 +31,8 @@ class TestLowerAdaptiveEvolutionaryAlgorithm:
         :param index: Example value of 'index' attribute.
         :param params: Some additional parameters.
         """
-        _LowerAdaptiveEvolutionaryAlgorithm.__init__(self=self.mock_lower_evolutionary_algorithm_object,
-                                                     upper_iteration=upper_iteration, index=index, **params)
+        LowerAdaptiveEvolutionaryAlgorithm.__init__(self=self.mock_lower_evolutionary_algorithm_object,
+                                                    upper_iteration=upper_iteration, index=index, **params)
         assert self.mock_lower_evolutionary_algorithm_object.upper_iteration == upper_iteration
         assert self.mock_lower_evolutionary_algorithm_object.index == index
         assert self.mock_lower_evolutionary_algorithm_object._population == []
@@ -50,9 +50,9 @@ class TestLowerAdaptiveEvolutionaryAlgorithm:
         :param index: Example value of 'index' attribute.
         :param params: Some additional parameters.
         """
-        _LowerAdaptiveEvolutionaryAlgorithm.__init__(self=self.mock_lower_evolutionary_algorithm_object,
-                                                     upper_iteration=upper_iteration, index=index,
-                                                     initial_population=initial_population, **params)
+        LowerAdaptiveEvolutionaryAlgorithm.__init__(self=self.mock_lower_evolutionary_algorithm_object,
+                                                    upper_iteration=upper_iteration, index=index,
+                                                    initial_population=initial_population, **params)
         assert self.mock_lower_evolutionary_algorithm_object.upper_iteration == upper_iteration
         assert self.mock_lower_evolutionary_algorithm_object.index == index
         assert self.mock_lower_evolutionary_algorithm_object._population == initial_population
@@ -68,8 +68,8 @@ class TestLowerAdaptiveEvolutionaryAlgorithm:
         :param iteration_index: Example value of 'iteration_index'.
         """
         self.mock_lower_evolutionary_algorithm_object.logger = None
-        _LowerAdaptiveEvolutionaryAlgorithm._log_iteration(self=self.mock_lower_evolutionary_algorithm_object,
-                                                           iteration_index=iteration_index)
+        LowerAdaptiveEvolutionaryAlgorithm._log_iteration(self=self.mock_lower_evolutionary_algorithm_object,
+                                                          iteration_index=iteration_index)
 
     @pytest.mark.parametrize("iteration_index", [0, 1, 23])
     @pytest.mark.parametrize("upper_iteration", [2, 3])
@@ -89,8 +89,8 @@ class TestLowerAdaptiveEvolutionaryAlgorithm:
         self.mock_lower_evolutionary_algorithm_object.upper_iteration = upper_iteration
         self.mock_lower_evolutionary_algorithm_object.index = lower_algorithm_index
         self.mock_lower_evolutionary_algorithm_object._population = population
-        _LowerAdaptiveEvolutionaryAlgorithm._log_iteration(self=self.mock_lower_evolutionary_algorithm_object,
-                                                           iteration_index=iteration_index)
+        LowerAdaptiveEvolutionaryAlgorithm._log_iteration(self=self.mock_lower_evolutionary_algorithm_object,
+                                                          iteration_index=iteration_index)
         mock_logger.log_lower_level_iteration.assert_called_once_with(upper_iteration=upper_iteration,
                                                                       lower_algorithm_index=lower_algorithm_index,
                                                                       lower_iteration=iteration_index,
