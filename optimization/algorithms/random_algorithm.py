@@ -36,7 +36,7 @@ class RandomAlgorithm(AbstractOptimizationAlgorithm):
         if population_size <= 0:
             raise ValueError(f"Parameter 'population_size' value must be greater than 0. "
                              f"Actual value: {population_size}.")
-        super(RandomAlgorithm, self).__init__(problem=problem, stop_conditions=stop_conditions, logger=logger)
+        super().__init__(problem=problem, stop_conditions=stop_conditions, logger=logger)
         self.population_size = population_size
 
     def _perform_iteration(self, iteration_index: int) -> None:
@@ -57,6 +57,6 @@ class RandomAlgorithm(AbstractOptimizationAlgorithm):
 
         :return: Dictionary with this Random Algorithm crucial data.
         """
-        log_data = super(RandomAlgorithm, self).get_log_data()
+        log_data = super().get_log_data()
         log_data.update(population_size=self.population_size)
         return log_data

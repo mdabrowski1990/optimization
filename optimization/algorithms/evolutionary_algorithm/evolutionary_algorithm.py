@@ -59,7 +59,7 @@ class EvolutionaryAlgorithm(AbstractOptimizationAlgorithm):
         """
         self._check_init_input(population_size=population_size, mutation_chance=mutation_chance,
                                apply_elitism=apply_elitism)
-        super(EvolutionaryAlgorithm, self).__init__(problem=problem, stop_conditions=stop_conditions, logger=logger)
+        super().__init__(problem=problem, stop_conditions=stop_conditions, logger=logger)
         self.population_size = population_size
         self._population: list = []
         self.mutation_chance = mutation_chance
@@ -218,7 +218,7 @@ class EvolutionaryAlgorithm(AbstractOptimizationAlgorithm):
 
         :return: Dictionary with this Evolutionary Algorithm crucial data.
         """
-        log_data = super(EvolutionaryAlgorithm, self).get_log_data()
+        log_data = super().get_log_data()
         log_data.update(population_size=self.population_size, apply_elitism=self.apply_elitism,
                         selection_type=self.selection_type, selection_params=self.selection_params,
                         crossover_type=self.crossover_type, crossover_params=self.crossover_params,
