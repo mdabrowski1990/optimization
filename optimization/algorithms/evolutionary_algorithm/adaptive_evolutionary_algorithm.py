@@ -6,7 +6,7 @@ Evolutionary algorithms that performs two level optimization of:
  - adaptation problem - searching for optimal settings of evolutionary settings
 """
 
-__all__ = ["AdaptiveEvolutionaryAlgorithm"]
+__all__ = ["AdaptiveEvolutionaryAlgorithm", "EvolutionaryAlgorithmAdaptationProblem"]
 
 
 from typing import Any, Union, Optional, Tuple, Iterable, Dict, Callable
@@ -19,9 +19,10 @@ from ...problem import OptimizationProblem, AbstractSolution, OptimizationType, 
     IntegerVariable, DiscreteVariable, FloatVariable, ChoiceVariable
 from ...stop_conditions import StopConditions
 from ...logging import AbstractLogger
-from .selection import SelectionType
+from .selection import SelectionType, SELECTION_ADDITIONAL_PARAMS_LIMITS
 from .crossover import CrossoverType
 from .mutation import MutationType
+# mypy: ignore-errors
 
 
 class AdaptationType(Enum):
@@ -33,19 +34,11 @@ class AdaptationType(Enum):
      - BestSolutions - algorithm effectiveness is considered to be equal a sum of N best solutions objective values
      - BestSolutionsPercentile - algorithm effectiveness is considered to be equal an average of
             P% best solutions objective values
-     - BestSolutionsProgress - algorithm effectiveness is considered to be equal SUM_END - SUM_START, where:
-            SUM_END - a sum of N best solutions objective values in the iteration 0
-            SUM_START - a sum of N best solutions objective values in the last iteration
-     - BestSolutionsPercentileProgress - algorithm effectiveness is considered to be equal AVE_END - AVE_START, where:
-            AVE_END - an average of P% best solutions in the iteration 0
-            AVE_START - an average of P% best solutions in the last iteration
     """
 
     BestSolution = "BestSolution"
     BestSolutions = "BestSolutions"
     BestSolutionsPercentile = "BestSolutionsPercentile"
-    BestSolutionsProgress = "BestSolutionsProgress"
-    BestSolutionsPercentileProgress = "BestSolutionsPercentileProgress"
 
 
 class EvolutionaryAlgorithmAdaptationProblem(OptimizationProblem):
@@ -77,6 +70,7 @@ class EvolutionaryAlgorithmAdaptationProblem(OptimizationProblem):
         :param optional_params: Definition of other (optional) parameters that depends on
             selection/crossover/mutation type.
         """
+        # pylint: disable=too-many-locals
         decision_variables = OrderedDict(
             population_size=DiscreteVariable(min_value=population_size[0], max_value=population_size[1], step=2),
             selection_types=ChoiceVariable(possible_values=selection_types),
@@ -87,16 +81,73 @@ class EvolutionaryAlgorithmAdaptationProblem(OptimizationProblem):
         )
         super().__init__(decision_variables=decision_variables,
                          constraints={},  # no constraints are needed
-                         penalty_function=lambda **x: 0,  # penalty function is not used
+                         penalty_function=lambda **x: 0,  # penalty function is not used here
                          objective_function=self._create_objective_function(adaptation_type=adaptation_type),
                          optimization_type=OptimizationType.Maximize)  # default value (updated later on)
         # additional parameters
-        # todo: find additional parameters, check if they are correct, and create 'additional_decision_variable' dict
-        self.additional_decision_variable = {}
+        _min_group_size, _max_group_size = \
+            optional_params.get("tournament_group_size", SELECTION_ADDITIONAL_PARAMS_LIMITS["tournament_group_size"])
+        _min_roulette_bias, _max_roulette_bias = \
+            optional_params.get("roulette_bias", SELECTION_ADDITIONAL_PARAMS_LIMITS["roulette_bias"])
+        _min_ranking_bias, _max_ranking_bias = \
+            optional_params.get("ranking_bias", SELECTION_ADDITIONAL_PARAMS_LIMITS["ranking_bias"])
+        # temporary values for _max_crossover_points, _max_crossover_pattern and _max_mutation_points - updated later on
+        _min_crossover_points, _max_crossover_points = optional_params.get("crossover_points_number", [2, 1000])
+        _min_crossover_pattern, _max_crossover_pattern = 0, 1 << 1000
+        _min_mutation_points, _max_mutation_points = optional_params.get("mutation_points_number", [2, 1000])
+        self.additional_decision_variable = {
+            # selection
+            "tournament_group_size":
+                IntegerVariable(min_value=_min_group_size, max_value=_max_group_size),
+            "roulette_bias": FloatVariable(min_value=_min_roulette_bias, max_value=_max_roulette_bias),
+            "ranking_bias": FloatVariable(min_value=_min_ranking_bias, max_value=_max_ranking_bias),
+            # crossover
+            "crossover_points_number":
+                IntegerVariable(min_value=_min_crossover_points, max_value=_max_crossover_points),
+            "crossover_patter": IntegerVariable(min_value=_min_crossover_pattern, max_value=_max_crossover_pattern),
+            # mutation
+            "mutation_points_number":
+                IntegerVariable(min_value=_min_mutation_points, max_value=_max_mutation_points),
+        }
 
     @staticmethod
-    def _create_objective_function(adaptation_type) -> Callable:
-        ...
+    def _create_objective_function(adaptation_type: AdaptationType, percentile: Optional[float] = None,
+                                   number: Optional[int] = None) -> Callable:
+        """
+        Creates objective function for adaptation problem.
+
+        :param adaptation_type: Determines how to assess effectiveness of Evolutionary Algorithms.
+        :param percentile: Relevant for 'BestSolutionsPercentile', determines percentile of solutions to be considered.
+        :param number: Relevant for 'BestSolutions', determines number of solutions to be considered.
+
+        :return: Objective function for adaptation problem.
+        """
+        # pylint: disable= unused-argument
+        if adaptation_type == AdaptationType.BestSolution:
+            def adaptation_objective_function(best_solution: AbstractSolution, solutions: list, population_size: int,
+                                              **_: Any) -> float:
+                return best_solution.get_objective_value_with_penalty()
+        elif adaptation_type == AdaptationType.BestSolutions:
+            if not isinstance(number, int):
+                raise TypeError
+
+            def adaptation_objective_function(best_solution: AbstractSolution, solutions: list, population_size: int,
+                                              **_: Any) -> float:
+                return sum([solution.get_objective_value_with_penalty()
+                            for solution in sorted(solutions, reverse=True)[:number]])
+        elif adaptation_type == AdaptationType.BestSolutionsPercentile:
+            if not isinstance(percentile, float):
+                raise TypeError
+
+            def adaptation_objective_function(best_solution: AbstractSolution, solutions: list, population_size: int,
+                                              **_: Any) -> float:
+                considered_number = int(population_size*percentile // 100)
+                considered_number = max(considered_number, 1)
+                return sum([solution.get_objective_value_with_penalty()
+                            for solution in sorted(solutions, reverse=True)[:considered_number]])
+        else:
+            raise ValueError
+        return adaptation_objective_function
 
 
 class LowerAdaptiveEvolutionaryAlgorithm(EvolutionaryAlgorithm, AbstractSolution):
@@ -210,7 +261,17 @@ class AdaptiveEvolutionaryAlgorithm(EvolutionaryAlgorithm):
         :param logger: Logger used for optimization process recording.
         :param other_params: Parameter related to selected selection, crossover and mutation type.
         """
+        # TODO: protect from problem.variables_number < 4 and adaptation_problem uses 'crossover_points_number'
+        #  or 'mutation_points_number'
         adaptation_problem.optimization_type = problem.optimization_type
+        adaptation_problem.additional_decision_variable["crossover_points_number"].max_value \
+            = min(adaptation_problem.additional_decision_variable["crossover_points_number"].max_value,
+                  problem.variables_number // 2)
+        adaptation_problem.additional_decision_variable["crossover_patter"].max_value \
+            = (1 << problem.variables_number) - 1
+        adaptation_problem.additional_decision_variable["mutation_points_number"].max_value \
+            = min(adaptation_problem.additional_decision_variable["mutation_points_number"].max_value,
+                  problem.variables_number // 2)
         self.adaptation_problem = adaptation_problem
         super().__init__(problem=problem, stop_conditions=stop_conditions, population_size=population_size,
                          selection_type=selection_type, crossover_type=crossover_type, mutation_type=mutation_type,
@@ -221,6 +282,6 @@ class AdaptiveEvolutionaryAlgorithm(EvolutionaryAlgorithm):
 
             optimization_problem = adaptation_problem
 
-        self.SolutionClass = AdaptiveAESolution  # type: ignore
+        self.SolutionClass = AdaptiveAESolution
 
     # todo: a few methods must be updated
