@@ -1,17 +1,83 @@
 import pytest
 from mock import Mock, patch
 
-from optimization.algorithms.evolutionary_algorithm.adaptive_evolutionary_algorithm import AdaptiveEvolutionaryAlgorithm, \
-    LowerAdaptiveEvolutionaryAlgorithm, EvolutionaryAlgorithmAdaptationProblem
+from optimization.algorithms.evolutionary_algorithm.adaptive_evolutionary_algorithm import \
+    AdaptiveEvolutionaryAlgorithm, AdaptationType, LowerAdaptiveEvolutionaryAlgorithm, \
+    EvolutionaryAlgorithmAdaptationProblem, \
+    SelectionType, CrossoverType, MutationType, \
+    MIN_POPULATION_SIZE, MAX_POPULATION_SIZE, MIN_MUTATION_CHANCE, MAX_MUTATION_CHANCE
 
 
-# TODO: prepare tests
-# class TestEvolutionaryAlgorithmAdaptationProblem:
-#     # __init__
-#
-#     def test_init(self):
-#         EvolutionaryAlgorithmAdaptationProblem.__init__()
+class TestEvolutionaryAlgorithmAdaptationProblem:
 
+    SCRIPT_LOCATION = "optimization.algorithms.evolutionary_algorithm.adaptive_evolutionary_algorithm"
+
+    def setup(self):
+        self.mock_adaptation_problem_object = Mock(spec=EvolutionaryAlgorithmAdaptationProblem)
+        # patching
+        self._patcher_optimization_problem_init = patch(f"{self.SCRIPT_LOCATION}.OptimizationProblem.__init__")
+        self.mock_optimization_problem_init = self._patcher_optimization_problem_init.start()
+
+    def teardown(self):
+        self._patcher_optimization_problem_init.stop()
+
+    # __init__
+
+    @pytest.mark.parametrize("adaptation_type, adaptation_params", [
+        (AdaptationType.BestSolution, {}),
+        (AdaptationType.BestSolutions, {"solutions_number": 5}),
+        (AdaptationType.BestSolutionsPercentile, {"solutions_percentile": 0.1}),
+    ])
+    @pytest.mark.parametrize("selection_types, crossover_types, mutation_types", [
+        ({SelectionType.Ranking}, {CrossoverType.SinglePoint}, {MutationType.SinglePoint}),
+        (list(SelectionType), list(CrossoverType), list(MutationType)),
+    ])
+    def test_init__valid_input(self, adaptation_type, adaptation_params,
+                               selection_types, crossover_types, mutation_types):
+        EvolutionaryAlgorithmAdaptationProblem.__init__(self=self.mock_adaptation_problem_object,
+                                                        adaptation_type=adaptation_type,
+                                                        **adaptation_params,
+                                                        selection_types=selection_types,
+                                                        crossover_types=crossover_types,
+                                                        mutation_types=mutation_types,
+                                                        population_size_boundaries=(MIN_POPULATION_SIZE,
+                                                                                    MAX_POPULATION_SIZE),
+                                                        mutation_chance_boundaries=(MIN_MUTATION_CHANCE,
+                                                                                    MAX_MUTATION_CHANCE))
+        create_objective_params = {"percentile": adaptation_params.get("solutions_percentile", None),
+                                   "number": adaptation_params.get("solutions_number", None)}
+        self.mock_adaptation_problem_object._create_objective_function.assert_called_once_with(
+            adaptation_type=adaptation_type, **create_objective_params)
+        self.mock_optimization_problem_init.assert_called_once()
+        assert isinstance(self.mock_adaptation_problem_object.additional_decision_variable, dict)
+
+    @pytest.mark.parametrize("adaptation_type", [None, 1])
+    def test_init__invalid_adaptation_type(self, adaptation_type, example_selection_types, example_crossover_types,
+                                           example_mutation_types):
+        with pytest.raises(TypeError):
+            EvolutionaryAlgorithmAdaptationProblem.__init__(self=self.mock_adaptation_problem_object,
+                                                            adaptation_type=adaptation_type,
+                                                            selection_types=example_selection_types,
+                                                            crossover_types=example_crossover_types,
+                                                            mutation_types=example_mutation_types,
+                                                            population_size_boundaries=(MIN_POPULATION_SIZE,
+                                                                                        MAX_POPULATION_SIZE),
+                                                            mutation_chance_boundaries=(MIN_MUTATION_CHANCE,
+                                                                                        MAX_MUTATION_CHANCE))
+
+    # todo: more invalid test cases - for all exceptions
+    # def test_init__invalid_adaptation_type(self, example_adaptation_type, example_selection_types, example_crossover_types,
+    #                                        example_mutation_types):
+    #     with pytest.raises(TypeError):
+    #         EvolutionaryAlgorithmAdaptationProblem.__init__(self=self.mock_adaptation_problem_object,
+    #                                                         adaptation_type=example_adaptation_type,
+    #                                                         selection_types=example_selection_types,
+    #                                                         crossover_types=example_crossover_types,
+    #                                                         mutation_types=example_mutation_types,
+    #                                                         population_size_boundaries=(MIN_POPULATION_SIZE,
+    #                                                                                     MAX_POPULATION_SIZE),
+    #                                                         mutation_chance_boundaries=(MIN_MUTATION_CHANCE,
+    #                                                                                     MAX_MUTATION_CHANCE))
 
 class TestLowerAdaptiveEvolutionaryAlgorithm:
 

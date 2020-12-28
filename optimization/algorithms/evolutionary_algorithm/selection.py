@@ -23,10 +23,10 @@ SelectionOutput = Iterator[Tuple[AbstractSolution, AbstractSolution]]
 
 MIN_TOURNAMENT_GROUP_SIZE = 3
 MAX_TOURNAMENT_GROUP_SIZE = 8
-MIN_ROULETTE_BIAS = 1
-MAX_ROULETTE_BIAS = 100
-MIN_RANKING_BIAS = 1
-MAX_RANKING_BIAS = 2
+MIN_ROULETTE_BIAS = 1.
+MAX_ROULETTE_BIAS = 100.
+MIN_RANKING_BIAS = 1.
+MAX_RANKING_BIAS = 2.
 
 
 def calculate_roulette_scaling(best_solution: AbstractSolution,

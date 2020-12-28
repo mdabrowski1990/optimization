@@ -8,4 +8,5 @@ Available algorithms:
 """
 
 from .random_algorithm import RandomAlgorithm
-from .evolutionary_algorithm import EvolutionaryAlgorithm, SelectionType, CrossoverType, MutationType
+from .evolutionary_algorithm import EvolutionaryAlgorithm, SelectionType, CrossoverType, MutationType, \
+    AdaptationType, EvolutionaryAlgorithmAdaptationProblem, AdaptiveEvolutionaryAlgorithm
