@@ -10,25 +10,23 @@ __all__ = ["AdaptationType", "EvolutionaryAlgorithmAdaptationProblem", "Adaptive
 
 
 from typing import Any, Union, Optional, Tuple, Iterable, Dict, Callable
+from typing import OrderedDict as OrderedDictTyping
 from enum import Enum
 from abc import abstractmethod
 from collections import OrderedDict
 
 from .evolutionary_algorithm import EvolutionaryAlgorithm
 from ...problem import OptimizationProblem, AbstractSolution, OptimizationType, \
-    IntegerVariable, DiscreteVariable, FloatVariable, ChoiceVariable
+    IntegerVariable, DiscreteVariable, FloatVariable, ChoiceVariable, DecisionVariable
 from ...stop_conditions import StopConditions
 from ...logging import AbstractLogger
 from .selection import SelectionType, SELECTION_ADDITIONAL_PARAMS_LIMITS
 from .crossover import CrossoverType
 from .mutation import MutationType
+from .limits import MIN_AE_POPULATION_SIZE, MAX_AE_POPULATION_SIZE, MIN_AE_MUTATION_CHANCE, MAX_AE_MUTATION_CHANCE
 # mypy: ignore-errors
 
 
-MIN_POPULATION_SIZE: int = 10
-MAX_POPULATION_SIZE: int = 1000
-MIN_MUTATION_CHANCE: float = 0.
-MAX_MUTATION_CHANCE: float = 0.2
 DEFAULT_SOLUTIONS_PERCENTILE: float = 0.1
 DEFAULT_SOLUTIONS_NUMBER: int = 3
 
@@ -56,13 +54,18 @@ class EvolutionaryAlgorithmAdaptationProblem(OptimizationProblem):
     Problem of Evolutionary Algorithm adaptation during optimization process of 'AdaptiveEvolutionaryAlgorithm'.
     """
 
+    MIN_POPULATION_SIZE: int = MIN_AE_POPULATION_SIZE
+    MAX_POPULATION_SIZE: int = MAX_AE_POPULATION_SIZE
+    MIN_MUTATION_CHANCE: float = MIN_AE_MUTATION_CHANCE
+    MAX_MUTATION_CHANCE: float = MAX_AE_MUTATION_CHANCE
+
     def __init__(self,
                  adaptation_type: AdaptationType,
                  population_size_boundaries: Tuple[int, int],
                  selection_types: Iterable[SelectionType],
                  crossover_types: Iterable[CrossoverType],
                  mutation_types: Iterable[MutationType],
-                 mutation_chance_boundaries: Tuple[float, float] = (0.01, 0.2),
+                 mutation_chance_boundaries: Tuple[float, float] = (MIN_MUTATION_CHANCE, MAX_MUTATION_CHANCE),
                  apply_elitism_options: Iterable[bool] = (True, False),
                  **optional_params: Union[Tuple[Union[float, int], Union[float, int]], int, float]) -> None:
         """
@@ -85,10 +88,88 @@ class EvolutionaryAlgorithmAdaptationProblem(OptimizationProblem):
                 Int value: 2 < solutions_number <= population_size_boundaries[0]
                 Applicable only if adaptation_type == AdaptationType.BestSolutions.
         """
-        # pylint: disable=too-many-locals
+        self._validate_mandatory_parameters(adaptation_type=adaptation_type,
+                                            population_size_boundaries=population_size_boundaries,
+                                            selection_types=selection_types,
+                                            crossover_types=crossover_types,
+                                            mutation_types=mutation_types,
+                                            mutation_chance_boundaries=mutation_chance_boundaries,
+                                            apply_elitism_options=apply_elitism_options)
+        decision_variables = self._get_main_decision_variables(population_size_boundaries=population_size_boundaries,
+                                                               selection_types=selection_types,
+                                                               crossover_types=crossover_types,
+                                                               mutation_types=mutation_types,
+                                                               mutation_chance_boundaries=mutation_chance_boundaries,
+                                                               apply_elitism_options=apply_elitism_options)
+        _solutions_percentile = optional_params.pop("solutions_percentile", DEFAULT_SOLUTIONS_PERCENTILE) \
+            if adaptation_type == AdaptationType.BestSolutionsPercentile else None
+        _solutions_number = optional_params.pop("solutions_number", DEFAULT_SOLUTIONS_NUMBER) \
+            if adaptation_type == AdaptationType.BestSolutions else None
+        _objective_function = self._get_objective_function(adaptation_type=adaptation_type,
+                                                           solutions_percentile=_solutions_percentile,
+                                                           solutions_number=_solutions_number)
+        super().__init__(decision_variables=decision_variables,
+                         constraints=self._get_constraints(),
+                         penalty_function=self._get_penalty_function(),
+                         objective_function=_objective_function,
+                         optimization_type=OptimizationType.Maximize)  # default value (updated later on)
+        self.additional_decision_variable = self._get_additional_decision_variables(**optional_params)
+
+    def _validate_mandatory_parameters(self,
+                                       adaptation_type: AdaptationType,
+                                       population_size_boundaries: Tuple[int, int],
+                                       selection_types: Iterable[SelectionType],
+                                       crossover_types: Iterable[CrossoverType],
+                                       mutation_types: Iterable[MutationType],
+                                       mutation_chance_boundaries: Tuple[float, float],
+                                       apply_elitism_options: Iterable[bool]) -> None:
+        """
+        Validates all mandatory parameters of __init__ method.
+
+        :param adaptation_type: Determines how to assess effectiveness of Evolutionary Algorithms.
+        :param population_size_boundaries: Tuple with minimal and maximal population size of Evolutionary Algorithm.
+        :param selection_types: Possible selection types to be chosen by Evolutionary Algorithm.
+        :param crossover_types: Possible crossover types to be chosen by Evolutionary Algorithm.
+        :param mutation_types: Possible mutation types to be chosen by Evolutionary Algorithm.
+        :param mutation_chance_boundaries: Tuple with minimal and maximal mutation chance of Evolutionary Algorithm.
+        :param apply_elitism_options: Possible elitism values.
+
+        :return: None
+        """
+        self._validate_adaptation_type(adaptation_type=adaptation_type)
+        self._validate_population_size_boundaries(population_size_boundaries=population_size_boundaries)
+        self._validate_selection_types(selection_types=selection_types)
+        self._validate_crossover_types(crossover_types=crossover_types)
+        self._validate_mutation_types(mutation_types=mutation_types)
+        self._validate_mutation_chance_boundaries(mutation_chance_boundaries=mutation_chance_boundaries)
+        self._validate_apply_elitism_options(apply_elitism_options=apply_elitism_options)
+
+    @staticmethod
+    def _validate_adaptation_type(adaptation_type: AdaptationType) -> None:
+        """
+        Validates value of 'adaptation_type' parameter.
+
+        :param adaptation_type: Determines how to assess effectiveness of Evolutionary Algorithms.
+
+        :raise TypeError: Parameter 'adaptation_type' is not AdaptationType.
+        :return: None
+        """
         if not isinstance(adaptation_type, AdaptationType):
             raise TypeError(f"Value of 'adaptation_type' parameter is not AdaptationType type. "
                             f"Actual value: '{adaptation_type}'.")
+
+    def _validate_population_size_boundaries(self, population_size_boundaries: Tuple[int, int]) -> None:
+        """
+        Validates value of 'population_size_boundaries' parameter.
+
+        :param population_size_boundaries: Tuple with minimal and maximal population size of Evolutionary Algorithm.
+
+        :raise TypeError: Parameter 'population_size_boundaries' is not tuple type.
+        :raise ValueError: Parameter 'population_size_boundaries' does not consists of two even integer values that
+            satisfies inequality:
+            MIN_POPULATION_SIZE <= population_size_boundaries[0] <= population_size_boundaries[1] <= MAX_POPULATION_SIZE
+        :return: None
+        """
         if not isinstance(population_size_boundaries, tuple):
             raise TypeError(f"Value of 'population_size_boundaries' parameter is not tuple type. "
                             f"Actual value: '{population_size_boundaries}'.")
@@ -96,29 +177,83 @@ class EvolutionaryAlgorithmAdaptationProblem(OptimizationProblem):
                 or not isinstance(population_size_boundaries[1], int):
             raise ValueError(f"Parameter 'population_size_boundaries' has invalid value. "
                              f"Expected two element tuple with int values. Actual value: {population_size_boundaries}.")
-        if population_size_boundaries[0] < MIN_POPULATION_SIZE or population_size_boundaries[1] > MAX_POPULATION_SIZE:
+        if not self.MIN_POPULATION_SIZE <= population_size_boundaries[0] <= \
+                population_size_boundaries[1] <= self.MAX_POPULATION_SIZE:
             raise ValueError(f"Parameter 'population_size_boundaries' has invalid value. "
-                             f"Expected two element tuple with population_size_boundaries[0] >= {MIN_POPULATION_SIZE} "
-                             f"and population_size_boundaries[1] <= {MAX_POPULATION_SIZE}. "
+                             f"Expected two element tuple with "
+                             f"{self.MIN_POPULATION_SIZE} <= population_size_boundaries[0] <= "
+                             f"population_size_boundaries[1] <= {self.MAX_POPULATION_SIZE}. "
                              f"Actual value: {population_size_boundaries}.")
-        if not isinstance(selection_types, Iterable):
+        if population_size_boundaries[0] & 1 or population_size_boundaries[1] & 1:
+            raise ValueError(f"Both limits (min and max) of 'population_size_boundaries' parameters must be even. "
+                             f"Actual values: {population_size_boundaries}")
+
+    @staticmethod
+    def _validate_selection_types(selection_types: Iterable[SelectionType]) -> None:
+        """
+        Validates value of 'selection_types' parameter.
+
+        :param selection_types: Possible selection types to be chosen by Evolutionary Algorithm.
+
+        :raise TypeError: Parameter 'selection_types' is not iterable.
+        :raise ValueError: Elements of 'selection_types' are not SelectionType.
+        :return: None
+        """
+        if not isinstance(selection_types, Iterable):  # pylint: disable=isinstance-second-argument-not-valid-type
             raise TypeError(f"Value of 'selection_types' parameter is not Iterable type. "
                             f"Actual value: '{selection_types}'.")
         if any([not isinstance(value, SelectionType) for value in selection_types]):
             raise ValueError(f"Parameter 'selection_types' has invalid value. "
                              f"Expected iterable with values of SelectionType. Actual value: {selection_types}.")
-        if not isinstance(crossover_types, Iterable):
+
+    @staticmethod
+    def _validate_crossover_types(crossover_types: Iterable[CrossoverType]) -> None:
+        """
+        Validates value of 'crossover_types' parameter.
+
+        :param crossover_types: Possible crossover types to be chosen by Evolutionary Algorithm.
+
+        :raise TypeError: Parameter 'crossover_types' is not iterable.
+        :raise ValueError: Elements of 'crossover_types' are not CrossoverType.
+        :return: None
+        """
+        if not isinstance(crossover_types, Iterable):  # pylint: disable=isinstance-second-argument-not-valid-type
             raise TypeError(f"Value of 'crossover_types' parameter is not Iterable type. "
                             f"Actual value: '{crossover_types}'.")
         if any([not isinstance(value, CrossoverType) for value in crossover_types]):
             raise ValueError(f"Parameter 'crossover_types' has invalid value. "
                              f"Expected iterable with values of CrossoverType. Actual value: {crossover_types}.")
-        if not isinstance(mutation_types, Iterable):
+
+    @staticmethod
+    def _validate_mutation_types(mutation_types: Iterable[MutationType]) -> None:
+        """
+        Validates value of 'mutation_types' parameter.
+
+        :param mutation_types: Possible mutation types to be chosen by Evolutionary Algorithm.
+
+        :raise TypeError: Parameter 'mutation_types' is not iterable.
+        :raise ValueError: Elements of 'mutation_types' are not MutationType.
+        :return: None
+        """
+        if not isinstance(mutation_types, Iterable):  # pylint: disable=isinstance-second-argument-not-valid-type
             raise TypeError(f"Value of 'mutation_types' parameter is not Iterable type. "
                             f"Actual value: '{mutation_types}'.")
         if any([not isinstance(value, MutationType) for value in mutation_types]):
             raise ValueError(f"Parameter 'mutation_types' has invalid value. "
                              f"Expected iterable with values of MutationType. Actual value: {mutation_types}.")
+
+    def _validate_mutation_chance_boundaries(self, mutation_chance_boundaries: Tuple[float, float]) -> None:
+        """
+        Validates value of 'mutation_chance_boundaries' parameter.
+
+        :param mutation_chance_boundaries: Tuple with minimal and maximal mutation chance of Evolutionary Algorithm.
+
+        :raise TypeError: Parameter 'mutation_chance_boundaries' is not tuple type.
+        :raise ValueError: Parameter 'mutation_chance_boundaries' does not consists of two float values that
+            satisfies inequality:
+            MIN_MUTATION_CHANCE <= mutation_chance_boundaries[0] <= mutation_chance_boundaries[1] <= MAX_MUTATION_CHANCE
+        :return: None
+        """
         if not isinstance(mutation_chance_boundaries, tuple):
             raise TypeError(f"Value of 'mutation_chance_boundaries' parameter is not tuple type. "
                             f"Actual value: '{mutation_chance_boundaries}'.")
@@ -127,71 +262,31 @@ class EvolutionaryAlgorithmAdaptationProblem(OptimizationProblem):
             raise ValueError(f"Parameter 'mutation_chance_boundaries' has invalid value. "
                              f"Expected two element tuple with float values. "
                              f"Actual value: {mutation_chance_boundaries}.")
-        if mutation_chance_boundaries[0] < MIN_MUTATION_CHANCE or mutation_chance_boundaries[1] > MAX_MUTATION_CHANCE:
+        if not self.MIN_MUTATION_CHANCE <= mutation_chance_boundaries[0] <= \
+                mutation_chance_boundaries[1] <= self.MAX_MUTATION_CHANCE:
             raise ValueError(f"Parameter 'mutation_chance_boundaries' has invalid value. "
-                             f"Expected two element tuple with mutation_chance_boundaries[0] >= {MIN_MUTATION_CHANCE} "
-                             f"and mutation_chance_boundaries[1] <= {MAX_MUTATION_CHANCE}. "
+                             f"Expected two element tuple with "
+                             f"{self.MIN_MUTATION_CHANCE} <= mutation_chance_boundaries[0] <= "
+                             f"mutation_chance_boundaries[1] <= {self.MAX_MUTATION_CHANCE}. "
                              f"Actual value: {mutation_chance_boundaries}.")
-        if not isinstance(apply_elitism_options, Iterable):
+
+    @staticmethod
+    def _validate_apply_elitism_options(apply_elitism_options: Iterable[bool]) -> None:
+        """
+        Validates value of 'apply_elitism_options' parameter.
+
+        :param apply_elitism_options: Possible elitism values.
+
+        :raise TypeError: Parameter 'apply_elitism_options' is not iterable.
+        :raise ValueError: Elements of 'apply_elitism_options' are not bool type or no elements.
+        :return: None
+        """
+        if not isinstance(apply_elitism_options, Iterable):  # pylint: disable=isinstance-second-argument-not-valid-type
             raise TypeError(f"Value of 'apply_elitism_options' parameter is not Iterable type. "
                             f"Actual value: '{apply_elitism_options}'.")
-        if not set(apply_elitism_options).issubset({True, False}):
+        if not (apply_elitism_options and set(apply_elitism_options).issubset({True, False})):
             raise ValueError(f"Parameter 'apply_elitism_options' has invalid value. "
-                             f"Expected iterable with bool values. Actual value: {apply_elitism_options}.")
-        decision_variables = OrderedDict(
-            population_size=DiscreteVariable(min_value=population_size_boundaries[0],
-                                             max_value=population_size_boundaries[1], step=2),
-            selection_type=ChoiceVariable(possible_values=selection_types),
-            crossover_type=ChoiceVariable(possible_values=crossover_types),
-            mutation_type=ChoiceVariable(possible_values=mutation_types),
-            mutation_chance=FloatVariable(min_value=mutation_chance_boundaries[0],
-                                          max_value=mutation_chance_boundaries[1]),
-            apply_elitism=ChoiceVariable(possible_values=apply_elitism_options)
-        )
-        _solutions_percentile = optional_params.get("solutions_percentile", DEFAULT_SOLUTIONS_PERCENTILE) \
-            if adaptation_type == AdaptationType.BestSolutionsPercentile else None
-        if isinstance(_solutions_percentile, float) and not (0 < _solutions_percentile < 1):
-            raise ValueError(f"Value of 'solutions_percentile' is not in range: 0 < solutions_percentile < 1. "
-                             f"solutions_percentile = {_solutions_percentile}")
-        _solutions_number = optional_params.get("solutions_number", DEFAULT_SOLUTIONS_NUMBER) \
-            if adaptation_type == AdaptationType.BestSolutions else None
-        if isinstance(_solutions_number, int) and not (2 < _solutions_number < population_size_boundaries[0]):
-            raise ValueError(f"Value of 'solutions_number' is not in range: "
-                             f"2 < solutions_number < {population_size_boundaries[0]}. "
-                             f"solutions_number = {_solutions_number}")
-        _objective_function = self._create_objective_function(adaptation_type=adaptation_type,
-                                                              percentile=_solutions_percentile,
-                                                              number=_solutions_number)
-        super().__init__(decision_variables=decision_variables,
-                         constraints={},  # no constraints are needed
-                         penalty_function=lambda **x: 0,  # penalty function is not used here
-                         objective_function=_objective_function,
-                         optimization_type=OptimizationType.Maximize)  # default value (updated later on)
-        # additional parameters
-        _min_group_size, _max_group_size = \
-            optional_params.get("tournament_group_size", SELECTION_ADDITIONAL_PARAMS_LIMITS["tournament_group_size"])
-        _min_roulette_bias, _max_roulette_bias = \
-            optional_params.get("roulette_bias", SELECTION_ADDITIONAL_PARAMS_LIMITS["roulette_bias"])
-        _min_ranking_bias, _max_ranking_bias = \
-            optional_params.get("ranking_bias", SELECTION_ADDITIONAL_PARAMS_LIMITS["ranking_bias"])
-        # temporary values for _max_crossover_points, _max_crossover_pattern and _max_mutation_points - updated later on
-        _min_crossover_points, _max_crossover_points = optional_params.get("crossover_points_number", [2, 3])
-        _min_crossover_pattern, _max_crossover_pattern = 0, 1
-        _min_mutation_points, _max_mutation_points = optional_params.get("mutation_points_number", [2, 3])
-        self.additional_decision_variable = {
-            # selection
-            "tournament_group_size":
-                IntegerVariable(min_value=_min_group_size, max_value=_max_group_size),
-            "roulette_bias": FloatVariable(min_value=_min_roulette_bias, max_value=_max_roulette_bias),
-            "ranking_bias": FloatVariable(min_value=_min_ranking_bias, max_value=_max_ranking_bias),
-            # crossover
-            "crossover_points_number":
-                IntegerVariable(min_value=_min_crossover_points, max_value=_max_crossover_points),
-            "crossover_patter": IntegerVariable(min_value=_min_crossover_pattern, max_value=_max_crossover_pattern),
-            # mutation
-            "mutation_points_number":
-                IntegerVariable(min_value=_min_mutation_points, max_value=_max_mutation_points),
-        }
+                             f"Expected iterable with one or both bool values. Actual value: {apply_elitism_options}.")
 
     @staticmethod
     def _create_objective_function(adaptation_type: AdaptationType,
@@ -226,8 +321,84 @@ class EvolutionaryAlgorithmAdaptationProblem(OptimizationProblem):
                 return sum([solution.get_objective_value_with_penalty()
                             for solution in sorted(solutions, reverse=True)[:considered_number]])
         else:
-            raise NotImplemented(f"Value of 'adaptation_type' parameter is not supported. Value: {adaptation_type}")
+            raise NotImplementedError(f"Value of 'adaptation_type' parameter is not supported. "
+                                      f"Value: {adaptation_type}")
         return adaptation_objective_function
+
+    def _get_objective_function(self,
+                                adaptation_type: AdaptationType,
+                                solutions_percentile: Optional[float],
+                                solutions_number: Optional[int]) -> Callable:
+        ...
+        # todo
+        # if isinstance(solutions_percentile, float) and not (0 < solutions_percentile < 1):
+        #     raise ValueError(f"Value of 'solutions_percentile' is not in range: 0 < solutions_percentile < 1. "
+        #                      f"solutions_percentile = {_solutions_percentile}")
+        # if isinstance(_solutions_number, int) and not (2 < _solutions_number < population_size_boundaries[0]):
+        #     raise ValueError(f"Value of 'solutions_number' is not in range: "
+        #                      f"2 < solutions_number < {population_size_boundaries[0]}. "
+        #                      f"solutions_number = {_solutions_number}")
+        # return self._create_objective_function(adaptation_type=adaptation_type,
+        #                                                       percentile=_solutions_percentile,
+        #                                                       number=_solutions_number)
+
+    @staticmethod
+    def _get_main_decision_variables(population_size_boundaries: Tuple[int, int],
+                                     selection_types: Iterable[SelectionType],
+                                     crossover_types: Iterable[CrossoverType],
+                                     mutation_types: Iterable[MutationType],
+                                     mutation_chance_boundaries: Tuple[float, float],
+                                     apply_elitism_options: Iterable[bool]) -> OrderedDictTyping[str, DecisionVariable]:
+        # todo: description
+        return OrderedDict(
+            population_size=DiscreteVariable(min_value=population_size_boundaries[0],
+                                             max_value=population_size_boundaries[1],
+                                             step=2),
+            selection_type=ChoiceVariable(possible_values=selection_types),
+            crossover_type=ChoiceVariable(possible_values=crossover_types),
+            mutation_type=ChoiceVariable(possible_values=mutation_types),
+            mutation_chance=FloatVariable(min_value=mutation_chance_boundaries[0],
+                                          max_value=mutation_chance_boundaries[1]),
+            apply_elitism=ChoiceVariable(possible_values=apply_elitism_options)
+        )
+
+    @staticmethod
+    def _get_additional_decision_variables(**optional_params: Union[float, int]) -> Dict[str, DecisionVariable]:
+        # todo: description
+        _min_group_size, _max_group_size = \
+            optional_params.get("tournament_group_size", SELECTION_ADDITIONAL_PARAMS_LIMITS["tournament_group_size"])
+        _min_roulette_bias, _max_roulette_bias = \
+            optional_params.get("roulette_bias", SELECTION_ADDITIONAL_PARAMS_LIMITS["roulette_bias"])
+        _min_ranking_bias, _max_ranking_bias = \
+            optional_params.get("ranking_bias", SELECTION_ADDITIONAL_PARAMS_LIMITS["ranking_bias"])
+        # temporary values for _max_crossover_points, _max_crossover_pattern and _max_mutation_points - updated later on
+        _min_crossover_points, _max_crossover_points = optional_params.get("crossover_points_number", [2, 3])
+        _min_crossover_pattern, _max_crossover_pattern = 0, 1
+        _min_mutation_points, _max_mutation_points = optional_params.get("mutation_points_number", [2, 3])
+        return {
+            # selection
+            "tournament_group_size":
+                IntegerVariable(min_value=_min_group_size, max_value=_max_group_size),
+            "roulette_bias": FloatVariable(min_value=_min_roulette_bias, max_value=_max_roulette_bias),
+            "ranking_bias": FloatVariable(min_value=_min_ranking_bias, max_value=_max_ranking_bias),
+            # crossover
+            "crossover_points_number":
+                IntegerVariable(min_value=_min_crossover_points, max_value=_max_crossover_points),
+            "crossover_patter": IntegerVariable(min_value=_min_crossover_pattern, max_value=_max_crossover_pattern),
+            # mutation
+            "mutation_points_number":
+                IntegerVariable(min_value=_min_mutation_points, max_value=_max_mutation_points),
+        }
+
+    @staticmethod
+    def _get_constraints() -> Dict:
+        # todo: description
+        return {}  # no constraints are needed
+
+    @staticmethod
+    def _get_penalty_function() -> Callable:
+        # todo: description
+        return lambda **decision_variables_values: 0  # penalty function is not used here
 
 
 class LowerAdaptiveEvolutionaryAlgorithm(EvolutionaryAlgorithm, AbstractSolution):
