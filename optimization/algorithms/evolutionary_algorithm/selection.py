@@ -14,19 +14,14 @@ from enum import Enum
 
 from ...problem import AbstractSolution
 from ...utilities import choose_random_values, choose_random_value_with_weights
+from .limits import MIN_TOURNAMENT_GROUP_SIZE, MAX_TOURNAMENT_GROUP_SIZE, MIN_ROULETTE_BIAS, MAX_ROULETTE_BIAS, \
+    MIN_RANKING_BIAS, MAX_RANKING_BIAS
 
 
 # selection utilities
 
 
 SelectionOutput = Iterator[Tuple[AbstractSolution, AbstractSolution]]
-
-MIN_TOURNAMENT_GROUP_SIZE = 3
-MAX_TOURNAMENT_GROUP_SIZE = 8
-MIN_ROULETTE_BIAS = 1.
-MAX_ROULETTE_BIAS = 100.
-MIN_RANKING_BIAS = 1.
-MAX_RANKING_BIAS = 2.
 
 
 def calculate_roulette_scaling(best_solution: AbstractSolution,
@@ -112,7 +107,7 @@ def check_roulette_bias(roulette_bias: Union[float, int]) -> None:
     """
     if not isinstance(roulette_bias, (int, float)):
         raise TypeError(f"Parameter 'roulette_bias' is not int nor float type. Actual value: {roulette_bias}.")
-    if not MIN_ROULETTE_BIAS < roulette_bias <= MAX_ROULETTE_BIAS:
+    if not MIN_ROULETTE_BIAS <= roulette_bias <= MAX_ROULETTE_BIAS:
         raise ValueError(f"Parameter 'roulette_bias' has invalid value. Expected value: 1 < roulette_bias <= 100. "
                          f"Actual value: {roulette_bias}.")
 
@@ -129,7 +124,7 @@ def check_ranking_bias(ranking_bias: float) -> None:
     """
     if not isinstance(ranking_bias, float):
         raise TypeError(f"Parameter 'ranking_bias' is not float type. Actual value: {ranking_bias}.")
-    if not MIN_RANKING_BIAS < ranking_bias <= MAX_RANKING_BIAS:
+    if not MIN_RANKING_BIAS <= ranking_bias <= MAX_RANKING_BIAS:
         raise ValueError(f"Parameter 'ranking_bias' has invalid value. Expected value: 1 < ranking_bias <= 2. "
                          f"Actual value: {ranking_bias}.")
 

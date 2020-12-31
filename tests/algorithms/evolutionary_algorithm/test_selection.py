@@ -6,7 +6,9 @@ from types import GeneratorType
 from optimization.algorithms.evolutionary_algorithm.selection import uniform_selection, tournament_selection, \
     double_tournament_selection, roulette_selection, ranking_selection, \
     get_scaled_ranking, get_scaled_objective, calculate_roulette_scaling, \
-    check_selection_parameters
+    check_selection_parameters, \
+    MIN_TOURNAMENT_GROUP_SIZE, MAX_TOURNAMENT_GROUP_SIZE, MIN_ROULETTE_BIAS, MAX_ROULETTE_BIAS, \
+    MIN_RANKING_BIAS, MAX_RANKING_BIAS
 
 
 class TestUtilities:
@@ -85,15 +87,16 @@ class TestUtilities:
 
     @pytest.mark.parametrize("selection_params", [
         {},
-        {"tournament_group_size": 3},
-        {"tournament_group_size": 8},
-        {"roulette_bias": 2},
-        {"roulette_bias": 1.0001},
-        {"roulette_bias": 100},
-        {"roulette_bias": 100.},
-        {"ranking_bias": 1.0001},
-        {"ranking_bias": 2.},
-        {"tournament_group_size": 5, "roulette_bias": 4.232, "ranking_bias": 1.5}
+        {"tournament_group_size": MIN_TOURNAMENT_GROUP_SIZE},
+        {"tournament_group_size": MAX_TOURNAMENT_GROUP_SIZE},
+        {"tournament_group_size": int((MIN_TOURNAMENT_GROUP_SIZE + MAX_TOURNAMENT_GROUP_SIZE) // 2)},
+        {"roulette_bias": MIN_ROULETTE_BIAS},
+        {"roulette_bias": MAX_ROULETTE_BIAS},
+        {"roulette_bias": (MIN_ROULETTE_BIAS + MAX_ROULETTE_BIAS) // 2},
+        {"ranking_bias": MIN_RANKING_BIAS},
+        {"ranking_bias": MAX_RANKING_BIAS},
+        {"ranking_bias": (MIN_RANKING_BIAS + MAX_RANKING_BIAS) // 2},
+        {"tournament_group_size": 4, "roulette_bias": 4.232, "ranking_bias": 1.5}
     ])
     def test_check_selection_parameters__valid(self, selection_params):
         """
@@ -122,14 +125,12 @@ class TestUtilities:
             check_selection_parameters(**selection_params)
 
     @pytest.mark.parametrize("selection_params", [
-        {"tournament_group_size": 2},
-        {"tournament_group_size": 9},
-        {"roulette_bias": 1},
-        {"roulette_bias": 1.},
-        {"roulette_bias": 101},
-        {"roulette_bias": 100.001},
-        {"ranking_bias": 1.},
-        {"ranking_bias": 2.001},
+        {"tournament_group_size": MIN_TOURNAMENT_GROUP_SIZE - 1},
+        {"tournament_group_size": MAX_TOURNAMENT_GROUP_SIZE + 1},
+        {"roulette_bias": MIN_ROULETTE_BIAS - 0.00001},
+        {"roulette_bias": MAX_ROULETTE_BIAS + 0.00001},
+        {"ranking_bias": MIN_RANKING_BIAS - 0.00001},
+        {"ranking_bias": MAX_RANKING_BIAS + 0.00001},
         {"tournament_group_size": 0, "roulette_bias": 0, "ranking_bias": 0}
     ])
     def test_check_selection_parameters__invalid_value(self, selection_params):

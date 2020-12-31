@@ -1,5 +1,6 @@
 import pytest
-from mock import Mock, patch
+from mock import Mock, patch, call
+from collections import OrderedDict
 
 from optimization.algorithms.evolutionary_algorithm.adaptive_evolutionary_algorithm import \
     EvolutionaryAlgorithmAdaptationProblem, \
@@ -7,7 +8,6 @@ from optimization.algorithms.evolutionary_algorithm.adaptive_evolutionary_algori
 
 
 class TestEvolutionaryAlgorithmAdaptationProblem:
-
     SCRIPT_LOCATION = "optimization.algorithms.evolutionary_algorithm.adaptive_evolutionary_algorithm"
 
     def setup(self):
@@ -27,9 +27,21 @@ class TestEvolutionaryAlgorithmAdaptationProblem:
         # patching
         self._patcher_optimization_problem_init = patch(f"{self.SCRIPT_LOCATION}.OptimizationProblem.__init__")
         self.mock_optimization_problem_init = self._patcher_optimization_problem_init.start()
+        self._patcher_discrete_variable_class = patch(f"{self.SCRIPT_LOCATION}.DiscreteVariable")
+        self.mock_discrete_variable_class = self._patcher_discrete_variable_class.start()
+        self._patcher_choice_variable_class = patch(f"{self.SCRIPT_LOCATION}.ChoiceVariable")
+        self.mock_choice_variable_class = self._patcher_choice_variable_class.start()
+        self._patcher_float_variable_class = patch(f"{self.SCRIPT_LOCATION}.FloatVariable")
+        self.mock_float_variable_class = self._patcher_float_variable_class.start()
+        self._patcher_integer_variable_class = patch(f"{self.SCRIPT_LOCATION}.IntegerVariable")
+        self.mock_integer_variable_class = self._patcher_integer_variable_class.start()
 
     def teardown(self):
         self._patcher_optimization_problem_init.stop()
+        self._patcher_discrete_variable_class.stop()
+        self._patcher_choice_variable_class.stop()
+        self._patcher_float_variable_class.stop()
+        self._patcher_integer_variable_class.stop()
 
     # __init__
 
@@ -80,7 +92,8 @@ class TestEvolutionaryAlgorithmAdaptationProblem:
             solutions_percentile=adaptation_params.get("solutions_percentile", None)
             if example_adaptation_type == AdaptationType.BestSolutionsPercentile else None,
             solutions_number=adaptation_params.get("solutions_number", None)
-            if example_adaptation_type == AdaptationType.BestSolutions else None
+            if example_adaptation_type == AdaptationType.BestSolutions else None,
+            population_size_boundaries=example_population_size_boundaries
         )
         self.mock_optimization_problem_init.assert_called_once_with(
             decision_variables=self.mock_get_main_decision_variables.return_value,
@@ -91,7 +104,7 @@ class TestEvolutionaryAlgorithmAdaptationProblem:
         )
         self.mock_get_additional_decision_variables.assert_called_once()
         assert self.mock_adaptation_problem_object.additional_decision_variable \
-            == self.mock_get_additional_decision_variables.return_value
+               == self.mock_get_additional_decision_variables.return_value
 
     # _validate_mandatory_parameters
 
@@ -108,13 +121,20 @@ class TestEvolutionaryAlgorithmAdaptationProblem:
             mutation_types=example_mutation_types,
             mutation_chance_boundaries=example_mutation_chance_boundaries,
             apply_elitism_options=example_apply_elitism_options) is None
-        self.mock_adaptation_problem_object._validate_adaptation_type.assert_called_once_with(adaptation_type=example_adaptation_type)
-        self.mock_adaptation_problem_object._validate_population_size_boundaries.assert_called_once_with(population_size_boundaries=example_population_size_boundaries)
-        self.mock_adaptation_problem_object._validate_selection_types.assert_called_once_with(selection_types=example_selection_types)
-        self.mock_adaptation_problem_object._validate_crossover_types.assert_called_once_with(crossover_types=example_crossover_types)
-        self.mock_adaptation_problem_object._validate_mutation_types.assert_called_once_with(mutation_types=example_mutation_types)
-        self.mock_adaptation_problem_object._validate_mutation_chance_boundaries.assert_called_once_with(mutation_chance_boundaries=example_mutation_chance_boundaries)
-        self.mock_adaptation_problem_object._validate_apply_elitism_options.assert_called_once_with(apply_elitism_options=example_apply_elitism_options)
+        self.mock_adaptation_problem_object._validate_adaptation_type.assert_called_once_with(
+            adaptation_type=example_adaptation_type)
+        self.mock_adaptation_problem_object._validate_population_size_boundaries.assert_called_once_with(
+            population_size_boundaries=example_population_size_boundaries)
+        self.mock_adaptation_problem_object._validate_selection_types.assert_called_once_with(
+            selection_types=example_selection_types)
+        self.mock_adaptation_problem_object._validate_crossover_types.assert_called_once_with(
+            crossover_types=example_crossover_types)
+        self.mock_adaptation_problem_object._validate_mutation_types.assert_called_once_with(
+            mutation_types=example_mutation_types)
+        self.mock_adaptation_problem_object._validate_mutation_chance_boundaries.assert_called_once_with(
+            mutation_chance_boundaries=example_mutation_chance_boundaries)
+        self.mock_adaptation_problem_object._validate_apply_elitism_options.assert_called_once_with(
+            apply_elitism_options=example_apply_elitism_options)
 
     # _validate_adaptation_type
 
@@ -192,7 +212,7 @@ class TestEvolutionaryAlgorithmAdaptationProblem:
             EvolutionaryAlgorithmAdaptationProblem._validate_selection_types(selection_types=selection_types)
 
     # _validate_crossover_types
-    
+
     @pytest.mark.parametrize("crossover_types", [
         {CrossoverType.SinglePoint},
         (CrossoverType.MultiPoint, CrossoverType.Adaptive),
@@ -291,7 +311,8 @@ class TestEvolutionaryAlgorithmAdaptationProblem:
     @pytest.mark.parametrize("apply_elitism_options", [None, 1, True])
     def test_validate_apply_elitism_options__invalid_type(self, apply_elitism_options):
         with pytest.raises(TypeError):
-            EvolutionaryAlgorithmAdaptationProblem._validate_apply_elitism_options(apply_elitism_options=apply_elitism_options)
+            EvolutionaryAlgorithmAdaptationProblem._validate_apply_elitism_options(
+                apply_elitism_options=apply_elitism_options)
 
     @pytest.mark.parametrize("apply_elitism_options", [
         {None, True},
@@ -300,7 +321,200 @@ class TestEvolutionaryAlgorithmAdaptationProblem:
     ])
     def test_validate_crossover_types__invalid_value(self, apply_elitism_options):
         with pytest.raises(ValueError):
-            EvolutionaryAlgorithmAdaptationProblem._validate_apply_elitism_options(apply_elitism_options=apply_elitism_options)
+            EvolutionaryAlgorithmAdaptationProblem._validate_apply_elitism_options(
+                apply_elitism_options=apply_elitism_options)
+
+    # _create_objective_function
+
+    @pytest.mark.parametrize("adaptation_type, solutions_percentile, solutions_number", [
+        (AdaptationType.BestSolution, None, None),
+        (AdaptationType.BestSolutions, None, 5),
+        (AdaptationType.BestSolutionsPercentile, 0.1, None),
+    ])
+    def test_create_objective_function__valid(self, adaptation_type, solutions_percentile, solutions_number):
+        objective = EvolutionaryAlgorithmAdaptationProblem._create_objective_function(
+            adaptation_type=adaptation_type,
+            solutions_percentile=solutions_percentile,
+            solutions_number=solutions_number)
+        assert callable(objective)
+
+    @pytest.mark.parametrize("adaptation_type", ["Unknown value", None])
+    def test_create_objective_function__invalid_type(self, adaptation_type):
+        with pytest.raises(NotImplementedError):
+            EvolutionaryAlgorithmAdaptationProblem._create_objective_function(adaptation_type=adaptation_type,
+                                                                              solutions_percentile=None,
+                                                                              solutions_number=None)
+
+    # _get_objective_function
+
+    @pytest.mark.parametrize("adaptation_type, solutions_percentile, solutions_number, population_size_boundaries", [
+        (AdaptationType.BestSolution, None, None, (10, 100)),
+        (AdaptationType.BestSolutions, None, 5, (10, 100)),
+        (AdaptationType.BestSolutions, None, 10, (10, 100)),
+        (AdaptationType.BestSolutions, None, 20, (20, 1000)),
+        (AdaptationType.BestSolutionsPercentile, 0.1, None, (10, 100)),
+        (AdaptationType.BestSolutionsPercentile, 0.00001, None, (10, 100)),
+        (AdaptationType.BestSolutionsPercentile, 1., None, (10, 100)),
+    ])
+    def test_get_objective_function__valid(self, adaptation_type, solutions_percentile, solutions_number,
+                                           population_size_boundaries):
+        return_value = EvolutionaryAlgorithmAdaptationProblem._get_objective_function(
+            self=self.mock_adaptation_problem_object,
+            adaptation_type=adaptation_type,
+            solutions_percentile=solutions_percentile,
+            solutions_number=solutions_number,
+            population_size_boundaries=population_size_boundaries)
+        self.mock_adaptation_problem_object._create_objective_function.assert_called_once_with(
+            adaptation_type=adaptation_type,
+            solutions_percentile=solutions_percentile,
+            solutions_number=solutions_number)
+        assert return_value == self.mock_adaptation_problem_object._create_objective_function.return_value
+
+    @pytest.mark.parametrize("adaptation_type, solutions_percentile, solutions_number", [
+        (AdaptationType.BestSolutions, None, None),
+        (AdaptationType.BestSolutions, None, 0.5),
+        (AdaptationType.BestSolutions, None, "abc"),
+        (AdaptationType.BestSolutionsPercentile, 1, None),
+        (AdaptationType.BestSolutionsPercentile, False, None),
+        (AdaptationType.BestSolutionsPercentile, None, None),
+    ])
+    def test_get_objective_function__invalid_type(self, adaptation_type, solutions_percentile, solutions_number,
+                                                  example_population_size_boundaries):
+        with pytest.raises(TypeError):
+            EvolutionaryAlgorithmAdaptationProblem._get_objective_function(
+                self=self.mock_adaptation_problem_object,
+                adaptation_type=adaptation_type,
+                solutions_percentile=solutions_percentile,
+                solutions_number=solutions_number,
+                population_size_boundaries=example_population_size_boundaries)
+
+    @pytest.mark.parametrize("adaptation_type, solutions_percentile, solutions_number, population_size_boundaries", [
+        (AdaptationType.BestSolutions, None, 1, (10, 100)),
+        (AdaptationType.BestSolutions, None, 11, (10, 100)),
+        (AdaptationType.BestSolutions, None, 21, (20, 1000)),
+        (AdaptationType.BestSolutionsPercentile, 0., None, (10, 100)),
+        (AdaptationType.BestSolutionsPercentile, 1.00001, None, (10, 100)),
+    ])
+    def test_get_objective_function__invalid_value(self, adaptation_type, solutions_percentile, solutions_number,
+                                                   population_size_boundaries):
+        with pytest.raises(ValueError):
+            EvolutionaryAlgorithmAdaptationProblem._get_objective_function(
+                self=self.mock_adaptation_problem_object,
+                adaptation_type=adaptation_type,
+                solutions_percentile=solutions_percentile,
+                solutions_number=solutions_number,
+                population_size_boundaries=population_size_boundaries)
+
+    @pytest.mark.parametrize("adaptation_type", [None, "Something new"])
+    def test_get_objective_function__ont_implemented(self, adaptation_type, example_population_size_boundaries):
+        with pytest.raises(NotImplementedError):
+            EvolutionaryAlgorithmAdaptationProblem._get_objective_function(
+                self=self.mock_adaptation_problem_object,
+                adaptation_type=adaptation_type,
+                solutions_percentile=None,
+                solutions_number=None,
+                population_size_boundaries=example_population_size_boundaries)
+
+    # _get_main_decision_variables
+
+    @pytest.mark.parametrize("population_size_boundaries, mutation_chance_boundaries", [
+        [(1, 2), (0.1, 0.2)],
+        [(10, 100), (0, 1)],
+    ])
+    @pytest.mark.parametrize("selection_types, crossover_types, mutation_types", [
+        ("abc", "def", "hij"),
+        (range(3), range(3, 6), range(6, 9))
+    ])
+    @pytest.mark.parametrize("apply_elitism_options", [[True], {True, False}])
+    def test_get_main_decision_variables(self, population_size_boundaries, selection_types, crossover_types,
+                                         mutation_types, mutation_chance_boundaries, apply_elitism_options):
+        return_value = EvolutionaryAlgorithmAdaptationProblem._get_main_decision_variables(
+            population_size_boundaries=population_size_boundaries,
+            selection_types=selection_types,
+            crossover_types=crossover_types,
+            mutation_types=mutation_types,
+            mutation_chance_boundaries=mutation_chance_boundaries,
+            apply_elitism_options=apply_elitism_options
+        )
+        self.mock_discrete_variable_class.assert_has_calls([call(min_value=population_size_boundaries[0],
+                                                                 max_value=population_size_boundaries[1], step=2)])
+        self.mock_choice_variable_class.assert_has_calls([call(possible_values=selection_types),
+                                                          call(possible_values=crossover_types),
+                                                          call(possible_values=mutation_types),
+                                                          call(possible_values=apply_elitism_options)])
+        self.mock_float_variable_class.assert_has_calls([call(min_value=mutation_chance_boundaries[0],
+                                                              max_value=mutation_chance_boundaries[1])])
+        assert isinstance(return_value, OrderedDict)
+        assert return_value["population_size"] == self.mock_discrete_variable_class.return_value
+        assert return_value["selection_type"] == self.mock_choice_variable_class.return_value
+        assert return_value["crossover_type"] == self.mock_choice_variable_class.return_value
+        assert return_value["mutation_type"] == self.mock_choice_variable_class.return_value
+        assert return_value["mutation_chance"] == self.mock_float_variable_class.return_value
+        assert return_value["apply_elitism"] == self.mock_choice_variable_class.return_value
+
+    # _get_additional_decision_variables
+
+    @pytest.mark.parametrize("additional_params", [
+        {},
+        {"min_tournament_group_size": 2},
+        {"min_tournament_group_size": 3},
+        {"max_tournament_group_size": 6},
+        {"max_tournament_group_size": 5},
+        {"min_roulette_bias": 1.},
+        {"min_roulette_bias": 1.1},
+        {"max_roulette_bias": 100.},
+        {"max_roulette_bias": 99.9},
+        {"min_ranking_bias": 1.},
+        {"min_ranking_bias": 1.1},
+        {"max_ranking_bias": 2.},
+        {"max_ranking_bias": 1.9},
+        {"min_tournament_group_size": 3, "max_tournament_group_size": 6,
+         "min_roulette_bias": 10., "max_roulette_bias": 20.,
+         "min_ranking_bias": 1.2, "max_ranking_bias": 1.8}
+    ])
+    def test_get_additional_decision_variables__valid(self, additional_params, default_min_tournament_group_size,
+                                                      default_max_tournament_group_size,
+                                                      default_min_ranking_bias, default_max_ranking_bias,
+                                                      default_min_roulette_bias, default_max_roulette_bias):
+        return_value = EvolutionaryAlgorithmAdaptationProblem._get_additional_decision_variables(**additional_params)
+        self.mock_integer_variable_class.assert_has_calls([
+            call(min_value=additional_params.get("min_tournament_group_size", default_min_tournament_group_size),
+                 max_value=additional_params.get("max_tournament_group_size", default_max_tournament_group_size))
+        ])
+        self.mock_float_variable_class.assert_has_calls([
+            call(min_value=additional_params.get("min_roulette_bias", default_min_roulette_bias),
+                 max_value=additional_params.get("max_roulette_bias", default_max_roulette_bias)),
+            call(min_value=additional_params.get("min_ranking_bias", default_min_ranking_bias),
+                 max_value=additional_params.get("max_ranking_bias", default_max_ranking_bias)),
+        ])
+        assert isinstance(return_value, dict)
+        assert return_value["tournament_group_size"] == self.mock_integer_variable_class.return_value
+        assert return_value["roulette_bias"] == self.mock_float_variable_class.return_value
+        assert return_value["ranking_bias"] == self.mock_float_variable_class.return_value
+        assert return_value["crossover_points_number"] == self.mock_integer_variable_class.return_value
+        assert return_value["crossover_patter"] == self.mock_integer_variable_class.return_value
+        assert return_value["mutation_points_number"] == self.mock_integer_variable_class.return_value
+
+    @pytest.mark.parametrize("additional_params", [
+        {"something_strange": None},
+        {"min_tournament_group_size": 1},
+        {"max_tournament_group_size": 1000},
+        {"min_roulette_bias": 0.},
+        {"max_roulette_bias": 9999999999999999999.},
+        {"min_ranking_bias": 0.},
+        {"min_ranking_bias": 0.99},
+        {"max_ranking_bias": 2.01},
+        {"max_ranking_bias": 9999.99},
+        {"min_tournament_group_size": 4, "max_tournament_group_size": 3},
+        {"min_roulette_bias": 40., "max_roulette_bias": 39.9999},
+        {"min_ranking_bias": 1.51, "max_ranking_bias": 1.5},
+    ])
+    def test_get_additional_decision_variables__valid(self, additional_params, default_min_tournament_group_size,
+                                                      default_max_tournament_group_size,
+                                                      default_min_ranking_bias, default_max_ranking_bias,
+                                                      default_min_roulette_bias, default_max_roulette_bias):
+        with pytest.raises(ValueError):
+            EvolutionaryAlgorithmAdaptationProblem._get_additional_decision_variables(**additional_params)
 
 
 # class TestLowerAdaptiveEvolutionaryAlgorithm:

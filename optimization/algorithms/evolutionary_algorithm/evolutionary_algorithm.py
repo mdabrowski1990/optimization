@@ -14,7 +14,7 @@ from .selection import SelectionType, SELECTION_FUNCTIONS, SELECTION_ADDITIONAL_
 from .crossover import CrossoverType, CROSSOVER_FUNCTIONS, CROSSOVER_ADDITIONAL_PARAMS, check_crossover_parameters, \
     ChildrenValuesTyping
 from .mutation import MutationType, MUTATION_FUNCTIONS, MUTATION_ADDITIONAL_PARAMS, check_mutation_parameters
-from .limits import MIN_AE_POPULATION_SIZE, MAX_AE_POPULATION_SIZE, MIN_AE_MUTATION_CHANCE, MAX_AE_MUTATION_CHANCE
+from .limits import MIN_EA_POPULATION_SIZE, MAX_EA_POPULATION_SIZE, MIN_EA_MUTATION_CHANCE, MAX_EA_MUTATION_CHANCE
 
 
 class EvolutionaryAlgorithm(AbstractOptimizationAlgorithm):
@@ -25,10 +25,10 @@ class EvolutionaryAlgorithm(AbstractOptimizationAlgorithm):
     for given optimization problem.
     """
 
-    MIN_POPULATION_SIZE: int = MIN_AE_POPULATION_SIZE
-    MAX_POPULATION_SIZE: int = MAX_AE_POPULATION_SIZE
-    MIN_MUTATION_CHANCE: float = MIN_AE_MUTATION_CHANCE
-    MAX_MUTATION_CHANCE: float = MAX_AE_MUTATION_CHANCE
+    MIN_POPULATION_SIZE: int = MIN_EA_POPULATION_SIZE
+    MAX_POPULATION_SIZE: int = MAX_EA_POPULATION_SIZE
+    MIN_MUTATION_CHANCE: float = MIN_EA_MUTATION_CHANCE
+    MAX_MUTATION_CHANCE: float = MAX_EA_MUTATION_CHANCE
 
     def __init__(self, problem: OptimizationProblem,  # pylint: disable=too-many-arguments
                  stop_conditions: StopConditions,

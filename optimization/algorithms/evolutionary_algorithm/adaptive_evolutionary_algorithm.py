@@ -17,16 +17,16 @@ from collections import OrderedDict
 
 from .evolutionary_algorithm import EvolutionaryAlgorithm
 from ...problem import OptimizationProblem, AbstractSolution, OptimizationType, \
-    IntegerVariable, DiscreteVariable, FloatVariable, ChoiceVariable, DecisionVariable
+    IntegerVariable, DiscreteVariable, FloatVariable, ChoiceVariable
 from ...stop_conditions import StopConditions
 from ...logging import AbstractLogger
 from .selection import SelectionType, SELECTION_ADDITIONAL_PARAMS_LIMITS
 from .crossover import CrossoverType
 from .mutation import MutationType
-from .limits import MIN_AE_POPULATION_SIZE, MAX_AE_POPULATION_SIZE, MIN_AE_MUTATION_CHANCE, MAX_AE_MUTATION_CHANCE
-# mypy: ignore-errors
+from .limits import MIN_EA_POPULATION_SIZE, MAX_EA_POPULATION_SIZE, MIN_EA_MUTATION_CHANCE, MAX_EA_MUTATION_CHANCE
 
 
+DecisionVariableTyping = Union[IntegerVariable, DiscreteVariable, FloatVariable, ChoiceVariable]
 DEFAULT_SOLUTIONS_PERCENTILE: float = 0.1
 DEFAULT_SOLUTIONS_NUMBER: int = 3
 
@@ -54,10 +54,10 @@ class EvolutionaryAlgorithmAdaptationProblem(OptimizationProblem):
     Problem of Evolutionary Algorithm adaptation during optimization process of 'AdaptiveEvolutionaryAlgorithm'.
     """
 
-    MIN_POPULATION_SIZE: int = MIN_AE_POPULATION_SIZE
-    MAX_POPULATION_SIZE: int = MAX_AE_POPULATION_SIZE
-    MIN_MUTATION_CHANCE: float = MIN_AE_MUTATION_CHANCE
-    MAX_MUTATION_CHANCE: float = MAX_AE_MUTATION_CHANCE
+    MIN_POPULATION_SIZE: int = MIN_EA_POPULATION_SIZE
+    MAX_POPULATION_SIZE: int = MAX_EA_POPULATION_SIZE
+    MIN_MUTATION_CHANCE: float = MIN_EA_MUTATION_CHANCE
+    MAX_MUTATION_CHANCE: float = MAX_EA_MUTATION_CHANCE
 
     def __init__(self,
                  adaptation_type: AdaptationType,
@@ -67,7 +67,7 @@ class EvolutionaryAlgorithmAdaptationProblem(OptimizationProblem):
                  mutation_types: Iterable[MutationType],
                  mutation_chance_boundaries: Tuple[float, float] = (MIN_MUTATION_CHANCE, MAX_MUTATION_CHANCE),
                  apply_elitism_options: Iterable[bool] = (True, False),
-                 **optional_params: Union[Tuple[Union[float, int], Union[float, int]], int, float]) -> None:
+                 **optional_params: Any) -> None:
         """
         Definition of Evolutionary Algorithm Adaptation problem.
 
@@ -87,6 +87,18 @@ class EvolutionaryAlgorithmAdaptationProblem(OptimizationProblem):
                 LowerAdaptiveEvolutionaryAlgorithm is performed.
                 Int value: 2 < solutions_number <= population_size_boundaries[0]
                 Applicable only if adaptation_type == AdaptationType.BestSolutions.
+            - min_tournament_group_size - determines minimal group size for tournament selection
+                Default value is used if not provided.
+            - max_tournament_group_size - determines maximal group size for tournament selection
+                Default value is used if not provided.
+            - min_roulette_bias - determines minimal value of roulette selection bias
+                Default value is used if not provided.
+            - max_roulette_bias - determines maximal value of roulette selection bias
+                Default value is used if not provided.
+            - min_ranking_bias - determines minimal value of ranking selection bias
+                Default value is used if not provided.
+            - max_ranking_bias - determines maximal value of ranking selection bias
+                Default value is used if not provided.
         """
         self._validate_mandatory_parameters(adaptation_type=adaptation_type,
                                             population_size_boundaries=population_size_boundaries,
@@ -107,7 +119,8 @@ class EvolutionaryAlgorithmAdaptationProblem(OptimizationProblem):
             if adaptation_type == AdaptationType.BestSolutions else None
         _objective_function = self._get_objective_function(adaptation_type=adaptation_type,
                                                            solutions_percentile=_solutions_percentile,
-                                                           solutions_number=_solutions_number)
+                                                           solutions_number=_solutions_number,
+                                                           population_size_boundaries=population_size_boundaries)
         super().__init__(decision_variables=decision_variables,
                          constraints=self._get_constraints(),
                          penalty_function=self._get_penalty_function(),
@@ -290,57 +303,84 @@ class EvolutionaryAlgorithmAdaptationProblem(OptimizationProblem):
 
     @staticmethod
     def _create_objective_function(adaptation_type: AdaptationType,
-                                   percentile: Optional[float],
-                                   number: Optional[int]) -> Callable:
+                                   solutions_percentile: Optional[float],
+                                   solutions_number: Optional[int]) -> Callable:
         """
         Creates objective function for adaptation problem.
 
         :param adaptation_type: Determines how to assess effectiveness of Evolutionary Algorithms.
-        :param percentile: Relevant for 'BestSolutionsPercentile', determines percentile of solutions to be considered.
-        :param number: Relevant for 'BestSolutions', determines number of solutions to be considered.
+        :param solutions_percentile: Relevant for 'BestSolutionsPercentile' value of 'adaptation_type'.
+            Determines percentile of solutions to be considered when assessing effectiveness of Evolutionary Algorithms.
+        :param solutions_number: Relevant for 'BestSolutions' value of 'adaptation_type'.
+            Determines number of solutions to be considered when assessing effectiveness of Evolutionary Algorithms.
 
+        :raise NotImplementedError: Unsupported value of 'adaptation_type' is provided.
         :return: Objective function for adaptation problem.
         """
         if adaptation_type == AdaptationType.BestSolution:
-            def adaptation_objective_function(best_solution: AbstractSolution, **_: Any) -> float:
+
+            def adaptation_objective_function(best_solution: AbstractSolution, **_: Any) -> float:  # type: ignore
                 return best_solution.get_objective_value_with_penalty()
         elif adaptation_type == AdaptationType.BestSolutions:
-            if not isinstance(number, int):
-                raise TypeError
 
-            def adaptation_objective_function(solutions: list, **_: Any) -> float:
+            def adaptation_objective_function(solutions: list, **_: Any) -> float:  # type: ignore
                 return sum([solution.get_objective_value_with_penalty()
-                            for solution in sorted(solutions, reverse=True)[:number]])
+                            for solution in sorted(solutions, reverse=True)[:solutions_number]])
         elif adaptation_type == AdaptationType.BestSolutionsPercentile:
-            if not isinstance(percentile, float):
-                raise TypeError
 
-            def adaptation_objective_function(solutions: list, population_size: int, **_: Any) -> float:
-                considered_number = int(population_size*percentile // 100)
+            def adaptation_objective_function(solutions: list, population_size: int, **_: Any) -> float:  # type: ignore
+                considered_number = int(population_size*solutions_percentile // 100)  # type: ignore
                 considered_number = max(considered_number, 1)
                 return sum([solution.get_objective_value_with_penalty()
                             for solution in sorted(solutions, reverse=True)[:considered_number]])
         else:
-            raise NotImplementedError(f"Value of 'adaptation_type' parameter is not supported. "
-                                      f"Value: {adaptation_type}")
+            raise NotImplementedError(f"This value of 'adaptation_type' parameter is not supported. "
+                                      f"Actual value: {adaptation_type}")
         return adaptation_objective_function
 
     def _get_objective_function(self,
                                 adaptation_type: AdaptationType,
                                 solutions_percentile: Optional[float],
-                                solutions_number: Optional[int]) -> Callable:
-        ...
-        # todo
-        # if isinstance(solutions_percentile, float) and not (0 < solutions_percentile < 1):
-        #     raise ValueError(f"Value of 'solutions_percentile' is not in range: 0 < solutions_percentile < 1. "
-        #                      f"solutions_percentile = {_solutions_percentile}")
-        # if isinstance(_solutions_number, int) and not (2 < _solutions_number < population_size_boundaries[0]):
-        #     raise ValueError(f"Value of 'solutions_number' is not in range: "
-        #                      f"2 < solutions_number < {population_size_boundaries[0]}. "
-        #                      f"solutions_number = {_solutions_number}")
-        # return self._create_objective_function(adaptation_type=adaptation_type,
-        #                                                       percentile=_solutions_percentile,
-        #                                                       number=_solutions_number)
+                                solutions_number: Optional[int],
+                                population_size_boundaries: Tuple[int, int]) -> Callable:
+        """
+        Provides objective function for Evolutionary Algorithm Adaptation problem.
+
+        :param adaptation_type: Determines how to assess effectiveness of Evolutionary Algorithms.
+        :param solutions_percentile: Relevant for 'BestSolutionsPercentile' value of 'adaptation_type'.
+            Determines percentile of solutions to be considered when assessing effectiveness of Evolutionary Algorithms.
+        :param solutions_number: Relevant for 'BestSolutions' value of 'adaptation_type'.
+            Determines number of solutions to be considered when assessing effectiveness of Evolutionary Algorithms.
+        :param population_size_boundaries: Tuple with minimal and maximal population size of Evolutionary Algorithm.
+
+        :raise TypeError: Invalid type of 'solutions_percentile' or 'solutions_number' parameter was provided.
+        :raise ValueError: Invalid value of 'solutions_percentile' or 'solutions_number' parameter was provided.
+        :return: Objective function for adaptation problem.
+        """
+        if adaptation_type == AdaptationType.BestSolutionsPercentile:
+            if not isinstance(solutions_percentile, float):
+                raise TypeError(f"Value of 'solutions_percentile' is not float type for "
+                                f"'BestSolutionsPercentile' adaptation type. "
+                                f"Actual value: {solutions_percentile}")
+            if not (0 < solutions_percentile <= 1):
+                raise ValueError(f"Value of 'solutions_percentile' is not in range: 0 < solutions_percentile <= 1. "
+                                 f"Actual value: {solutions_percentile}")
+        elif adaptation_type == AdaptationType.BestSolutions:
+            if not isinstance(solutions_number, int):
+                raise TypeError(f"Value of 'solutions_number' is not int type for 'BestSolutions' adaptation type. "
+                                f"Actual value: {solutions_number}")
+            if not 2 <= solutions_number <= population_size_boundaries[0]:
+                raise ValueError(f"Value of 'solutions_number' is not in range "
+                                 f"2 <= solutions_number <= population_size_boundaries[0]. "
+                                 f"Actual value: {solutions_number}")
+        elif adaptation_type == AdaptationType.BestSolution:
+            pass
+        else:
+            raise NotImplementedError(f"This value of 'adaptation_type' parameter is not supported.  "
+                                      f"Actual value: {adaptation_type}")
+        return self._create_objective_function(adaptation_type=adaptation_type,
+                                               solutions_percentile=solutions_percentile,
+                                               solutions_number=solutions_number)
 
     @staticmethod
     def _get_main_decision_variables(population_size_boundaries: Tuple[int, int],
@@ -348,8 +388,22 @@ class EvolutionaryAlgorithmAdaptationProblem(OptimizationProblem):
                                      crossover_types: Iterable[CrossoverType],
                                      mutation_types: Iterable[MutationType],
                                      mutation_chance_boundaries: Tuple[float, float],
-                                     apply_elitism_options: Iterable[bool]) -> OrderedDictTyping[str, DecisionVariable]:
-        # todo: description
+                                     apply_elitism_options: Iterable[bool]) \
+            -> OrderedDictTyping[str, DecisionVariableTyping]:  # type: ignore
+        """
+        Creates definition of main decision variables vector.
+
+        :param population_size_boundaries: Tuple with minimal and maximal population size of Evolutionary Algorithm.
+        :param selection_types: Possible selection types to be chosen by Evolutionary Algorithm.
+        :param crossover_types: Possible crossover types to be chosen by Evolutionary Algorithm.
+        :param mutation_types: Possible mutation types to be chosen by Evolutionary Algorithm.
+        :param mutation_chance_boundaries: Tuple with minimal and maximal mutation chance of Evolutionary Algorithm.
+        :param apply_elitism_options: Possible elitism values.
+
+        :return: OrderedDict with main decision variables definitions:
+            Keys: Names of decision variables.
+            Values: Definition of decision variables.
+        """
         return OrderedDict(
             population_size=DiscreteVariable(min_value=population_size_boundaries[0],
                                              max_value=population_size_boundaries[1],
@@ -363,22 +417,59 @@ class EvolutionaryAlgorithmAdaptationProblem(OptimizationProblem):
         )
 
     @staticmethod
-    def _get_additional_decision_variables(**optional_params: Union[float, int]) -> Dict[str, DecisionVariable]:
-        # todo: description
-        _min_group_size, _max_group_size = \
-            optional_params.get("tournament_group_size", SELECTION_ADDITIONAL_PARAMS_LIMITS["tournament_group_size"])
-        _min_roulette_bias, _max_roulette_bias = \
-            optional_params.get("roulette_bias", SELECTION_ADDITIONAL_PARAMS_LIMITS["roulette_bias"])
-        _min_ranking_bias, _max_ranking_bias = \
-            optional_params.get("ranking_bias", SELECTION_ADDITIONAL_PARAMS_LIMITS["ranking_bias"])
+    def _get_additional_decision_variables(**optional_params: Union[int, float]) -> Dict[str, DecisionVariableTyping]:
+        """
+        Creates definition of additional decision variables vector.
+
+        Note: Additional decision variables are relevant only for certain selection/crossover/mutation type.
+
+        :param optional_params: Parameters that overwrites default configuration of additional decision variables.
+
+        :raise ValueError: Any of provided values is not in acceptable range.
+        :return: Dictionary with additional decision variables definitions:
+            Keys: Names of decision variables.
+            Values: Definition of decision variables.
+        """
+        # pylint: disable=too-many-locals
+        # get default values
+        _default_min_group_size, _default_max_group_size = SELECTION_ADDITIONAL_PARAMS_LIMITS["tournament_group_size"]
+        _default_min_roulette_bias, _default_max_roulette_bias = SELECTION_ADDITIONAL_PARAMS_LIMITS["roulette_bias"]
+        _default_min_ranking_bias, _default_max_ranking_bias = SELECTION_ADDITIONAL_PARAMS_LIMITS["ranking_bias"]
+        # set provided values (use default if not provided)
+        _min_group_size: int = optional_params.pop("min_tournament_group_size", _default_min_group_size)  # type: ignore
+        _max_group_size: int = optional_params.pop("max_tournament_group_size", _default_max_group_size)  # type: ignore
+        _min_roulette_bias = optional_params.pop("min_roulette_bias", _default_min_roulette_bias)
+        _max_roulette_bias = optional_params.pop("max_roulette_bias", _default_max_roulette_bias)
+        _min_ranking_bias = optional_params.pop("min_ranking_bias", _default_min_ranking_bias)
+        _max_ranking_bias = optional_params.pop("max_ranking_bias", _default_max_ranking_bias)
+        # validate values
+        if not _default_min_group_size <= _min_group_size <= _max_group_size <= _default_max_group_size:
+            raise ValueError(f"Provided tournament groups size limits are not in range. "
+                             f"Expected: {_default_min_group_size} <= min_tournament_group_size <= "
+                             f"max_tournament_group_size <= {_default_max_group_size}"
+                             f"Actual values: min_tournament_group_size={_min_group_size}, "
+                             f"max_tournament_group_size={_max_group_size}")
+        if not _default_min_roulette_bias <= _min_roulette_bias <= _max_roulette_bias <= _default_max_roulette_bias:
+            raise ValueError(f"Provided roulette bias limits are not in range. "
+                             f"Expected: {_default_min_roulette_bias} <= min_roulette_bias <= "
+                             f"max_roulette_bias <= {_default_max_roulette_bias}"
+                             f"Actual values: min_roulette_bias={_min_roulette_bias}, "
+                             f"max_roulette_bias={_max_roulette_bias}")
+        if not _default_min_ranking_bias <= _min_ranking_bias <= _max_ranking_bias <= _default_max_ranking_bias:
+            raise ValueError(f"Provided ranking bias limits are not in range. "
+                             f"Expected: {_default_min_ranking_bias} <= min_ranking_bias <= "
+                             f"max_ranking_bias <= {_default_max_ranking_bias}"
+                             f"Actual values: min_ranking_bias={_min_ranking_bias}, "
+                             f"max_ranking_bias={_max_ranking_bias}")
+        if optional_params:
+            raise ValueError(f"Unexpected value(s) was/were provided to 'optional_params': {optional_params}")
         # temporary values for _max_crossover_points, _max_crossover_pattern and _max_mutation_points - updated later on
-        _min_crossover_points, _max_crossover_points = optional_params.get("crossover_points_number", [2, 3])
+        _min_crossover_points, _max_crossover_points = 2, 3
         _min_crossover_pattern, _max_crossover_pattern = 0, 1
-        _min_mutation_points, _max_mutation_points = optional_params.get("mutation_points_number", [2, 3])
+        _min_mutation_points, _max_mutation_points = 2, 3
         return {
             # selection
-            "tournament_group_size":
-                IntegerVariable(min_value=_min_group_size, max_value=_max_group_size),
+            "tournament_group_size": IntegerVariable(min_value=_min_group_size, max_value=_max_group_size),
             "roulette_bias": FloatVariable(min_value=_min_roulette_bias, max_value=_max_roulette_bias),
             "ranking_bias": FloatVariable(min_value=_min_ranking_bias, max_value=_max_ranking_bias),
             # crossover
@@ -386,18 +477,25 @@ class EvolutionaryAlgorithmAdaptationProblem(OptimizationProblem):
                 IntegerVariable(min_value=_min_crossover_points, max_value=_max_crossover_points),
             "crossover_patter": IntegerVariable(min_value=_min_crossover_pattern, max_value=_max_crossover_pattern),
             # mutation
-            "mutation_points_number":
-                IntegerVariable(min_value=_min_mutation_points, max_value=_max_mutation_points),
+            "mutation_points_number": IntegerVariable(min_value=_min_mutation_points, max_value=_max_mutation_points),
         }
 
     @staticmethod
-    def _get_constraints() -> Dict:
-        # todo: description
+    def _get_constraints() -> Dict[str, Callable]:
+        """
+        Creates constraints for adaptation problem.
+
+        :return: Dictionary with constraints.
+        """
         return {}  # no constraints are needed
 
     @staticmethod
     def _get_penalty_function() -> Callable:
-        # todo: description
+        """
+        Creates penalty function for adaptation problem.
+
+        :return: Penalty function.
+        """
         return lambda **decision_variables_values: 0  # penalty function is not used here
 
 
@@ -528,11 +626,11 @@ class AdaptiveEvolutionaryAlgorithm(EvolutionaryAlgorithm):
                          selection_type=selection_type, crossover_type=crossover_type, mutation_type=mutation_type,
                          mutation_chance=mutation_chance, apply_elitism=False, logger=logger, **other_params)
 
-        class AdaptiveAESolution(LowerAdaptiveEvolutionaryAlgorithm):
-            """Solution class for given evolutionary algorithm adaptation problem."""
-
-            optimization_problem = adaptation_problem
-
-        self.SolutionClass = AdaptiveAESolution
+        # class AdaptiveAESolution(LowerAdaptiveEvolutionaryAlgorithm):
+        #     """Solution class for given evolutionary algorithm adaptation problem."""
+        #
+        #     optimization_problem = adaptation_problem
+        #
+        # self.SolutionClass = AdaptiveAESolution
 
     # todo: a few methods must be updated
