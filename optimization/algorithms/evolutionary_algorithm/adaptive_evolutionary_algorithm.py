@@ -24,10 +24,7 @@ from .selection import SelectionType, SELECTION_ADDITIONAL_PARAMS_LIMITS
 from .crossover import CrossoverType
 from .mutation import MutationType
 from .limits import MIN_EA_POPULATION_SIZE, MAX_EA_POPULATION_SIZE, MIN_EA_MUTATION_CHANCE, MAX_EA_MUTATION_CHANCE
-
-
-DEFAULT_SOLUTIONS_PERCENTILE: float = 0.1
-DEFAULT_SOLUTIONS_NUMBER: int = 3
+from .defaults import DEFAULT_SOLUTIONS_NUMBER, DEFAULT_SOLUTIONS_PERCENTILE
 
 
 class AdaptationType(Enum):
@@ -78,25 +75,25 @@ class EvolutionaryAlgorithmAdaptationProblem(OptimizationProblem):
         :param mutation_chance_boundaries: Tuple with minimal and maximal mutation chance of Evolutionary Algorithm.
         :param apply_elitism_options: Possible elitism values.
         :param optional_params: Configuration of other parameters such as:
-            - solutions_percentile - determines number of solutions (percentile of population size) to be taken
-                into consideration when assessment of LowerAdaptiveEvolutionaryAlgorithm is performed.
+            - :param solutions_percentile: float - determines number of solutions (percentile of population size)
+                to be taken into consideration when assessment of LowerAdaptiveEvolutionaryAlgorithm is performed.
                 Float value: 0 < solutions_percentile < 1
                 Applicable only if adaptation_type == AdaptationType.BestSolutionsPercentile.
-            - solutions_number - determines number of solutions to be taken into consideration when assessment of
-                LowerAdaptiveEvolutionaryAlgorithm is performed.
+            - :param solutions_number: int - determines number of solutions to be taken into consideration when
+                assessment of LowerAdaptiveEvolutionaryAlgorithm is performed.
                 Int value: 2 < solutions_number <= population_size_boundaries[0]
                 Applicable only if adaptation_type == AdaptationType.BestSolutions.
-            - min_tournament_group_size - determines minimal group size for tournament selection
+            - :param min_tournament_group_size: int - determines minimal group size for tournament selection
                 Default value is used if not provided.
-            - max_tournament_group_size - determines maximal group size for tournament selection
+            - :param max_tournament_group_size: int - determines maximal group size for tournament selection
                 Default value is used if not provided.
-            - min_roulette_bias - determines minimal value of roulette selection bias
+            - :param min_roulette_bias: float - determines minimal value of roulette selection bias
                 Default value is used if not provided.
-            - max_roulette_bias - determines maximal value of roulette selection bias
+            - :param max_roulette_bias: float - determines maximal value of roulette selection bias
                 Default value is used if not provided.
-            - min_ranking_bias - determines minimal value of ranking selection bias
+            - :param min_ranking_bias: float - determines minimal value of ranking selection bias
                 Default value is used if not provided.
-            - max_ranking_bias - determines maximal value of ranking selection bias
+            - :param max_ranking_bias: float - determines maximal value of ranking selection bias
                 Default value is used if not provided.
         """
         self._validate_mandatory_parameters(adaptation_type=adaptation_type,
@@ -498,7 +495,7 @@ class EvolutionaryAlgorithmAdaptationProblem(OptimizationProblem):
         return lambda **decision_variables_values: 0  # penalty function is not used here
 
 
-class LowerAdaptiveEvolutionaryAlgorithm(EvolutionaryAlgorithm, AbstractSolution):
+class LowerAdaptiveEvolutionaryAlgorithm(EvolutionaryAlgorithm, AbstractSolution):  # TODO: update
     """
     Definition of Lower (Slave) Adaptive Evolutionary Algorithm.
 
@@ -576,7 +573,7 @@ class LowerAdaptiveEvolutionaryAlgorithm(EvolutionaryAlgorithm, AbstractSolution
         return data
 
 
-class AdaptiveEvolutionaryAlgorithm(EvolutionaryAlgorithm):
+class AdaptiveEvolutionaryAlgorithm(EvolutionaryAlgorithm):  # TODO: update
     """
     Adaptive Evolutionary Algorithm definition.
 
@@ -585,10 +582,11 @@ class AdaptiveEvolutionaryAlgorithm(EvolutionaryAlgorithm):
     optimization process effectiveness (it optimizes settings of _LowerAdaptiveEvolutionaryAlgorithm).
     """
 
-    MIN_POPULATION_SIZE = 5
-    MAX_POPULATION_SIZE = 100
+    MIN_POPULATION_SIZE: int = MIN_EA_POPULATION_SIZE
+    MAX_POPULATION_SIZE: int = MAX_EA_POPULATION_SIZE
 
-    def __init__(self, problem: OptimizationProblem,  # pylint: disable=too-many-arguments
+    def __init__(self,  # pylint: disable=too-many-arguments
+                 problem: OptimizationProblem,
                  adaptation_problem: EvolutionaryAlgorithmAdaptationProblem,
                  stop_conditions: StopConditions,
                  population_size: int,
@@ -610,7 +608,8 @@ class AdaptiveEvolutionaryAlgorithm(EvolutionaryAlgorithm):
         :param mutation_type: Type of mutation function to use.
         :param mutation_chance: Probability of a single decision variable (gene) mutation.
         :param logger: Logger used for optimization process recording.
-        :param other_params: Parameter related to selected selection, crossover and mutation type.
+        :param other_params: Parameter related to selected selection, crossover and mutation type further
+            described in parent class.
         """
         # TODO: protect from problem.variables_number < 4 and adaptation_problem uses 'crossover_points_number'
         #  or 'mutation_points_number'

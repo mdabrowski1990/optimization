@@ -54,7 +54,15 @@ class EvolutionaryAlgorithm(AbstractOptimizationAlgorithm):
             When True, then only better adopted children will replace their parents.
             When False, then children will always replace their parents.
         :param logger: Logger used for optimization process recording.
-        :param other_params: Parameter related to selected selection, crossover and mutation type.
+        :param other_params: Parameter related to selected selection, crossover and mutation type such as:
+            - :param tournament_group_size: int - determines group size used in tournament
+                and double tournament selections
+            - :param roulette_bias: float - bias towards promoting better adopted individuals in roulette selection
+            - :param ranking_bias: float - represents selection pressure (the higher the value the higher the pressure)
+                in ranking selection
+            - :param crossover_points_number: int - number of crossover points to use in multipoint crossover
+            - :param crossover_pattern: int - pattern of crossover to be used in adaptive crossover
+            - :param mutation_points_number: int - number of mutation points to be used in multipoint mutation.
 
         :raise ValueError: Unexpected value of 'other_params'.
         """

@@ -1,6 +1,6 @@
 """Evolutionary algorithms boundary values definitions."""
 
-# general Evolutionary Algorithm params
+# general Evolutionary Algorithm
 MIN_EA_POPULATION_SIZE: int = 10  # must be even
 MAX_EA_POPULATION_SIZE: int = 1000  # must be even
 MIN_EA_MUTATION_CHANCE: float = 0.001

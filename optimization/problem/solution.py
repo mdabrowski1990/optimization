@@ -144,7 +144,7 @@ class AbstractSolution(ABC):
 
         :return: Dictionary with constraints values.
             Keys: Names of constraint functions.
-            Values: Calculated of the corresponding constraint.
+            Values: Calculated value of the corresponding constraint.
         """
         constraints_values = {
             constraint_name: abs(constraint_function(**self.decision_variables_values))
@@ -154,7 +154,7 @@ class AbstractSolution(ABC):
 
     def _calculate_penalty(self) -> Union[float, int]:
         """:return: Value of solution penalty."""
-        return self.optimization_problem.penalty_function(**self._calculate_constraints())  # TODO: consider abs here
+        return self.optimization_problem.penalty_function(**self._calculate_constraints())
 
     def get_objective_value_with_penalty(self):
         """:return: Value of solution objective with penalty."""
