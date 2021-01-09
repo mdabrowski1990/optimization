@@ -17,7 +17,7 @@ from collections import OrderedDict
 
 from .evolutionary_algorithm import EvolutionaryAlgorithm
 from ...problem import OptimizationProblem, AbstractSolution, OptimizationType, \
-    IntegerVariable, DiscreteVariable, FloatVariable, ChoiceVariable
+    DecisionVariable, IntegerVariable, DiscreteVariable, FloatVariable, ChoiceVariable
 from ...stop_conditions import StopConditions
 from ...logging import AbstractLogger
 from .selection import SelectionType, SELECTION_ADDITIONAL_PARAMS_LIMITS
@@ -26,7 +26,6 @@ from .mutation import MutationType
 from .limits import MIN_EA_POPULATION_SIZE, MAX_EA_POPULATION_SIZE, MIN_EA_MUTATION_CHANCE, MAX_EA_MUTATION_CHANCE
 
 
-DecisionVariableTyping = Union[IntegerVariable, DiscreteVariable, FloatVariable, ChoiceVariable]
 DEFAULT_SOLUTIONS_PERCENTILE: float = 0.1
 DEFAULT_SOLUTIONS_NUMBER: int = 3
 
@@ -389,7 +388,7 @@ class EvolutionaryAlgorithmAdaptationProblem(OptimizationProblem):
                                      mutation_types: Iterable[MutationType],
                                      mutation_chance_boundaries: Tuple[float, float],
                                      apply_elitism_options: Iterable[bool]) \
-            -> OrderedDictTyping[str, DecisionVariableTyping]:  # type: ignore
+            -> OrderedDictTyping[str, DecisionVariable]:  # type: ignore
         """
         Creates definition of main decision variables vector.
 
@@ -417,7 +416,7 @@ class EvolutionaryAlgorithmAdaptationProblem(OptimizationProblem):
         )
 
     @staticmethod
-    def _get_additional_decision_variables(**optional_params: Union[int, float]) -> Dict[str, DecisionVariableTyping]:
+    def _get_additional_decision_variables(**optional_params: Union[int, float]) -> Dict[str, DecisionVariable]:
         """
         Creates definition of additional decision variables vector.
 
@@ -501,10 +500,11 @@ class EvolutionaryAlgorithmAdaptationProblem(OptimizationProblem):
 
 class LowerAdaptiveEvolutionaryAlgorithm(EvolutionaryAlgorithm, AbstractSolution):
     """
-    Definition of lower level adaptive evolutionary algorithm.
+    Definition of Lower (Slave) Adaptive Evolutionary Algorithm.
 
     These algorithms (there are many of them during optimization process) search for optimal solution of
-    main optimization problem.
+    main optimization problem while Upper (Master) Adaptive Evolutionary Algorithm optimizes settings (configurations)
+    of Lower Adaptive Evolutionary Algorithms.
     """
 
     @property
@@ -513,7 +513,9 @@ class LowerAdaptiveEvolutionaryAlgorithm(EvolutionaryAlgorithm, AbstractSolution
         """Evolutionary Algorithm adaptation problem for which this class is able to create solutions (as objects)."""
         ...
 
-    def __init__(self, upper_iteration: int, index: int,  # pylint: disable=too-many-arguments
+    def __init__(self,  # pylint: disable=too-many-arguments
+                 upper_iteration: int,
+                 index: int,
                  problem: OptimizationProblem,
                  stop_conditions: StopConditions,
                  population_size: int,
@@ -613,14 +615,12 @@ class AdaptiveEvolutionaryAlgorithm(EvolutionaryAlgorithm):
         # TODO: protect from problem.variables_number < 4 and adaptation_problem uses 'crossover_points_number'
         #  or 'mutation_points_number'
         adaptation_problem.optimization_type = problem.optimization_type
-        adaptation_problem.additional_decision_variable["crossover_points_number"].max_value \
-            = min(adaptation_problem.additional_decision_variable["crossover_points_number"].max_value,
-                  problem.variables_number // 2)
-        adaptation_problem.additional_decision_variable["crossover_patter"].max_value \
-            = (1 << problem.variables_number) - 1
-        adaptation_problem.additional_decision_variable["mutation_points_number"].max_value \
-            = min(adaptation_problem.additional_decision_variable["mutation_points_number"].max_value,
-                  problem.variables_number // 2)
+        dv_crossover_points_number = adaptation_problem.additional_decision_variable["crossover_points_number"]
+        dv_crossover_points_number.max_value = problem.variables_number // 2  # type: ignore
+        dv_crossover_patter = adaptation_problem.additional_decision_variable["crossover_patter"]
+        dv_crossover_patter.max_value = (1 << problem.variables_number) - 1  # type: ignore
+        dv_mutation_points_number = adaptation_problem.additional_decision_variable["mutation_points_number"]
+        dv_mutation_points_number.max_value = problem.variables_number // 2  # type: ignore
         self.adaptation_problem = adaptation_problem
         super().__init__(problem=problem, stop_conditions=stop_conditions, population_size=population_size,
                          selection_type=selection_type, crossover_type=crossover_type, mutation_type=mutation_type,
