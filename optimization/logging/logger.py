@@ -115,7 +115,7 @@ class AbstractLogger(ABC):
     """
 
     @abstractmethod
-    def log_at_start(self, algorithm, stop_conditions, problem):
+    def log_at_start(self, algorithm, stop_conditions, problem):  # TODO: adaptation problem should also be logged
         """
         Logging method that will be called before the start of the optimization process.
 
@@ -136,7 +136,8 @@ class AbstractLogger(ABC):
         ...
 
     @abstractmethod
-    def log_lower_level_iteration(self, upper_iteration: int,
+    def log_lower_level_iteration(self,
+                                  upper_iteration: int,
                                   lower_algorithm_index: int,
                                   lower_iteration: int,
                                   solutions: Iterable):
@@ -168,7 +169,8 @@ class Logger(AbstractLogger):
 
     LOG_DIRECTORY_PATTERN = "{}_%Y-%m-%d_%H-%M-%S"
 
-    def __init__(self, logs_dir: str,
+    def __init__(self,
+                 logs_dir: str,
                  verbosity: LoggingVerbosity = LoggingVerbosity.BestSolution,
                  log_format: LoggingFormat = LoggingFormat.YAML) -> None:
         """
@@ -280,7 +282,8 @@ class Logger(AbstractLogger):
                 with open(file_path, mode) as json_file:
                     json_dump(data_to_log, json_file)
 
-    def log_lower_level_iteration(self, upper_iteration: int,
+    def log_lower_level_iteration(self,
+                                  upper_iteration: int,
                                   lower_algorithm_index: int,
                                   lower_iteration: int,
                                   solutions: Iterable) -> None:

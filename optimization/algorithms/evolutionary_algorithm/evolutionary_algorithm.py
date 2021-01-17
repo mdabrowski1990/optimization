@@ -165,6 +165,8 @@ class EvolutionaryAlgorithm(AbstractOptimizationAlgorithm):
         """
         Performs crossover of two parents.
 
+        :param parents: Solution objects with values of selected parents.
+
         :return: Values of children decision variables (genes).
         """
         return self.crossover_function(parents=parents, variables_number=self.problem.variables_number,

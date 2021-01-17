@@ -14,15 +14,17 @@ from typing import OrderedDict as OrderedDictTyping
 from enum import Enum
 from abc import abstractmethod
 from collections import OrderedDict
+from copy import deepcopy
 
+from ...utilities import shuffled
 from .evolutionary_algorithm import EvolutionaryAlgorithm
 from ...problem import OptimizationProblem, AbstractSolution, OptimizationType, \
     DecisionVariable, IntegerVariable, DiscreteVariable, FloatVariable, ChoiceVariable
 from ...stop_conditions import StopConditions
 from ...logging import AbstractLogger
-from .selection import SelectionType, SELECTION_ADDITIONAL_PARAMS_LIMITS
-from .crossover import CrossoverType
-from .mutation import MutationType
+from .selection import SelectionType, SELECTION_ADDITIONAL_PARAMS_LIMITS, SELECTION_ADDITIONAL_PARAMS
+from .crossover import CrossoverType, CROSSOVER_ADDITIONAL_PARAMS, ChildrenValuesTyping
+from .mutation import MutationType, MUTATION_ADDITIONAL_PARAMS
 from .limits import MIN_EA_POPULATION_SIZE, MAX_EA_POPULATION_SIZE, MIN_EA_MUTATION_CHANCE, MAX_EA_MUTATION_CHANCE
 from .defaults import DEFAULT_SOLUTIONS_NUMBER, DEFAULT_SOLUTIONS_PERCENTILE
 
@@ -573,7 +575,7 @@ class LowerAdaptiveEvolutionaryAlgorithm(EvolutionaryAlgorithm, AbstractSolution
         return data
 
 
-class AdaptiveEvolutionaryAlgorithm(EvolutionaryAlgorithm):  # TODO: update
+class AdaptiveEvolutionaryAlgorithm(EvolutionaryAlgorithm):
     """
     Adaptive Evolutionary Algorithm definition.
 
@@ -582,8 +584,7 @@ class AdaptiveEvolutionaryAlgorithm(EvolutionaryAlgorithm):  # TODO: update
     optimization process effectiveness (it optimizes settings of _LowerAdaptiveEvolutionaryAlgorithm).
     """
 
-    MIN_POPULATION_SIZE: int = MIN_EA_POPULATION_SIZE
-    MAX_POPULATION_SIZE: int = MAX_EA_POPULATION_SIZE
+    ParentsTyping = Tuple[LowerAdaptiveEvolutionaryAlgorithm, LowerAdaptiveEvolutionaryAlgorithm]
 
     def __init__(self,  # pylint: disable=too-many-arguments
                  problem: OptimizationProblem,
@@ -611,8 +612,9 @@ class AdaptiveEvolutionaryAlgorithm(EvolutionaryAlgorithm):  # TODO: update
         :param other_params: Parameter related to selected selection, crossover and mutation type further
             described in parent class.
         """
-        # TODO: protect from problem.variables_number < 4 and adaptation_problem uses 'crossover_points_number'
-        #  or 'mutation_points_number'
+        if not isinstance(adaptation_problem, EvolutionaryAlgorithmAdaptationProblem):
+            raise TypeError(f"Value of 'adaptation_problem' parameter is not EvolutionaryAlgorithmAdaptationProblem "
+                            f"type. Actual value: '{adaptation_problem}'.")
         adaptation_problem.optimization_type = problem.optimization_type
         dv_crossover_points_number = adaptation_problem.additional_decision_variable["crossover_points_number"]
         dv_crossover_points_number.max_value = problem.variables_number // 2  # type: ignore
@@ -625,11 +627,122 @@ class AdaptiveEvolutionaryAlgorithm(EvolutionaryAlgorithm):  # TODO: update
                          selection_type=selection_type, crossover_type=crossover_type, mutation_type=mutation_type,
                          mutation_chance=mutation_chance, apply_elitism=False, logger=logger, **other_params)
 
-        # class AdaptiveAESolution(LowerAdaptiveEvolutionaryAlgorithm):
-        #     """Solution class for given evolutionary algorithm adaptation problem."""
-        #
-        #     optimization_problem = adaptation_problem
-        #
-        # self.SolutionClass = AdaptiveAESolution
+        class AdaptiveAESolution(LowerAdaptiveEvolutionaryAlgorithm):
+            """Solution class for given evolutionary algorithm adaptation problem."""
 
-    # todo: a few methods must be updated
+            optimization_problem = adaptation_problem
+
+        self.SolutionClass = AdaptiveAESolution  # type: ignore
+
+    @staticmethod
+    def _assign_additional_params_to_children(parents: ParentsTyping,
+                                              child_1_main_values: OrderedDictTyping,  # type: ignore
+                                              child_2_main_values: OrderedDictTyping) -> Tuple[dict, dict]:  # noqa
+        """
+        Performs crossover on additional decision variables.
+
+        Additional parameters values are selected basing on parents genes and already assigned main decision variables.
+
+        :param parents: Solution objects with values of selected parents.
+        :param child_1_main_values: Already assigned (to first child) main decision variables.
+        :param child_2_main_values: Already assigned (to second child) main decision variables.
+
+        :return: Tuple with additional decision variables assignment for following children.
+        """
+        child_1_side_values, child_2_side_values = {}, {}
+        for main_function, additional_params in (("selection_type", SELECTION_ADDITIONAL_PARAMS),
+                                                 ("crossover_type", CROSSOVER_ADDITIONAL_PARAMS),
+                                                 ("mutation_type", MUTATION_ADDITIONAL_PARAMS)):
+            val1, val2 = child_1_main_values[main_function], child_2_main_values[main_function]  # type: ignore
+            child_1_params, child_2_params = additional_params[val1.value], additional_params[val2.value]
+            if not child_1_params and not child_2_params:
+                continue
+            if child_1_params == child_2_params:
+                for param in child_1_params:
+                    child_1_side_values[param], child_2_side_values[param] = \
+                        shuffled([parents[0].additional_decision_variables_values[param],
+                                  parents[1].additional_decision_variables_values[param]])
+                continue
+            for param in child_1_params:
+                if param in parents[0].additional_decision_variables_values:
+                    child_1_side_values[param] = parents[0].additional_decision_variables_values[param]
+                elif param in parents[1].additional_decision_variables_values:
+                    child_1_side_values[param] = parents[1].additional_decision_variables_values[param]
+                else:
+                    raise ValueError("Unexpected additional decision variable value of child 1.")
+            for param in child_2_params:
+                if param in parents[0].additional_decision_variables_values:
+                    child_2_side_values[param] = parents[0].additional_decision_variables_values[param]
+                elif param in parents[1].additional_decision_variables_values:
+                    child_2_side_values[param] = parents[1].additional_decision_variables_values[param]
+                else:
+                    raise ValueError("Unexpected additional decision variable value of child 2.")
+        return child_1_side_values, child_2_side_values
+
+    def _update_additional_params(self,
+                                  values_before_main_mutation: OrderedDictTyping,  # type: ignore
+                                  values_after_main_mutation: OrderedDictTyping) -> OrderedDictTyping:  # type: ignore
+        """
+        Adjusts additional decision variable values.
+
+        If any of main function (selection_type, crossover_type, mutation_type) was changed changed (mutated), then
+        side parameters must be adjusted.
+
+        :Note Example:
+        After crossover, SelectionType.Tournament was selection type assigned.
+        It required 'tournament_group_size' as additional parameter.
+        After mutation selection_type was switched from SelectionType.Tournament to SelectionType.Ranking.
+        Ranking selection requires 'ranking_bias' as additional parameter.
+        It is necessary to remove 'tournament_group_size' value and assign some 'ranking_bias' value
+        to additional params.
+
+
+        :param values_before_main_mutation: All decision variables values before mutation.
+        :param values_after_main_mutation: Decision variables values after mutation of main parameters.
+
+        :return: Final version of all decision variables (both main and additional) after mutation.
+        """
+        final_values = deepcopy(values_after_main_mutation)
+        for main_function, additional_params in (("selection_type", SELECTION_ADDITIONAL_PARAMS),
+                                                 ("crossover_type", CROSSOVER_ADDITIONAL_PARAMS),
+                                                 ("mutation_type", MUTATION_ADDITIONAL_PARAMS)):
+            value_before_mutation = values_before_main_mutation[main_function]  # type: ignore
+            value_after_mutation = values_after_main_mutation[main_function]  # type: ignore
+            if value_before_mutation != value_after_mutation:
+                old_side_values = set(additional_params[value_before_mutation])
+                required_side_values = set(additional_params[value_before_mutation])
+                for var_name_no_longer_needed in old_side_values.difference(required_side_values):
+                    final_values.pop(var_name_no_longer_needed)  # type: ignore
+                for var_name_new in required_side_values.difference(old_side_values):
+                    value = self.adaptation_problem.additional_decision_variable[var_name_new].generate_random_value()
+                    final_values[var_name_new] = value  # type: ignore
+        return final_values
+
+    def _perform_crossover(self, parents: ParentsTyping) -> ChildrenValuesTyping:  # type: ignore
+        """
+        Performs crossover of two parents.
+
+        :param parents: Solution objects with values of selected parents.
+
+        :return: Values of children decision variables (genes).
+        """
+        child_1_main_values, child_2_main_values = super()._perform_crossover(parents=parents)
+        child_1_side_values, child_2_side_values = self._assign_additional_params_to_children(
+            parents=parents, child_1_main_values=child_1_main_values, child_2_main_values=child_2_main_values)
+        return OrderedDict(**child_1_main_values, **child_1_side_values), \
+            OrderedDict(**child_2_main_values, **child_2_side_values)
+
+    def _perform_mutation(self, individual_values: OrderedDictTyping[str, Any]) -> None:  # type: ignore
+        """
+        Performs mutation on individual decision variables values.
+
+        :param individual_values: Individual values to be mutated.
+
+        :return: None
+        """
+        initial_value = deepcopy(individual_values)
+        super()._perform_mutation(individual_values=individual_values)
+        final_values = self._update_additional_params(values_before_main_mutation=initial_value,
+                                                      values_after_main_mutation=individual_values)
+        individual_values.clear()  # type: ignore
+        individual_values.update(final_values)  # type: ignore
