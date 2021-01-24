@@ -1,10 +1,9 @@
 import pytest
 from mock import Mock, patch, call
 from collections import OrderedDict
-from copy import deepcopy
 
 from optimization.algorithms.evolutionary_algorithm.adaptive_evolutionary_algorithm import \
-    EvolutionaryAlgorithmAdaptationProblem, AdaptiveEvolutionaryAlgorithm, \
+    EvolutionaryAlgorithmAdaptationProblem, AdaptiveEvolutionaryAlgorithm, LowerAdaptiveEvolutionaryAlgorithm, \
     OptimizationType, AdaptationType, SelectionType, CrossoverType, MutationType
 
 
@@ -516,6 +515,97 @@ class TestEvolutionaryAlgorithmAdaptationProblem:
                                                       default_min_roulette_bias, default_max_roulette_bias):
         with pytest.raises(ValueError):
             EvolutionaryAlgorithmAdaptationProblem._get_additional_decision_variables(**additional_params)
+
+
+class TestLowerAdaptiveEvolutionaryAlgorithm:
+    SCRIPT_LOCATION = "optimization.algorithms.evolutionary_algorithm.adaptive_evolutionary_algorithm"
+
+    def setup(self):
+        self.mock_lower_adaptive_evolutionary_algorithm_object = Mock(spec=LowerAdaptiveEvolutionaryAlgorithm)
+        # pathing
+        self._patcher_evolutionary_algorithm_init = patch(f"{self.SCRIPT_LOCATION}.EvolutionaryAlgorithm.__init__")
+        self.mock_evolutionary_algorithm_init = self._patcher_evolutionary_algorithm_init.start()
+        self._patcher_abstract_solution_init = patch(f"{self.SCRIPT_LOCATION}.AbstractSolution.__init__")
+        self.mock_abstract_solution_init = self._patcher_abstract_solution_init.start()
+        self._patcher_evolutionary_algorithm_get_log_data = patch(f"{self.SCRIPT_LOCATION}.EvolutionaryAlgorithm.get_log_data")
+        self.mock_evolutionary_algorithm_get_log_data = self._patcher_evolutionary_algorithm_get_log_data.start()
+        self._patcher_abstract_solution_get_log_data = patch(f"{self.SCRIPT_LOCATION}.AbstractSolution.get_log_data")
+        self.mock_abstract_solution_get_log_data = self._patcher_abstract_solution_get_log_data.start()
+
+    def teardown(self):
+        self._patcher_evolutionary_algorithm_init.stop()
+        self._patcher_abstract_solution_init.stop()
+        self._patcher_evolutionary_algorithm_get_log_data.stop()
+        self._patcher_abstract_solution_get_log_data.stop()
+
+    @pytest.mark.parametrize("upper_iteration, index", [(0, 0), (1, 5)])
+    @pytest.mark.parametrize("problem, stop_conditions, population_size, selection_type, crossover_type, "
+                             "mutation_type, mutation_chance, apply_elitism", [
+        ("problem 1", "never", 10, "ranking", "point", "uniform", 0.01, False),
+        ("problem 2", "10s", 25, "roulette", "two-points", "other", 0.23, True),
+    ])
+    @pytest.mark.parametrize("optional_params", [
+        {},
+        {"param1": 1, "param2": 2, "param3": 3},
+        {"logger": None, "initial_population": []},
+        {"logger": "Some logger", "initial_population": list(range(10)), "p1": "v1", "p2": "v2"}
+    ])
+    def test_init(self, upper_iteration, index, problem, stop_conditions, population_size, selection_type,
+                  crossover_type, mutation_type, mutation_chance, apply_elitism, optional_params):
+        LowerAdaptiveEvolutionaryAlgorithm.__init__(
+            self=self.mock_lower_adaptive_evolutionary_algorithm_object,
+            upper_iteration=upper_iteration, index=index, problem=problem, stop_conditions=stop_conditions,
+            population_size=population_size, selection_type=selection_type, crossover_type=crossover_type,
+            mutation_type=mutation_type, mutation_chance=mutation_chance, apply_elitism=apply_elitism, **optional_params
+        )
+        # pop 'logger' and 'initial_population' values from optional_params
+        # only additional values related to selection, crossover and mutation are left in the dictionary
+        logger = optional_params.pop("logger", None)
+        initial_population = optional_params.pop("initial_population", [])
+        # assertions
+        assert self.mock_lower_adaptive_evolutionary_algorithm_object.upper_iteration == upper_iteration
+        assert self.mock_lower_adaptive_evolutionary_algorithm_object.index == index
+        assert self.mock_lower_adaptive_evolutionary_algorithm_object._population == initial_population
+        assert self.mock_lower_adaptive_evolutionary_algorithm_object.additional_decision_variables_values == optional_params
+        self.mock_evolutionary_algorithm_init.assert_called_once_with(
+            self_ea=self.mock_lower_adaptive_evolutionary_algorithm_object,
+            problem=problem, stop_conditions=stop_conditions, population_size=population_size,
+            selection_type=selection_type, crossover_type=crossover_type, mutation_type=mutation_type,
+            mutation_chance=mutation_chance, apply_elitism=apply_elitism, logger=logger, **optional_params)
+        self.mock_abstract_solution_init.assert_called_once_with(
+            self_solution=self.mock_lower_adaptive_evolutionary_algorithm_object,
+            population_size=population_size,
+            selection_type=selection_type, crossover_type=crossover_type, mutation_type=mutation_type,
+            mutation_chance=mutation_chance, apply_elitism=apply_elitism)
+
+    @pytest.mark.parametrize("iteration_index", [0, 1, 654])
+    def test_log_iteration__no_logger(self, iteration_index):
+        self.mock_lower_adaptive_evolutionary_algorithm_object.logger = None
+        LowerAdaptiveEvolutionaryAlgorithm._log_iteration(self=self.mock_lower_adaptive_evolutionary_algorithm_object,
+                                                          iteration_index=iteration_index)
+
+    @pytest.mark.parametrize("iteration_index", [0, 1, 654])
+    @pytest.mark.parametrize("upper_iteration, lower_algorithm_index", [(0, 0), (1, 23), (4, 1)])
+    @pytest.mark.parametrize("solutions", [range(10), set("abcdefg")])
+    def test_log_iteration__with_logger(self, iteration_index, upper_iteration, lower_algorithm_index, solutions):
+        mock_logger = Mock()
+        self.mock_lower_adaptive_evolutionary_algorithm_object.logger = mock_logger
+        self.mock_lower_adaptive_evolutionary_algorithm_object.upper_iteration = upper_iteration
+        self.mock_lower_adaptive_evolutionary_algorithm_object.index = lower_algorithm_index
+        self.mock_lower_adaptive_evolutionary_algorithm_object._population = solutions
+        LowerAdaptiveEvolutionaryAlgorithm._log_iteration(self=self.mock_lower_adaptive_evolutionary_algorithm_object,
+                                                          iteration_index=iteration_index)
+        mock_logger.log_lower_level_iteration.assert_called_once_with(upper_iteration=upper_iteration,
+                                                                      lower_algorithm_index=lower_algorithm_index,
+                                                                      lower_iteration=iteration_index,
+                                                                      solutions=solutions)
+
+    @pytest.mark.parametrize("additional_variables", [{}, {"p1": 1, "p2": 2}, {"a": "xyz", "b": "tuv", "c": "hij"}])
+    def test_get_log_data(self, additional_variables):
+        self.mock_lower_adaptive_evolutionary_algorithm_object.additional_decision_variables_values = additional_variables
+        LowerAdaptiveEvolutionaryAlgorithm.get_log_data(self=self.mock_lower_adaptive_evolutionary_algorithm_object)
+        self.mock_evolutionary_algorithm_get_log_data.assert_called_once_with(self_ea=self.mock_lower_adaptive_evolutionary_algorithm_object)
+        self.mock_abstract_solution_get_log_data.assert_called_once_with(self_solution=self.mock_lower_adaptive_evolutionary_algorithm_object)
 
 
 class TestAdaptiveEvolutionaryAlgorithm:

@@ -92,7 +92,7 @@ class TestEvolutionaryAlgorithm:
         :param mutation_type: Example value of 'mutation_type' parameter.
         :param mutation_args: Example additional argument for given mutation type.
         """
-        EvolutionaryAlgorithm.__init__(self=self.mock_evolutionary_algorithm_object, logger=logger,
+        EvolutionaryAlgorithm.__init__(self_ea=self.mock_evolutionary_algorithm_object, logger=logger,
                                        problem=self.mock_problem, stop_conditions=self.mock_stop_conditions,
                                        population_size=population_size, apply_elitism=apply_elitism,
                                        mutation_chance=mutation_chance, selection_type=selection_type,
@@ -152,7 +152,7 @@ class TestEvolutionaryAlgorithm:
         :param incorrect_args: Unexpected arguments.
         """
         with pytest.raises(ValueError):
-            EvolutionaryAlgorithm.__init__(self=self.mock_evolutionary_algorithm_object,
+            EvolutionaryAlgorithm.__init__(self_ea=self.mock_evolutionary_algorithm_object,
                                            problem=self.mock_problem, stop_conditions=self.mock_stop_conditions,
                                            population_size=example_population_size, apply_elitism=example_apply_elitism,
                                            mutation_chance=example_mutation_chance, selection_type=selection_type,
@@ -597,7 +597,7 @@ class TestEvolutionaryAlgorithm:
         self.mock_evolutionary_algorithm_object.mutation_type = mutation_type
         self.mock_evolutionary_algorithm_object.mutation_params = mutation_params
         self.mock_evolutionary_algorithm_object.mutation_chance = mutation_chance
-        log_data = EvolutionaryAlgorithm.get_log_data(self=self.mock_evolutionary_algorithm_object)
+        log_data = EvolutionaryAlgorithm.get_log_data(self_ea=self.mock_evolutionary_algorithm_object)
         assert isinstance(log_data, dict)
         assert log_data["type"] == "EvolutionaryAlgorithm"
         assert log_data["population_size"] == population_size

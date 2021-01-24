@@ -18,16 +18,16 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
 
-    - name: Install dependencies
+    - name: Install project dependencies
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         pip install -r requirements_tests.txt
 
-    - name: Static code analysis with prospector
+    - name: Static code analysis [prospector]
       run: |
         prospector --profile prospector_profile.yaml optimization
 
-    - name: Test with pytest
+    - name: Unit and integrations tests [pytest]
       run: |
         pytest -m "not random" --cov-report term-missing --cov=optimization tests

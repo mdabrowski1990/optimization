@@ -45,7 +45,7 @@ class TestSolution:
         """
         self.mock_decision_variables_items.return_value = [(name, self.mock_decision_variable)
                                                            for name in decision_variables_names]
-        AbstractSolution.__init__(self=self.mock_solution_object)
+        AbstractSolution.__init__(self_solution=self.mock_solution_object)
         assert isinstance(self.mock_solution_object.decision_variables_values, OrderedDict)
         assert set(self.mock_solution_object.decision_variables_values.keys()) == set(decision_variables_names)
         assert all([self.mock_solution_object.decision_variables_values[
@@ -62,7 +62,7 @@ class TestSolution:
         """
         self.mock_decision_variables_items.return_value = [(name, self.mock_decision_variable)
                                                            for name in decision_variables_values.keys()]
-        AbstractSolution.__init__(self=self.mock_solution_object, **decision_variables_values)
+        AbstractSolution.__init__(self_solution=self.mock_solution_object, **decision_variables_values)
         assert isinstance(self.mock_solution_object.decision_variables_values, OrderedDict)
         assert set(self.mock_solution_object.decision_variables_values.keys()) == set(decision_variables_values.keys())
         assert all([self.mock_solution_object.decision_variables_values[var_name] == var_value
@@ -81,7 +81,7 @@ class TestSolution:
         self.mock_decision_variables_items.return_value = [(name, self.mock_decision_variable)
                                                            for name in decision_variables_values.keys()]
         with pytest.raises(ValueError):
-            AbstractSolution.__init__(self=self.mock_solution_object, **decision_variables_values)
+            AbstractSolution.__init__(self_solution=self.mock_solution_object, **decision_variables_values)
 
     @pytest.mark.parametrize("decision_variables_values", EXAMPLE_DECISION_VARIABLES_VALUES)
     def test_init__unknown_variable(self, decision_variables_values):
@@ -92,7 +92,7 @@ class TestSolution:
         :param decision_variables_values: Examples values of decision variables to be set in solution object.
         """
         with pytest.raises(ValueError):
-            AbstractSolution.__init__(self=self.mock_solution_object, **decision_variables_values)
+            AbstractSolution.__init__(self_solution=self.mock_solution_object, **decision_variables_values)
 
     # _calculate_objective
 

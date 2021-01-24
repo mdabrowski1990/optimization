@@ -19,7 +19,8 @@ class AbstractSolution(ABC):
         """Optimization problem for which this class is able to create solutions (as objects)."""
         ...
 
-    def __init__(self, **decision_variables_values: Any) -> None:
+    def __init__(self_solution,  # noqa
+                 **decision_variables_values: Any) -> None:
         """
         Creates object that carries all information about single solution of 'optimization_problem'.
 
@@ -32,7 +33,7 @@ class AbstractSolution(ABC):
         """
         # find values for all variables
         values_to_set = OrderedDict()
-        for variable_name, variable_definition in self.optimization_problem.decision_variables.items():  # type: ignore
+        for variable_name, variable_definition in self_solution.optimization_problem.decision_variables.items():  # noqa
             if variable_name in decision_variables_values:
                 value = decision_variables_values.pop(variable_name)
                 if not variable_definition.is_proper_value(value):
@@ -46,8 +47,8 @@ class AbstractSolution(ABC):
             raise ValueError(f"Values for unknown decision variables were provided: "
                              f"{list(decision_variables_values.keys())}.")
         # set attributes
-        self.decision_variables_values = values_to_set
-        self._objective_value_with_penalty = None
+        self_solution.decision_variables_values = values_to_set
+        self_solution._objective_value_with_penalty = None
 
     def __eq__(self, other: object) -> bool:
         """
@@ -165,13 +166,13 @@ class AbstractSolution(ABC):
                 self._objective_value_with_penalty = self._calculate_objective() - self._calculate_penalty()
         return self._objective_value_with_penalty
 
-    def get_log_data(self) -> Dict[str, Union[dict, int, float]]:
+    def get_log_data(self_solution) -> Dict[str, Union[dict, int, float]]:  # noqa
         """
         Gets data for logging purposes.
 
         :return: Dictionary with this Solution crucial data.
         """
         return {
-            "decision_variables_values": self.decision_variables_values,
-            "objective_value_with_penalty": self.get_objective_value_with_penalty(),
+            "decision_variables_values": self_solution.decision_variables_values,
+            "objective_value_with_penalty": self_solution.get_objective_value_with_penalty(),
         }

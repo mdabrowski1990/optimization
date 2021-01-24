@@ -497,7 +497,7 @@ class EvolutionaryAlgorithmAdaptationProblem(OptimizationProblem):
         return lambda **decision_variables_values: 0  # penalty function is not used here
 
 
-class LowerAdaptiveEvolutionaryAlgorithm(EvolutionaryAlgorithm, AbstractSolution):  # TODO: update
+class LowerAdaptiveEvolutionaryAlgorithm(EvolutionaryAlgorithm, AbstractSolution):
     """
     Definition of Lower (Slave) Adaptive Evolutionary Algorithm.
 
@@ -530,23 +530,31 @@ class LowerAdaptiveEvolutionaryAlgorithm(EvolutionaryAlgorithm, AbstractSolution
 
         :param upper_iteration: Iteration index of Upper Algorithm.
         :param index: Unique index of this Lower Evolutionary Algorithm in this Upper Algorithm iteration.
-        :param kwargs: Other parameters:
-            - initial_population - (optional) starting population to be set.
-            - same parameters as in EvolutionaryAlgorithm.__init__
+        :param other_params: Parameter related to initial algorithm conditions, selected selection, crossover
+            or mutation type such as:
+            - :param initial_population - (optional) starting population to be set.
+            - :param tournament_group_size: int - determines group size used in tournament
+                and double tournament selections
+            - :param roulette_bias: float - bias towards promoting better adopted individuals in roulette selection
+            - :param ranking_bias: float - represents selection pressure (the higher the value the higher the pressure)
+                in ranking selection
+            - :param crossover_points_number: int - number of crossover points to use in multipoint crossover
+            - :param crossover_pattern: int - pattern of crossover to be used in adaptive crossover
+            - :param mutation_points_number: int - number of mutation points to be used in multipoint mutation.
         """
         self.upper_iteration = upper_iteration
         self.index = index
         # init as evolutionary algorithm
         initial_population = other_params.pop("initial_population", [])
-        EvolutionaryAlgorithm.__init__(self=self, problem=problem, stop_conditions=stop_conditions,
+        EvolutionaryAlgorithm.__init__(self_ea=self, problem=problem, stop_conditions=stop_conditions,
                                        population_size=population_size, selection_type=selection_type,
                                        crossover_type=crossover_type, mutation_type=mutation_type,
                                        mutation_chance=mutation_chance, apply_elitism=apply_elitism, logger=logger,
                                        **other_params)
         self._population = initial_population
         # init as solution
-        AbstractSolution.__init__(self=self, population_size=population_size, selection_type=self.selection_type,
-                                  crossover_type=self.crossover_type, mutation_type=self.mutation_type,
+        AbstractSolution.__init__(self_solution=self, population_size=population_size, selection_type=selection_type,
+                                  crossover_type=crossover_type, mutation_type=mutation_type,
                                   mutation_chance=mutation_chance, apply_elitism=apply_elitism)
         self.additional_decision_variables_values = other_params
 
@@ -570,8 +578,9 @@ class LowerAdaptiveEvolutionaryAlgorithm(EvolutionaryAlgorithm, AbstractSolution
 
         :return: Dictionary with this Solution crucial data.
         """
-        data = EvolutionaryAlgorithm.get_log_data(self=self)
-        data.update(objective_value_with_penalty=self.get_objective_value_with_penalty())
+        data = EvolutionaryAlgorithm.get_log_data(self_ea=self)
+        data.update(AbstractSolution.get_log_data(self_solution=self))
+        data["additional_decision_variables_values"] = self.additional_decision_variables_values
         return data
 
 
