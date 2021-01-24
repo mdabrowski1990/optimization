@@ -14,7 +14,7 @@ __all__ = ["AbstractLogger", "LoggingVerbosity", "LoggingFormat", "Logger"]
 from typing import Iterable, Optional
 from abc import ABC, abstractmethod
 from enum import IntEnum, Enum
-from os import path, mkdir
+from os import path, mkdir, makedirs
 from datetime import datetime, timedelta
 
 from yaml import dump as yaml_dump
@@ -183,7 +183,7 @@ class Logger(AbstractLogger):
         if not isinstance(logs_dir, str):
             raise TypeError(f"Parameter 'logs_dir' is not str type. Actual value: {logs_dir}.")
         if not path.isdir(logs_dir):
-            raise ValueError(f"Directory '{logs_dir}' is not a valid path to existing directory.")
+            makedirs(logs_dir)
         if isinstance(verbosity, LoggingVerbosity):
             pass
         elif isinstance(verbosity, str):

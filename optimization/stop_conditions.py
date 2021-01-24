@@ -12,7 +12,9 @@ from .problem.solution import AbstractSolution
 class StopConditions:
     """Definition of stop condition which causes the end of optimization process."""
 
-    def __init__(self, time_limit: timedelta, satisfying_objective_value: Optional[Union[float, int]] = None,
+    def __init__(self,
+                 time_limit: timedelta,
+                 satisfying_objective_value: Optional[Union[float, int]] = None,
                  max_iter_without_progress: Optional[int] = None,
                  max_time_without_progress: Optional[timedelta] = None) -> None:
         """
