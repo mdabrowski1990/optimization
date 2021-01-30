@@ -250,7 +250,7 @@ class Logger(AbstractLogger):
         :param problem: Optimization problem to solve.
         """
         # prepare separate directory for this optimization process logging
-        _top_level_dir_name = datetime.now().strftime(self.LOG_DIRECTORY_PATTERN)
+        _top_level_dir_name = datetime.now().strftime(self.LOG_DIRECTORY_PATTERN.format(algorithm.__class__.__name__))
         self.optimization_process_dir = path.join(self.main_dir, _top_level_dir_name)
         mkdir(self.optimization_process_dir)
         # create log files and dump data according to verbosity level

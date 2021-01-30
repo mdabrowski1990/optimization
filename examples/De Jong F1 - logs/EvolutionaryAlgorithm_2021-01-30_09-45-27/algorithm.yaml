@@ -1,0 +1,11 @@
+apply_elitism: true
+crossover_params: {}
+crossover_type: Uniform
+mutation_chance: 0.2
+mutation_params: {}
+mutation_type: SinglePoint
+population_size: 200
+selection_params:
+  ranking_bias: 1.9
+selection_type: Ranking
+type: EvolutionaryAlgorithm

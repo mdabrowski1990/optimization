@@ -166,13 +166,13 @@ class AbstractSolution(ABC):
                 self._objective_value_with_penalty = self._calculate_objective() - self._calculate_penalty()
         return self._objective_value_with_penalty
 
-    def get_log_data(self_solution) -> Dict[str, Union[dict, int, float]]:  # noqa
+    def get_log_data(self) -> Dict[str, Union[dict, int, float]]:
         """
         Gets data for logging purposes.
 
         :return: Dictionary with this Solution crucial data.
         """
         return {
-            "decision_variables_values": self_solution.decision_variables_values,
-            "objective_value_with_penalty": self_solution.get_objective_value_with_penalty(),
+            "decision_variables_values": self.decision_variables_values,
+            "objective_value_with_penalty": self.get_objective_value_with_penalty(),
         }

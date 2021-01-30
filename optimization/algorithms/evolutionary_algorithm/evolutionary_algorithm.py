@@ -190,7 +190,7 @@ class EvolutionaryAlgorithm(AbstractOptimizationAlgorithm):
             name, var = decision_variables_list[mutation_point]
             individual_values[name] = var.generate_random_value()  # type: ignore
 
-    def _evolution_iteration(self) -> None:
+    def _evolution_iteration(self, **_: Any) -> None:
         """
         Perform iteration according to evolutionary algorithm. To be called as following iteration.
 
@@ -227,16 +227,16 @@ class EvolutionaryAlgorithm(AbstractOptimizationAlgorithm):
             else max(*self._population, self._best_solution)
         self._log_iteration(iteration_index=iteration_index)
 
-    def get_log_data(self_ea) -> Dict[str, Any]:  # noqa
+    def get_log_data(self) -> Dict[str, Any]:
         """
         Gets data for logging purposes.
 
         :return: Dictionary with this Evolutionary Algorithm crucial data.
         """
         log_data = super().get_log_data()
-        log_data.update(population_size=self_ea.population_size, apply_elitism=self_ea.apply_elitism,
-                        selection_type=self_ea.selection_type, selection_params=self_ea.selection_params,
-                        crossover_type=self_ea.crossover_type, crossover_params=self_ea.crossover_params,
-                        mutation_type=self_ea.mutation_type, mutation_params=self_ea.mutation_params,
-                        mutation_chance=self_ea.mutation_chance)
+        log_data.update(population_size=self.population_size, apply_elitism=self.apply_elitism,
+                        selection_type=self.selection_type, selection_params=self.selection_params,
+                        crossover_type=self.crossover_type, crossover_params=self.crossover_params,
+                        mutation_type=self.mutation_type, mutation_params=self.mutation_params,
+                        mutation_chance=self.mutation_chance)
         return log_data

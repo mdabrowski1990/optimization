@@ -92,9 +92,12 @@ class TestLogger:
         # patching
         self._patcher_path = patch(f"{self.SCRIPT_LOCATION}.path", Mock(isdir=self.mock_path_isdir))
         self.mock_path = self._patcher_path.start()
+        self._patcher_makedirs = patch(f"{self.SCRIPT_LOCATION}.makedirs")
+        self.mock_makedirs = self._patcher_makedirs.start()
 
     def teardown(self):
         self._patcher_path.stop()
+        self._patcher_makedirs.stop()
 
     # __init__
 
@@ -173,7 +176,5 @@ class TestLogger:
         :param logs_dir: Example value of 'logs_dir' parameter.
         """
         self.mock_path_isdir.return_value = False
-        with pytest.raises(ValueError):
-            Logger.__init__(self=self.mock_logger_object, logs_dir=logs_dir)
-
-
+        Logger.__init__(self=self.mock_logger_object, logs_dir=logs_dir)
+        self.mock_makedirs.assert_called_once_with(logs_dir)

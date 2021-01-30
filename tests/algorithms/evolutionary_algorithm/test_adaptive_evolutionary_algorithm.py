@@ -529,14 +529,11 @@ class TestLowerAdaptiveEvolutionaryAlgorithm:
         self.mock_abstract_solution_init = self._patcher_abstract_solution_init.start()
         self._patcher_evolutionary_algorithm_get_log_data = patch(f"{self.SCRIPT_LOCATION}.EvolutionaryAlgorithm.get_log_data")
         self.mock_evolutionary_algorithm_get_log_data = self._patcher_evolutionary_algorithm_get_log_data.start()
-        self._patcher_abstract_solution_get_log_data = patch(f"{self.SCRIPT_LOCATION}.AbstractSolution.get_log_data")
-        self.mock_abstract_solution_get_log_data = self._patcher_abstract_solution_get_log_data.start()
 
     def teardown(self):
         self._patcher_evolutionary_algorithm_init.stop()
         self._patcher_abstract_solution_init.stop()
         self._patcher_evolutionary_algorithm_get_log_data.stop()
-        self._patcher_abstract_solution_get_log_data.stop()
 
     @pytest.mark.parametrize("upper_iteration, index", [(0, 0), (1, 5)])
     @pytest.mark.parametrize("problem, stop_conditions, population_size, selection_type, crossover_type, "
@@ -600,12 +597,25 @@ class TestLowerAdaptiveEvolutionaryAlgorithm:
                                                                       lower_iteration=iteration_index,
                                                                       solutions=solutions)
 
+    @pytest.mark.parametrize("evolutionary_algorithm_data", [{}, {"value1": "a", "value2": "b"}])
+    @pytest.mark.parametrize("decision_variables", [{}, {"x1": 1, "x2": 2}, {"size": "xyz", "width": "tuv", "depth": "hij"}])
     @pytest.mark.parametrize("additional_variables", [{}, {"p1": 1, "p2": 2}, {"a": "xyz", "b": "tuv", "c": "hij"}])
-    def test_get_log_data(self, additional_variables):
+    @pytest.mark.parametrize("upper_iteration", [0, 8])
+    @pytest.mark.parametrize("index", [0, 1])
+    def test_get_log_data(self, evolutionary_algorithm_data, decision_variables, additional_variables, upper_iteration, index):
+        self.mock_evolutionary_algorithm_get_log_data.return_value = evolutionary_algorithm_data
+        self.mock_lower_adaptive_evolutionary_algorithm_object.decision_variables_values = decision_variables
         self.mock_lower_adaptive_evolutionary_algorithm_object.additional_decision_variables_values = additional_variables
-        LowerAdaptiveEvolutionaryAlgorithm.get_log_data(self=self.mock_lower_adaptive_evolutionary_algorithm_object)
-        self.mock_evolutionary_algorithm_get_log_data.assert_called_once_with(self_ea=self.mock_lower_adaptive_evolutionary_algorithm_object)
-        self.mock_abstract_solution_get_log_data.assert_called_once_with(self_solution=self.mock_lower_adaptive_evolutionary_algorithm_object)
+        self.mock_lower_adaptive_evolutionary_algorithm_object.upper_iteration = upper_iteration
+        self.mock_lower_adaptive_evolutionary_algorithm_object.index = index
+        data = LowerAdaptiveEvolutionaryAlgorithm.get_log_data(self=self.mock_lower_adaptive_evolutionary_algorithm_object)
+        self.mock_evolutionary_algorithm_get_log_data.assert_called_once_with()
+        assert isinstance(data, dict)
+        assert data["upper_iteration"] == upper_iteration
+        assert data["index"] == index
+        assert data["decision_variables_values"] == decision_variables
+        assert data["additional_decision_variables_values"] == additional_variables
+        assert all(value == data[key] for key, value in evolutionary_algorithm_data.items())
 
 
 class TestAdaptiveEvolutionaryAlgorithm:

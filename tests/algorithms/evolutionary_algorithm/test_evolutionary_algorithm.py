@@ -597,7 +597,7 @@ class TestEvolutionaryAlgorithm:
         self.mock_evolutionary_algorithm_object.mutation_type = mutation_type
         self.mock_evolutionary_algorithm_object.mutation_params = mutation_params
         self.mock_evolutionary_algorithm_object.mutation_chance = mutation_chance
-        log_data = EvolutionaryAlgorithm.get_log_data(self_ea=self.mock_evolutionary_algorithm_object)
+        log_data = EvolutionaryAlgorithm.get_log_data(self=self.mock_evolutionary_algorithm_object)
         assert isinstance(log_data, dict)
         assert log_data["type"] == "EvolutionaryAlgorithm"
         assert log_data["population_size"] == population_size

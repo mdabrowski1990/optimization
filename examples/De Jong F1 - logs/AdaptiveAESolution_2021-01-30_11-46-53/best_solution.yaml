@@ -1,0 +1,7 @@
+best_solution:
+  decision_variables_values:
+    x1: 0.3921266648233823
+    x2: -0.1409285535574929
+    x3: -0.15076382960571522
+  objective_value_with_penalty: 0.1963539107906975
+optimization_duration: '0:00:00.274807'

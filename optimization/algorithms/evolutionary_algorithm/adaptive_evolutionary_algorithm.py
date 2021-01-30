@@ -9,7 +9,7 @@ Evolutionary algorithms that performs two level optimization of:
 __all__ = ["AdaptationType", "EvolutionaryAlgorithmAdaptationProblem", "AdaptiveEvolutionaryAlgorithm"]
 
 
-from typing import Any, Union, Optional, Tuple, Iterable, Dict, Callable
+from typing import Any, Union, Optional, Tuple, List, Iterable, Dict, Callable
 from typing import OrderedDict as OrderedDictTyping
 from enum import Enum
 from abc import abstractmethod
@@ -463,7 +463,7 @@ class EvolutionaryAlgorithmAdaptationProblem(OptimizationProblem):
             raise ValueError(f"Unexpected value(s) was/were provided to 'optional_params': {optional_params}")
         # temporary values for _max_crossover_points, _max_crossover_pattern and _max_mutation_points - updated later on
         _min_crossover_points, _max_crossover_points = 2, 3
-        _min_crossover_pattern, _max_crossover_pattern = 0, 1
+        _min_crossover_pattern, _max_crossover_pattern = 1, 2
         _min_mutation_points, _max_mutation_points = 2, 3
         return {
             # selection
@@ -473,7 +473,7 @@ class EvolutionaryAlgorithmAdaptationProblem(OptimizationProblem):
             # crossover
             "crossover_points_number":
                 IntegerVariable(min_value=_min_crossover_points, max_value=_max_crossover_points),
-            "crossover_patter": IntegerVariable(min_value=_min_crossover_pattern, max_value=_max_crossover_pattern),
+            "crossover_pattern": IntegerVariable(min_value=_min_crossover_pattern, max_value=_max_crossover_pattern),
             # mutation
             "mutation_points_number": IntegerVariable(min_value=_min_mutation_points, max_value=_max_mutation_points),
         }
@@ -572,14 +572,24 @@ class LowerAdaptiveEvolutionaryAlgorithm(EvolutionaryAlgorithm, AbstractSolution
                                                   lower_iteration=iteration_index,
                                                   solutions=self._population)
 
+    def _calculate_objective(self) -> Union[float, int]:
+        """:return: Value of solution objective without penalty."""
+        return self.optimization_problem.objective_function(
+            best_solution=self._best_solution,
+            solutions=self._population,
+            population_size=self.population_size
+        )
+
     def get_log_data(self) -> Dict[str, Any]:
         """
         Gets data for logging purposes.
 
         :return: Dictionary with this Solution crucial data.
         """
-        data = EvolutionaryAlgorithm.get_log_data(self_ea=self)
-        data.update(AbstractSolution.get_log_data(self_solution=self))
+        data = super().get_log_data()
+        data["upper_iteration"] = self.upper_iteration
+        data["index"] = self.index
+        data["decision_variables_values"] = self.decision_variables_values
         data["additional_decision_variables_values"] = self.additional_decision_variables_values
         return data
 
@@ -595,7 +605,7 @@ class AdaptiveEvolutionaryAlgorithm(EvolutionaryAlgorithm):
 
     ParentsTyping = Tuple[LowerAdaptiveEvolutionaryAlgorithm, LowerAdaptiveEvolutionaryAlgorithm]
 
-    def __init__(self,  # pylint: disable=too-many-arguments
+    def __init__(self,  # pylint: disable=too-many-arguments, too-many-locals
                  problem: OptimizationProblem,
                  adaptation_problem: EvolutionaryAlgorithmAdaptationProblem,
                  stop_conditions: StopConditions,
@@ -605,6 +615,7 @@ class AdaptiveEvolutionaryAlgorithm(EvolutionaryAlgorithm):
                  mutation_type: Union[MutationType, str],
                  mutation_chance: float,
                  logger: Optional[AbstractLogger] = None,
+                 iterations_number=10,
                  **other_params: Any) -> None:
         """
         Configuration of Self-adaptive Evolutionary Algorithm.
@@ -618,6 +629,9 @@ class AdaptiveEvolutionaryAlgorithm(EvolutionaryAlgorithm):
         :param mutation_type: Type of mutation function to use.
         :param mutation_chance: Probability of a single decision variable (gene) mutation.
         :param logger: Logger used for optimization process recording.
+        :param iterations_number: Desired number of iteration to be performed by AdaptiveEvolutionaryAlgorithm.
+            WARNING! The actual number of iterations might be slightly different.
+            Additionally, the lower the value of time_limit in StopConditions, the less accurate this value is.
         :param other_params: Parameter related to selected selection, crossover and mutation type further
             described in parent class.
         """
@@ -626,12 +640,13 @@ class AdaptiveEvolutionaryAlgorithm(EvolutionaryAlgorithm):
                             f"type. Actual value: '{adaptation_problem}'.")
         adaptation_problem.optimization_type = problem.optimization_type
         dv_crossover_points_number = adaptation_problem.additional_decision_variable["crossover_points_number"]
-        dv_crossover_points_number.max_value = problem.variables_number // 2  # type: ignore
-        dv_crossover_patter = adaptation_problem.additional_decision_variable["crossover_patter"]
-        dv_crossover_patter.max_value = (1 << problem.variables_number) - 1  # type: ignore
+        dv_crossover_points_number.max_value = problem.variables_number - 1  # type: ignore
+        dv_crossover_pattern = adaptation_problem.additional_decision_variable["crossover_pattern"]
+        dv_crossover_pattern.max_value = (1 << problem.variables_number) - 2  # type: ignore
         dv_mutation_points_number = adaptation_problem.additional_decision_variable["mutation_points_number"]
-        dv_mutation_points_number.max_value = problem.variables_number // 2  # type: ignore
+        dv_mutation_points_number.max_value = problem.variables_number - 1  # type: ignore
         self.adaptation_problem = adaptation_problem
+        self.iterations_number = iterations_number
         super().__init__(problem=problem, stop_conditions=stop_conditions, population_size=population_size,
                          selection_type=selection_type, crossover_type=crossover_type, mutation_type=mutation_type,
                          mutation_chance=mutation_chance, apply_elitism=False, logger=logger, **other_params)
@@ -755,3 +770,127 @@ class AdaptiveEvolutionaryAlgorithm(EvolutionaryAlgorithm):
                                                       values_after_main_mutation=individual_values)
         individual_values.clear()  # type: ignore
         individual_values.update(final_values)  # type: ignore
+
+    def _generate_lower_algorithm_stop_conditions(self) -> StopConditions:
+        """Returns instance of StopConditions for LowerAdaptiveEvolutionaryAlgorithm."""
+        return StopConditions(
+            time_limit=self.stop_conditions.time_limit / (self.population_size * self.iterations_number),
+            satisfying_objective_value=self.stop_conditions.satisfying_objective_value
+        )
+
+    def _create_individual(self,
+                           iteration: int,
+                           individual_number: int,
+                           **values: Any) -> LowerAdaptiveEvolutionaryAlgorithm:
+        """
+        Creates individual with provided attributes.
+
+        :param iteration: Number of AdaptiveEvolutionaryAlgorithm iteration.
+        :param individual_number: Unique individual number in this iteration (counted from 0).
+        :param values: Values to be assinged to the individual.
+
+        :return: Individual with provided values.
+        """
+        return self.SolutionClass(  # type: ignore
+            upper_iteration=iteration,
+            index=individual_number,
+            problem=self.problem,
+            stop_codnitions=self._generate_lower_algorithm_stop_conditions(),
+            logger=self.logger,
+            **values)
+
+    def _generate_random_individual(self, iteration: int, individual_number: int) -> LowerAdaptiveEvolutionaryAlgorithm:
+        """
+        Creates individual with random attributes.
+
+        :param iteration: Number of AdaptiveEvolutionaryAlgorithm iteration.
+        :param individual_number: Unique individual number in this iteration (counted from 0).
+
+        :return: Individual with random values.
+        """
+        additional_params = {}
+        selection_type = self.adaptation_problem.decision_variables["selection_type"].generate_random_value()  # noqa
+        crossover_type = self.adaptation_problem.decision_variables["crossover_type"].generate_random_value()  # noqa
+        mutation_type = self.adaptation_problem.decision_variables["mutation_type"].generate_random_value()  # noqa
+        params_names = list(SELECTION_ADDITIONAL_PARAMS[selection_type.value]) \
+            + list(CROSSOVER_ADDITIONAL_PARAMS[crossover_type.value]) \
+            + list(MUTATION_ADDITIONAL_PARAMS[mutation_type.value])
+        for param_name in params_names:
+            additional_params[param_name] = \
+                self.adaptation_problem.additional_decision_variable[param_name].generate_random_value()
+        return self._create_individual(
+            iteration=iteration,
+            individual_number=individual_number,
+            population_size=self.adaptation_problem.decision_variables["population_size"].  # type:ignore
+            generate_random_value(),
+            mutation_chance=self.adaptation_problem.decision_variables["mutation_chance"].  # type:ignore
+            generate_random_value(),
+            apply_elitism=self.adaptation_problem.decision_variables["apply_elitism"].  # type:ignore
+            generate_random_value(),
+            selection_type=selection_type,
+            crossover_type=crossover_type,
+            mutation_type=mutation_type,
+            **additional_params
+        )
+
+    def _generate_random_population(self) -> None:
+        """
+        Creates initial random population of solutions. To be called as initial iteration.
+
+        :return: None
+        """
+        current_population_size = len(self._population)
+        while current_population_size < self.population_size:
+            self._population.append(
+                self._generate_random_individual(iteration=0, individual_number=current_population_size))
+            current_population_size = len(self._population)
+
+    def _perform_iteration(self, iteration_index: int) -> None:
+        """
+        Executes following iteration of optimization algorithm.
+
+        :param iteration_index: Index number (counted from 0) of optimization algorithm iteration.
+
+        :return: None
+        """
+        if iteration_index == 0:
+            self._generate_random_population()
+        else:
+            self._evolution_iteration(iteration_index=iteration_index)
+        for lower_ae in self._population:
+            lower_ae.perform_optimization()
+        self._log_iteration(iteration_index=iteration_index)
+
+    def _evolution_iteration(self, **kwargs: Any) -> None:
+        """
+        Perform iteration according to adaptive evolutionary algorithm. To be called as following iteration.
+
+        :param kwargs: Keyword arguments passed to the method.
+            :param iteration_index: Index number (counted from 0) of optimization algorithm iteration.
+
+        :return: None
+        """
+        iteration_index = kwargs["iteration_index"]
+        new_population: List[LowerAdaptiveEvolutionaryAlgorithm] = []
+        for parent1, parent2 in self._perform_selection():
+            child1_values, child2_values = self._perform_crossover(parents=(parent1, parent2))  # type: ignore
+            self._perform_mutation(child1_values)
+            self._perform_mutation(child2_values)
+            current_population_size = len(new_population)
+            child1 = self._create_individual(
+                iteration=iteration_index,
+                individual_number=current_population_size,
+                **child1_values
+            )
+            child2 = self._create_individual(
+                iteration=iteration_index,
+                individual_number=current_population_size + 1,
+                **child2_values
+            )
+            if self.apply_elitism:
+                new_population.append(child1 if child1 >= parent1 else parent1)  # type: ignore
+                new_population.append(child2 if child2 >= parent2 else parent2)  # type: ignore
+            else:
+                new_population.append(child1)
+                new_population.append(child2)
+        self._population = new_population

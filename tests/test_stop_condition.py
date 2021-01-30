@@ -160,6 +160,30 @@ class TestStopConditions:
                                                             best_solution=self.mock_solution_object) is True
         self.mock_get_objective_value_with_penalty.assert_called_once_with()
 
+    @pytest.mark.parametrize("satisfying_objective_value", [-1, -32.342, 0, 0., 2.456, 564])
+    @pytest.mark.parametrize("diff", [-0.000000000001, -1, -543.543534])
+    def test_is_satisfying_solution_found__false(self, satisfying_objective_value, diff):
+        """
+        Test '_is_satisfying_solution_found' method return results of comparison 'best_solution' and
+        'satisfying_objective_value'.
+
+        :param satisfying_objective_value: Example value of 'satisfying_objective_value'.
+        :param diff: Difference between 'satisfying_objective_value' and best)solution objective.
+        """
+        self.mock_stop_condition_object.satisfying_objective_value = satisfying_objective_value
+        self.mock_get_objective_value_with_penalty.return_value = satisfying_objective_value + diff
+        assert StopConditions._is_satisfying_solution_found(self=self.mock_stop_condition_object,
+                                                            best_solution=self.mock_solution_object) is False
+        self.mock_get_objective_value_with_penalty.assert_called_once_with()
+
+    def test_is_satisfying_solution_found__not_checked(self):
+        """
+        Test '_is_satisfying_solution_found' method return False when no satisfying condition specified.
+        """
+        self.mock_stop_condition_object.satisfying_objective_value = None
+        assert StopConditions._is_satisfying_solution_found(self=self.mock_stop_condition_object,
+                                                            best_solution=self.mock_solution_object) is False
+
     # _is_iter_without_progress_exceeded
 
     @pytest.mark.parametrize("max_iter", [1, 4, 5, 45343])

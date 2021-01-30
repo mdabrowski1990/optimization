@@ -79,7 +79,8 @@ class StopConditions:
 
         :return: True if satisfying solution found, otherwise False.
         """
-        return best_solution.get_objective_value_with_penalty() >= self.satisfying_objective_value
+        return self.satisfying_objective_value is not None \
+            and best_solution.get_objective_value_with_penalty() >= self.satisfying_objective_value
 
     def _is_limit_without_progress_exceeded(self, best_solution: AbstractSolution) -> bool:
         """

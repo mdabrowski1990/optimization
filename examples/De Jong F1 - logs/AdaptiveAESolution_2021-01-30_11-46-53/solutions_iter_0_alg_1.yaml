@@ -1,0 +1,3101 @@
+Iteration 0:
+- decision_variables_values:
+    x1: 1.2583062685686617
+    x2: 3.8418498136374906
+    x3: 4.189469028341864
+  objective_value_with_penalty: 33.89479539550133
+- decision_variables_values:
+    x1: -1.3844487670461754
+    x2: 3.9328899763765177
+    x3: -1.386100367790093
+  objective_value_with_penalty: 19.305596184446394
+- decision_variables_values:
+    x1: 4.785428565343611
+    x2: -0.2583616298483937
+    x3: 4.605318302609189
+  objective_value_with_penalty: 44.17603395413171
+- decision_variables_values:
+    x1: -1.0698367845981966
+    x2: 2.4892250142959913
+    x3: 4.963699703355043
+  objective_value_with_penalty: 31.979106662563225
+- decision_variables_values:
+    x1: 3.4242674012011802
+    x2: -4.144296571143339
+    x3: 2.962889116519615
+  objective_value_with_penalty: 37.679513221309904
+- decision_variables_values:
+    x1: 3.824794792820785
+    x2: -0.7777690220052769
+    x3: -2.6174090457065744
+  objective_value_with_penalty: 22.084809971326635
+- decision_variables_values:
+    x1: -3.8923338607508677
+    x2: -4.934920046259485
+    x3: -2.6002082560707778
+  objective_value_with_penalty: 46.26478172146011
+- decision_variables_values:
+    x1: -3.7416195596067463
+    x2: 3.402949515218064
+    x3: 2.7571347950444958
+  objective_value_with_penalty: 33.18157460999969
+- decision_variables_values:
+    x1: -4.846522098236681
+    x2: 4.007985648935848
+    x3: -0.9107580610702781
+  objective_value_with_penalty: 40.38220565657669
+- decision_variables_values:
+    x1: 3.378098627853473
+    x2: 3.970267117463899
+    x3: -2.48577891372532
+  objective_value_with_penalty: 33.35366813144204
+- decision_variables_values:
+    x1: 3.25619002748826
+    x2: 3.7413394388458885
+    x3: -2.1867478901123216
+  objective_value_with_penalty: 29.38226062668835
+- decision_variables_values:
+    x1: 0.37769576820392814
+    x2: 0.10908962994091453
+    x3: -1.7972041717055038
+  objective_value_with_penalty: 3.3844974754754675
+- decision_variables_values:
+    x1: -2.7286953758425114
+    x2: -0.8413243852622001
+    x3: 1.274580941344924
+  objective_value_with_penalty: 9.778161751420836
+- decision_variables_values:
+    x1: -4.240365673975605
+    x2: -2.2912091662987097
+    x3: -2.4280456472381116
+  objective_value_with_penalty: 29.125746157833756
+- decision_variables_values:
+    x1: 1.9261907318796965
+    x2: 3.561763465213734
+    x3: -2.7911865680360224
+  objective_value_with_penalty: 24.187092175295298
+- decision_variables_values:
+    x1: -2.997053456882952
+    x2: -0.6690806655196893
+    x3: -3.5260334450350332
+  objective_value_with_penalty: 21.86291021589195
+- decision_variables_values:
+    x1: 3.215423931057596
+    x2: -1.6967311921311525
+    x3: 5.025530595643423
+  objective_value_with_penalty: 38.47380556251682
+- decision_variables_values:
+    x1: -3.1978592431976667
+    x2: -3.6978681378399436
+    x3: 2.5231388715963723
+  objective_value_with_penalty: 30.266762269517223
+- decision_variables_values:
+    x1: -2.035304902088833
+    x2: -0.6783114402516128
+    x3: -1.942962391249349
+  objective_value_with_penalty: 8.377675308252439
+- decision_variables_values:
+    x1: -3.150810379738525
+    x2: 0.5558268514568026
+    x3: 1.311251679455128
+  objective_value_with_penalty: 11.955930504742305
+- decision_variables_values:
+    x1: -3.2203468895705374
+    x2: 2.8665774705077345
+    x3: -3.2061607786947923
+  objective_value_with_penalty: 28.867367422429957
+- decision_variables_values:
+    x1: -1.2679864935118177
+    x2: 4.188013382704926
+    x3: -4.385689131429282
+  objective_value_with_penalty: 38.381514998980876
+- decision_variables_values:
+    x1: 1.8165084405516065
+    x2: -2.3002771278241063
+    x3: -3.964264241786367
+  objective_value_with_penalty: 24.306368758091985
+- decision_variables_values:
+    x1: 0.3569366743864464
+    x2: -2.2835302830687545
+    x3: -4.495217521227557
+  objective_value_with_penalty: 25.548894906365348
+- decision_variables_values:
+    x1: 5.068296572854902
+    x2: 3.042596744566832
+    x3: -2.07816861236631
+  objective_value_with_penalty: 39.26380988188594
+- decision_variables_values:
+    x1: -3.3669016107513734
+    x2: 4.054746176779012
+    x3: -0.6607585484526384
+  objective_value_with_penalty: 28.213594873937446
+- decision_variables_values:
+    x1: 3.4586959659002234
+    x2: -4.455402107353518
+    x3: 1.6275383846450744
+  objective_value_with_penalty: 34.462066916237745
+- decision_variables_values:
+    x1: 1.0523302127881973
+    x2: -0.978433919271005
+    x3: 3.939400236309541
+  objective_value_with_penalty: 17.58360603296254
+- decision_variables_values:
+    x1: 4.214571830582057
+    x2: 2.4764219940595487
+    x3: 0.6220118730091642
+  objective_value_with_penalty: 24.282180377962025
+- decision_variables_values:
+    x1: -4.264746593862716
+    x2: -1.1564648997081712
+    x3: -4.8256631607455756
+  objective_value_with_penalty: 42.81249951509764
+- decision_variables_values:
+    x1: -4.268462969788248
+    x2: 0.12944353771835715
+    x3: 0.8108081136054412
+  objective_value_with_penalty: 18.89394155099897
+- decision_variables_values:
+    x1: 4.4652907785113145
+    x2: -4.649875228756644
+    x3: -4.320553121503531
+  objective_value_with_penalty: 60.22734065539674
+- decision_variables_values:
+    x1: -2.3636619823138005
+    x2: 4.820871660742003
+    x3: 0.42049591565865185
+  objective_value_with_penalty: 29.00451835106657
+- decision_variables_values:
+    x1: -3.619271516577669
+    x2: 1.9243718211269893
+    x3: 1.6862189580920122
+  objective_value_with_penalty: 19.645667591286934
+- decision_variables_values:
+    x1: 2.5749944768948625
+    x2: -2.212560998612604
+    x3: 3.2499651567083196
+  objective_value_with_penalty: 22.08829624843878
+- decision_variables_values:
+    x1: 1.0279647183005345
+    x2: -4.852853156184998
+    x3: -0.45517010405488545
+  objective_value_with_penalty: 24.81407504119073
+- decision_variables_values:
+    x1: 0.015611812803159708
+    x2: 0.8094187483111241
+    x3: 3.6524109357597174
+  objective_value_with_penalty: 13.995508082473723
+- decision_variables_values:
+    x1: 4.251956897636499
+    x2: 1.6776963176013968
+    x3: -1.8185081246998505
+  objective_value_with_penalty: 24.200774193051256
+- decision_variables_values:
+    x1: 1.5829425654289802
+    x2: 4.38666350338718
+    x3: -3.9925888834514365
+  objective_value_with_penalty: 37.689289849655964
+- decision_variables_values:
+    x1: -3.470085339424015
+    x2: 1.7785524958854113
+    x3: -3.381674273664718
+  objective_value_with_penalty: 26.640462136671506
+- decision_variables_values:
+    x1: 4.25950221293991
+    x2: -0.7499791938353111
+    x3: -1.4238698932365752
+  objective_value_with_penalty: 20.733233366091387
+- decision_variables_values:
+    x1: -1.1298946235567429
+    x2: -4.899614326574902
+    x3: -3.232700611757589
+  objective_value_with_penalty: 35.733235654778355
+- decision_variables_values:
+    x1: 2.6143066290590866
+    x2: 3.3842381983950682
+    x3: -3.5189417107163363
+  objective_value_with_penalty: 30.6706180976378
+- decision_variables_values:
+    x1: 4.36598873295046
+    x2: 2.6473327218936538
+    x3: -0.4113007334811698
+  objective_value_with_penalty: 26.239396450021374
+- decision_variables_values:
+    x1: -1.8468244578669748
+    x2: -1.8089967684214834
+    x3: 2.3826551734234416
+  objective_value_with_penalty: 12.360275561776506
+- decision_variables_values:
+    x1: -1.9793984044420632
+    x2: 2.0361644544392696
+    x3: 1.088145289076765
+  objective_value_with_penalty: 9.24804389916971
+- decision_variables_values:
+    x1: -4.63971336783635
+    x2: 2.3555267466231244
+    x3: -2.5317836680086305
+  objective_value_with_penalty: 33.485374931331485
+- decision_variables_values:
+    x1: -1.6444549712571348
+    x2: -2.3298591670674536
+    x3: 1.6985090766637025
+  objective_value_with_penalty: 11.017408974369536
+- decision_variables_values:
+    x1: -2.834925680581258
+    x2: 1.303998364662176
+    x3: 3.122445043806743
+  objective_value_with_penalty: 19.486878401054035
+- decision_variables_values:
+    x1: 3.9574989262594675
+    x2: 2.5086089267876197
+    x3: 2.705523648928269
+  objective_value_with_penalty: 29.274774713813507
+- decision_variables_values:
+    x1: -1.7860249261799321
+    x2: -1.0367005748492621
+    x3: -1.9733753958817282
+  objective_value_with_penalty: 8.158843571900189
+- decision_variables_values:
+    x1: 1.6271633458429404
+    x2: 3.8636642135687653
+    x3: 4.029491938433277
+  objective_value_with_penalty: 33.812366991165504
+- decision_variables_values:
+    x1: -0.5391239326615542
+    x2: 2.064247777625849
+    x3: 1.6339085441804482
+  objective_value_with_penalty: 7.2214306329475875
+- decision_variables_values:
+    x1: -4.910156927660173
+    x2: -2.594785032310731
+    x3: 2.073264980325537
+  objective_value_with_penalty: 35.14097809679724
+- decision_variables_values:
+    x1: -1.0869617724725469
+    x2: -3.769628605586692
+    x3: -0.9872083294864407
+  objective_value_with_penalty: 16.366166004681535
+- decision_variables_values:
+    x1: -1.319671406949983
+    x2: -0.9411368178853365
+    x3: -1.9269141890015216
+  objective_value_with_penalty: 6.340269424076077
+- decision_variables_values:
+    x1: 3.489509964372677
+    x2: 0.8717052303167554
+    x3: 4.921218711476405
+  objective_value_with_penalty: 37.15494340620328
+- decision_variables_values:
+    x1: -1.7174968841982299
+    x2: -4.826795518795811
+    x3: 2.8481259312879583
+  objective_value_with_penalty: 34.35957184797286
+- decision_variables_values:
+    x1: -2.983438928354185
+    x2: -1.2884382520251507
+    x3: -3.795548224069976
+  objective_value_with_penalty: 24.967167289741546
+- decision_variables_values:
+    x1: 2.562765491812412
+    x2: 4.309245131258392
+    x3: -3.038675484962448
+  objective_value_with_penalty: 34.37090927021045
+- decision_variables_values:
+    x1: 1.1391160094529305
+    x2: 4.198956139696356
+    x3: -4.826098043929278
+  objective_value_with_penalty: 42.220040275703695
+- decision_variables_values:
+    x1: 2.5643382914331907
+    x2: 4.646591344420529
+    x3: 1.1948794958449085
+  objective_value_with_penalty: 29.59437900454486
+- decision_variables_values:
+    x1: -4.985443997872186
+    x2: 4.530312902528434
+    x3: -4.58088338441211
+  objective_value_with_penalty: 66.36287943231835
+- decision_variables_values:
+    x1: -2.0925997856058096
+    x2: 1.6697627750682367
+    x3: 3.30268970620041
+  objective_value_with_penalty: 18.074840883163212
+- decision_variables_values:
+    x1: -1.028414052907431
+    x2: -1.0979794821528586
+    x3: 0.35488185994477917
+  objective_value_with_penalty: 2.3891355419640137
+- decision_variables_values:
+    x1: 4.800512325187234
+    x2: -1.9743940482615256
+    x3: -2.4654726117952066
+  objective_value_with_penalty: 33.02170564159736
+- decision_variables_values:
+    x1: -3.202729087874501
+    x2: -3.7310079965376444
+    x3: -2.42852872009537
+  objective_value_with_penalty: 30.075646024873336
+- decision_variables_values:
+    x1: -0.039025928714649716
+    x2: 3.763473515835014
+    x3: 0.8772097719721872
+  objective_value_with_penalty: 14.9347529115471
+- decision_variables_values:
+    x1: -2.387250324861445
+    x2: 2.86311335154783
+    x3: -3.7666822307370094
+  objective_value_with_penalty: 28.084277204712457
+- decision_variables_values:
+    x1: -0.5774883918047307
+    x2: -0.3198706238151816
+    x3: -2.5204560289092752
+  objective_value_with_penalty: 6.78850865231424
+- decision_variables_values:
+    x1: 3.4471343820947196
+    x2: 4.117383674747722
+    x3: -3.2480542601910205
+  objective_value_with_penalty: 39.38544025044364
+- decision_variables_values:
+    x1: 3.1476224225009384
+    x2: -1.4784791011792833
+    x3: 0.4220947850505077
+  objective_value_with_penalty: 12.271591374821412
+- decision_variables_values:
+    x1: -1.9951525410632986
+    x2: -2.4998075239917252
+    x3: 0.9785837693633912
+  objective_value_with_penalty: 11.187297512778441
+- decision_variables_values:
+    x1: -2.8974637320555074
+    x2: 0.9972286860612565
+    x3: 2.2706090213148027
+  objective_value_with_penalty: 14.545426458556655
+- decision_variables_values:
+    x1: -2.447776983909673
+    x2: -0.34191126886252654
+    x3: -0.47705547521334335
+  objective_value_with_penalty: 6.336097405164147
+- decision_variables_values:
+    x1: -1.0801436178288384
+    x2: -1.7440804415828666
+    x3: 2.3360594604023905
+  objective_value_with_penalty: 9.665700624383767
+- decision_variables_values:
+    x1: 0.6641630648837564
+    x2: -2.6042243918400905
+    x3: 0.13163445802911422
+  objective_value_with_penalty: 7.240424890351292
+- decision_variables_values:
+    x1: -1.5388879579118577
+    x2: 3.30896212436821
+    x3: 2.342099048918727
+  objective_value_with_penalty: 18.802834442455513
+- decision_variables_values:
+    x1: 4.974686248167143
+    x2: -2.194898004328654
+    x3: 3.2844962664490707
+  objective_value_with_penalty: 40.35299624142708
+- decision_variables_values:
+    x1: -1.7041854384438921
+    x2: 0.5807761930441897
+    x3: -1.3406838342666254
+  objective_value_with_penalty: 5.038982138474963
+- decision_variables_values:
+    x1: -0.8999577618910397
+    x2: 0.9296149961615194
+    x3: 2.812907293883195
+  objective_value_with_penalty: 9.586555458257592
+- decision_variables_values:
+    x1: -4.207917777336688
+    x2: 4.87048970140541
+    x3: -2.976791494728683
+  objective_value_with_penalty: 50.28952955541132
+- decision_variables_values:
+    x1: -4.163298783806916
+    x2: -1.57066625655724
+    x3: -2.338943343817074
+  objective_value_with_penalty: 25.27070521832188
+- decision_variables_values:
+    x1: 3.0316073700779933
+    x2: -2.29218322266083
+    x3: -1.7358063955698015
+  objective_value_with_penalty: 17.457771015460022
+- decision_variables_values:
+    x1: -1.4986201496911726
+    x2: 1.3692951491769643
+    x3: -0.09800600537478577
+  objective_value_with_penalty: 4.13043673570948
+- decision_variables_values:
+    x1: -4.892425968595208
+    x2: -1.4153468885351015
+    x3: 2.262948339193935
+  objective_value_with_penalty: 31.05997385893134
+- decision_variables_values:
+    x1: -2.7956452169496013
+    x2: -0.9393678886932166
+    x3: -0.8321893433605636
+  objective_value_with_penalty: 9.390583312564022
+- decision_variables_values:
+    x1: 4.037006532942709
+    x2: 1.6689521183144622
+    x3: 4.04018425254652
+  objective_value_with_penalty: 35.405911714773325
+- decision_variables_values:
+    x1: 2.533108804195381
+    x2: -2.2661533964754588
+    x3: 2.9602275197231256
+  objective_value_with_penalty: 20.31503839877554
+- decision_variables_values:
+    x1: 4.208724432854711
+    x2: -2.165721326607935
+    x3: -1.1362468408931043
+  objective_value_with_penalty: 23.694767099672205
+- decision_variables_values:
+    x1: -0.06191517156647208
+    x2: 3.640555754432211
+    x3: 3.6939964881486995
+  objective_value_with_penalty: 26.903089744054515
+- decision_variables_values:
+    x1: 2.6429505632633745
+    x2: -3.1689958995939103
+    x3: -0.12065961447484685
+  objective_value_with_penalty: 17.04228143406242
+- decision_variables_values:
+    x1: -0.26621624178514214
+    x2: 1.9685361812884334
+    x3: -4.2688795035429
+  objective_value_with_penalty: 22.16933800020053
+- decision_variables_values:
+    x1: -2.151570693217781
+    x2: 1.288949745374687
+    x3: -0.10438055529960444
+  objective_value_with_penalty: 6.301543194339766
+- decision_variables_values:
+    x1: -1.1160266521228195
+    x2: 2.5970033677970434
+    x3: -4.7033662779516305
+  objective_value_with_penalty: 30.11159632517023
+- decision_variables_values:
+    x1: 4.52963805854973
+    x2: 3.266927417933725
+    x3: 4.407851245089435
+  objective_value_with_penalty: 50.61958829434576
+- decision_variables_values:
+    x1: 3.215893504856754
+    x2: 5.075089398755289
+    x3: 2.5554615253774573
+  objective_value_with_penalty: 42.62888704762267
+- decision_variables_values:
+    x1: -4.8129839510371415
+    x2: 2.7481506181650177
+    x3: -4.777363307114452
+  objective_value_with_penalty: 53.5403465012254
+- decision_variables_values:
+    x1: -4.400183368067079
+    x2: -4.1748659493775095
+    x3: 0.5506224894712375
+  objective_value_with_penalty: 37.094304493797424
+- decision_variables_values:
+    x1: 4.281166528428975
+    x2: 1.6758473366870588
+    x3: -2.0006946668160017
+  objective_value_with_penalty: 25.1396302898477
+- decision_variables_values:
+    x1: 1.382086721171448
+    x2: -0.1832098378083593
+    x3: -2.185947963802022
+  objective_value_with_penalty: 6.722098049958414
+- decision_variables_values:
+    x1: -0.8062679908798449
+    x2: 2.2897666387444504
+    x3: -0.6840288423837366
+  objective_value_with_penalty: 6.360994790237315
+- decision_variables_values:
+    x1: 2.231919239131968
+    x2: -3.227239308230728
+    x3: -1.5598982329000215
+  objective_value_with_penalty: 17.82981953960158
+- decision_variables_values:
+    x1: -2.421927175283895
+    x2: -1.112784983805656
+    x3: 2.3530758037705697
+  objective_value_with_penalty: 12.640987400852495
+- decision_variables_values:
+    x1: -4.559209623130125
+    x2: -4.389875773501398
+    x3: 1.8861676640108787
+  objective_value_with_penalty: 43.615030151177095
+- decision_variables_values:
+    x1: 5.10442698649021
+    x2: -1.2972387709067403
+    x3: -3.958655928884866
+  objective_value_with_penalty: 43.40896005244846
+- decision_variables_values:
+    x1: 0.3921266648233823
+    x2: -0.1409285535574929
+    x3: -0.15076382960571522
+  objective_value_with_penalty: 0.1963539107906975
+- decision_variables_values:
+    x1: 2.430211358955267
+    x2: 0.192521674252629
+    x3: -0.8416956309172132
+  objective_value_with_penalty: 6.651443379357368
+- decision_variables_values:
+    x1: 3.8393134075079383
+    x2: 0.8332394231878881
+    x3: -3.011247073618613
+  objective_value_with_penalty: 24.50222431580136
+- decision_variables_values:
+    x1: -4.713052292007956
+    x2: 0.3925073418321947
+    x3: 0.0577037667903495
+  objective_value_with_penalty: 22.370253645295417
+- decision_variables_values:
+    x1: -3.704180717886022
+    x2: -1.6969040079436466
+    x3: -3.0977141570217372
+  objective_value_with_penalty: 26.19627100154671
+- decision_variables_values:
+    x1: 1.5287324726189668
+    x2: -5.005327312365166
+    x3: -0.9446480901461065
+  objective_value_with_penalty: 28.28268449096508
+- decision_variables_values:
+    x1: 1.402213297870155
+    x2: 2.9127477051225705
+    x3: -2.7765246792851803
+  objective_value_with_penalty: 18.15939062110037
+- decision_variables_values:
+    x1: 1.6180731700042896
+    x2: -2.998283769727897
+    x3: -3.3418211256922894
+  objective_value_with_penalty: 22.77563478342474
+- decision_variables_values:
+    x1: 0.9877909765821071
+    x2: -4.4252344241692345
+    x3: 1.7005246310976965
+  objective_value_with_penalty: 23.450214743239407
+- decision_variables_values:
+    x1: -4.878736424188154
+    x2: -1.9697565662878391
+    x3: -1.171352620987153
+  objective_value_with_penalty: 29.05407698982775
+- decision_variables_values:
+    x1: -4.968364296080085
+    x2: -3.399288769041218
+    x3: -2.790250324949694
+  objective_value_with_penalty: 44.02530478977499
+- decision_variables_values:
+    x1: -3.1075372940228294
+    x2: 1.1891096920603141
+    x3: 3.8656330006771595
+  objective_value_with_penalty: 26.013888389418803
+- decision_variables_values:
+    x1: 3.4914583970493895
+    x2: -4.506540997085237
+    x3: -4.274039401457302
+  objective_value_with_penalty: 50.76660630194619
+- decision_variables_values:
+    x1: 1.9844070061859798
+    x2: 4.854162256836854
+    x3: -2.0206912989024453
+  objective_value_with_penalty: 31.58395570735951
+- decision_variables_values:
+    x1: -3.9499935311111987
+    x2: 3.100526128209487
+    x3: 0.6194928708577958
+  objective_value_with_penalty: 25.59948258457366
+- decision_variables_values:
+    x1: 3.03353615591178
+    x2: 3.0788726356715435
+    x3: 3.833414487198124
+  objective_value_with_penalty: 33.376864946571516
+- decision_variables_values:
+    x1: -3.9947115070319947
+    x2: 0.08411989072928083
+    x3: -3.531331371062137
+  objective_value_with_penalty: 28.43509743267773
+- decision_variables_values:
+    x1: 4.28602411920651
+    x2: -4.575966619817644
+    x3: -4.048357555534563
+  objective_value_with_penalty: 55.69867215355903
+- decision_variables_values:
+    x1: -0.5834173329854275
+    x2: 4.365094349492723
+    x3: -1.686052817235851
+  objective_value_with_penalty: 22.237198566910077
+- decision_variables_values:
+    x1: 3.692222187362714
+    x2: 0.6232087661615413
+    x3: 4.053934002228513
+  objective_value_with_penalty: 30.455274741498588
+- decision_variables_values:
+    x1: -1.896102062408536
+    x2: -3.6615684830967146
+    x3: 2.734572376699216
+  objective_value_with_penalty: 24.48017287088348
+- decision_variables_values:
+    x1: 3.7709484227466676
+    x2: -4.954210199583772
+    x3: 2.4313047900234555
+  objective_value_with_penalty: 44.67549369066646
+- decision_variables_values:
+    x1: -1.6451460087771341
+    x2: -4.5059612663777155
+    x3: 4.5579631975057575
+  objective_value_with_penalty: 43.785220834108515
+- decision_variables_values:
+    x1: 4.293612122975545
+    x2: 0.34902765710987893
+    x3: -3.604901305442911
+  objective_value_with_penalty: 31.552238789974183
+- decision_variables_values:
+    x1: -2.558716450128095
+    x2: 3.617108202485727
+    x3: -3.244844754587308
+  objective_value_with_penalty: 30.15951910201841
+- decision_variables_values:
+    x1: -4.9415792522898006
+    x2: -4.9812627871561155
+    x3: -2.710957252492942
+  objective_value_with_penalty: 56.581473686211424
+- decision_variables_values:
+    x1: -3.584582245595003
+    x2: 3.1134791129702597
+    x3: -3.1903749003486146
+  objective_value_with_penalty: 32.72147406711142
+- decision_variables_values:
+    x1: -0.7675865156908586
+    x2: 3.8184768850668087
+    x3: 4.981309624072014
+  objective_value_with_penalty: 39.98340035173242
+- decision_variables_values:
+    x1: -2.452102717593781
+    x2: 0.16142587707733824
+    x3: 0.40723706421390027
+  objective_value_with_penalty: 6.204708077890548
+- decision_variables_values:
+    x1: 4.908688741037014
+    x2: -1.7552024395293997
+    x3: -0.424203777466845
+  objective_value_with_penalty: 27.355909604930638
+- decision_variables_values:
+    x1: -4.782783499622198
+    x2: -2.285887607150072
+    x3: -3.757290701252783
+  objective_value_with_penalty: 42.217533570501274
+- decision_variables_values:
+    x1: -3.5478930649216043
+    x2: -2.0699845469894753
+    x3: 2.1426324154233383
+  objective_value_with_penalty: 21.463254892516886
+- decision_variables_values:
+    x1: 1.2300361937429125
+    x2: 3.5565767355505917
+    x3: 1.044116216195924
+  objective_value_with_penalty: 15.25240578670055
+- decision_variables_values:
+    x1: -2.2960440316209327
+    x2: 0.7515478302894438
+    x3: 4.976132833819709
+  objective_value_with_penalty: 30.598540316173445
+- decision_variables_values:
+    x1: -0.699096596630512
+    x2: 4.336456590838268
+    x3: -3.825042686289827
+  objective_value_with_penalty: 33.92454336758431
+- decision_variables_values:
+    x1: 1.196237353512764
+    x2: -0.5161528930763275
+    x3: 4.36955437824794
+  objective_value_with_penalty: 20.79040307943602
+- decision_variables_values:
+    x1: 3.848859398107291
+    x2: 0.017625394756555224
+    x3: -1.4890096874524774
+  objective_value_with_penalty: 17.03117917026647
+- decision_variables_values:
+    x1: 1.3137517382499064
+    x2: 1.3112838029851002
+    x3: 1.61480313714707
+  objective_value_with_penalty: 6.052998013465736
+- decision_variables_values:
+    x1: -2.1796215642006804
+    x2: -3.374250002896267
+    x3: 0.9052019046467823
+  objective_value_with_penalty: 16.95570373335024
+- decision_variables_values:
+    x1: -0.8256717904984328
+    x2: 2.8095030500569216
+    x3: 1.6820486893739064
+  objective_value_with_penalty: 11.40432908732851
+- decision_variables_values:
+    x1: -1.5441473699723076
+    x2: 4.405594155773044
+    x3: -3.228770003966429
+  objective_value_with_penalty: 32.21860670408737
+- decision_variables_values:
+    x1: -2.203149884529372
+    x2: 3.5994888122097466
+    x3: -4.182034635940662
+  objective_value_with_penalty: 35.29960281913226
+- decision_variables_values:
+    x1: -2.7192909119496242
+    x2: -4.975210827264253
+    x3: 3.8119888630787555
+  objective_value_with_penalty: 46.67852493177573
+- decision_variables_values:
+    x1: -3.362496009254892
+    x2: 0.7177991007455704
+    x3: 1.5243973438641651
+  objective_value_with_penalty: 14.145402223266348
+- decision_variables_values:
+    x1: 4.2265860111423175
+    x2: 4.75356688879437
+    x3: 2.1085443383682376
+  objective_value_with_penalty: 44.90638670269086
+- decision_variables_values:
+    x1: -4.0028884622069265
+    x2: 4.2439384253229315
+    x3: 1.3774370125932895
+  objective_value_with_penalty: 35.93146212246374
+- decision_variables_values:
+    x1: -4.5849452534170085
+    x2: 0.27226900104516094
+    x3: -3.1559457515959264
+  objective_value_with_penalty: 31.055846972777665
+- decision_variables_values:
+    x1: -4.912985741247277
+    x2: 1.1327131665991992
+    x3: -2.049749192545454
+  objective_value_with_penalty: 29.62193976382698
+- decision_variables_values:
+    x1: -4.424729151709391
+    x2: -2.5990200583050536
+    x3: -4.9709585803281024
+  objective_value_with_penalty: 51.04356253679649
+- decision_variables_values:
+    x1: -2.8102934774154984
+    x2: -3.5105861669200387
+    x3: -1.4232187985490623
+  objective_value_with_penalty: 22.24751641311786
+- decision_variables_values:
+    x1: -3.2502927231416687
+    x2: 4.322461996127193
+    x3: -4.610249225571643
+  objective_value_with_penalty: 50.502478415955494
+- decision_variables_values:
+    x1: -1.8981378750786453
+    x2: 4.3442324153384755
+    x3: 4.057620469951458
+  objective_value_with_penalty: 38.939566549454725
+- decision_variables_values:
+    x1: -1.8846105904314139
+    x2: 0.17728311529518948
+    x3: -1.0496491751378905
+  objective_value_with_penalty: 4.684949771402664
+- decision_variables_values:
+    x1: -0.2346745144678497
+    x2: 0.8998209484273456
+    x3: 1.32961491024502
+  objective_value_with_penalty: 2.6326256765152816
+- decision_variables_values:
+    x1: 2.4234181112529924
+    x2: 0.9735866200245118
+    x3: 0.9137565568466712
+  objective_value_with_penalty: 7.655777293820058
+- decision_variables_values:
+    x1: -1.8795824724793921
+    x2: 1.6710116181820354
+    x3: 1.1430931280774086
+  objective_value_with_penalty: 7.631771998408884
+- decision_variables_values:
+    x1: -3.3243389080547185
+    x2: -1.02215860861003
+    x3: -3.998881252018041
+  objective_value_with_penalty: 28.087088664503405
+- decision_variables_values:
+    x1: 4.393874282072907
+    x2: -1.555894910763501
+    x3: -2.6657167416044696
+  objective_value_with_penalty: 28.832985926471814
+- decision_variables_values:
+    x1: 2.660391528588729
+    x2: -0.8469918190588821
+    x3: -4.123361462023663
+  objective_value_with_penalty: 24.797187973441268
+- decision_variables_values:
+    x1: -1.2899480093351499
+    x2: -2.7270751292193403
+    x3: -4.897061136594777
+  objective_value_with_penalty: 33.08211240274133
+- decision_variables_values:
+    x1: -3.278462082784265
+    x2: 4.364081749824874
+    x3: -3.8132442977900145
+  objective_value_with_penalty: 44.334355222036734
+- decision_variables_values:
+    x1: 4.849644247140316
+    x2: -1.0651206036193885
+    x3: 1.3853372254297112
+  objective_value_with_penalty: 26.572690452236984
+- decision_variables_values:
+    x1: -3.6562057783102446
+    x2: 1.6481100879687798
+    x3: -0.09550669097228326
+  objective_value_with_penalty: 16.093229083434156
+- decision_variables_values:
+    x1: -0.5637548378628967
+    x2: 1.7968849208649749
+    x3: 1.8421729497256578
+  objective_value_with_penalty: 6.940216112746679
+- decision_variables_values:
+    x1: -2.248727914088744
+    x2: 4.456343332461736
+    x3: 4.806613433822448
+  objective_value_with_penalty: 48.01930583058051
+- decision_variables_values:
+    x1: 0.09491702051099438
+    x2: 0.07989093754653798
+    x3: -4.613489758308675
+  objective_value_with_penalty: 21.299679552703786
+- decision_variables_values:
+    x1: -4.654737116203976
+    x2: 3.551096213906283
+    x3: -3.230434690288087
+  objective_value_with_penalty: 44.71257022960313
+- decision_variables_values:
+    x1: 2.9916722489341696
+    x2: -1.1461637586723818
+    x3: 0.727891829092588
+  objective_value_with_penalty: 10.793620721596586
+- decision_variables_values:
+    x1: -3.255762796522837
+    x2: -1.5189048614719876
+    x3: 1.9321140859966333
+  objective_value_with_penalty: 16.640128206732047
+- decision_variables_values:
+    x1: 0.12610742947397302
+    x2: -0.7371772339245286
+    x3: -0.6225140998079848
+  objective_value_with_penalty: 0.9468571624448979
+- decision_variables_values:
+    x1: 4.084060625726372
+    x2: 1.7731983850763218
+    x3: 4.834235629355098
+  objective_value_with_penalty: 43.19361782757205
+- decision_variables_values:
+    x1: -4.148134211691341
+    x2: 0.39088122497566946
+    x3: 4.756387140469028
+  objective_value_with_penalty: 39.98302420026175
+- decision_variables_values:
+    x1: 4.001282369994086
+    x2: -0.6546814082827606
+    x3: 1.0281185691627241
+  objective_value_with_penalty: 17.495896143033796
+- decision_variables_values:
+    x1: 3.612874767532415
+    x2: 4.038538976001143
+    x3: -3.725084282915117
+  objective_value_with_penalty: 43.23891406137399
+- decision_variables_values:
+    x1: 0.17934652469942058
+    x2: 4.384599763575182
+    x3: 0.6243813911476863
+  objective_value_with_penalty: 19.646732384276824
+- decision_variables_values:
+    x1: 1.9329515684629
+    x2: 3.3086797765378764
+    x3: -3.8586805978632217
+  objective_value_with_penalty: 29.573079586019986
+- decision_variables_values:
+    x1: -1.0436457684336249
+    x2: -1.9016289783709248
+    x3: -2.480605059466693
+  objective_value_with_penalty: 10.858790722401213
+- decision_variables_values:
+    x1: -1.2224903166989658
+    x2: 4.241006857333642
+    x3: -1.631532854462141
+  objective_value_with_penalty: 22.14252119356309
+- decision_variables_values:
+    x1: -3.0706907297181885
+    x2: 1.252002337771227
+    x3: -1.6240532094840159
+  objective_value_with_penalty: 13.634200238597172
+- decision_variables_values:
+    x1: -0.020035702268370592
+    x2: -2.8605866225075363
+    x3: -1.9701112691463938
+  objective_value_with_penalty: 12.064695667052074
+- decision_variables_values:
+    x1: -2.1661147636226485
+    x2: -1.585442019196821
+    x3: -0.901283526117056
+  objective_value_with_penalty: 8.01799155986889
+- decision_variables_values:
+    x1: 1.9694407172526311
+    x2: 4.551867950650517
+    x3: -1.5033965545640617
+  objective_value_with_penalty: 26.858399779206987
+- decision_variables_values:
+    x1: 2.9247051627912564
+    x2: 3.7042223097286646
+    x3: 1.4109438884168517
+  objective_value_with_penalty: 24.265925865410257
+- decision_variables_values:
+    x1: -1.6800065022662465
+    x2: -4.601493018656146
+    x3: -0.6807133458349002
+  objective_value_with_penalty: 24.459530507595858
+- decision_variables_values:
+    x1: -3.406952913141752
+    x2: 2.2634831311519115
+    x3: 0.5825552115597405
+  objective_value_with_penalty: 17.070054611889745
+- decision_variables_values:
+    x1: 1.299424153662395
+    x2: 2.0004206599075625
+    x3: 4.671933184738227
+  objective_value_with_penalty: 27.51714563036451
+- decision_variables_values:
+    x1: -2.5725393860280166
+    x2: -3.1259518792820824
+    x3: 4.25971541613353
+  objective_value_with_penalty: 34.53470947069824
+- decision_variables_values:
+    x1: -0.64318455141232
+    x2: 0.0038848754207698732
+    x3: -0.4065170854778639
+  objective_value_with_penalty: 0.5789576002179191
+- decision_variables_values:
+    x1: -4.777771775950501
+    x2: -2.416567123001903
+    x3: -3.684636329673567
+  objective_value_with_penalty: 42.24344468499319
+- decision_variables_values:
+    x1: -3.5788246233112604
+    x2: -2.2618522520387216
+    x3: 1.0493380676302593
+  objective_value_with_penalty: 19.025071674649627
+- decision_variables_values:
+    x1: 4.072223538137497
+    x2: 1.2472690116656677
+    x3: 0.8142271406974269
+  objective_value_with_penalty: 18.80165036867084
+- decision_variables_values:
+    x1: 3.58259060319969
+    x2: -4.2831402489285875
+    x3: -0.26977503234671296
+  objective_value_with_penalty: 31.253024390204427
+- decision_variables_values:
+    x1: 0.9700040412701743
+    x2: 0.4122953903346227
+    x3: -0.4591365054653975
+  objective_value_with_penalty: 1.3217016596226259
+- decision_variables_values:
+    x1: 4.93083688151694
+    x2: -4.475161651024848
+    x3: -2.3635489594930905
+  objective_value_with_penalty: 49.926587838852015
+- decision_variables_values:
+    x1: 3.1152333814802633
+    x2: -4.61231662805188
+    x3: 3.94468845899251
+  objective_value_with_penalty: 46.538710737001516
+- decision_variables_values:
+    x1: -2.146663426996206
+    x2: 4.671245218012978
+    x3: -2.156447426902297
+  objective_value_with_penalty: 31.07896126060575
+- decision_variables_values:
+    x1: 4.509892502110387
+    x2: 3.0877132958445097
+    x3: 0.2391647919053863
+  objective_value_with_penalty: 29.930303575613596
+- decision_variables_values:
+    x1: 1.2895297675334305
+    x2: 4.809091064013848
+    x3: 4.49670103724313
+  objective_value_with_penalty: 45.01056410167611
+- decision_variables_values:
+    x1: -4.841461058385821
+    x2: 2.884733402378731
+    x3: 0.21322793719778677
+  objective_value_with_penalty: 31.80689813586755
+- decision_variables_values:
+    x1: 2.392629874975097
+    x2: 2.1807529374827324
+    x3: 0.9334237849164184
+  objective_value_with_penalty: 11.351641055210608
+- decision_variables_values:
+    x1: -1.7015282240489014
+    x2: 1.0515848344183185
+    x3: 4.926814993469486
+  objective_value_with_penalty: 28.27453494108934
+- decision_variables_values:
+    x1: -4.234720502206129
+    x2: 1.3250867557496058
+    x3: 1.3000009400702384
+  objective_value_with_penalty: 21.37871508625145
+- decision_variables_values:
+    x1: 2.9108429164387983
+    x2: -3.331573381050487
+    x3: 0.9974201374400193
+  objective_value_with_penalty: 20.567234608076966
+- decision_variables_values:
+    x1: 3.328637379048529
+    x2: 0.4524717450417919
+    x3: 4.84883822184105
+  objective_value_with_penalty: 34.79578958284691
+- decision_variables_values:
+    x1: -0.8493189240833798
+    x2: 4.978055107156707
+    x3: -4.528496078655248
+  objective_value_with_penalty: 46.00965201909108
+- decision_variables_values:
+    x1: 1.2817987365283159
+    x2: -3.2043919893220325
+    x3: -0.289040776372401
+  objective_value_with_penalty: 11.99468059260276
+- decision_variables_values:
+    x1: 0.08470000968957958
+    x2: -1.5287374934774163
+    x3: -1.6790047123931129
+  objective_value_with_penalty: 5.1632692398433075
+- decision_variables_values:
+    x1: 0.9983863050400146
+    x2: 1.74378379506968
+    x3: -1.7750652894908105
+  objective_value_with_penalty: 7.188413919994163
+- decision_variables_values:
+    x1: -3.844910834606452
+    x2: -3.1902212999656365
+    x3: -4.40953798403268
+  objective_value_with_penalty: 44.404876501455504
+- decision_variables_values:
+    x1: -0.17070513932296283
+    x2: 4.738116946123916
+    x3: 2.068654182754665
+  objective_value_with_penalty: 26.758222567566264
+- decision_variables_values:
+    x1: -1.442119279252696
+    x2: -4.898750296533796
+    x3: -4.410015601413171
+  objective_value_with_penalty: 45.52570008808985
+- decision_variables_values:
+    x1: -4.112396015552967
+    x2: 3.834128810819082
+    x3: 0.4416871049707263
+  objective_value_with_penalty: 31.80743222538629
+- decision_variables_values:
+    x1: 4.427497891714071
+    x2: 4.75930962556762
+    x3: -0.17896287725921045
+  objective_value_with_penalty: 42.28579340459004
+- decision_variables_values:
+    x1: 1.072833275120047
+    x2: -4.546962801932449
+    x3: 1.4367746763081728
+  objective_value_with_penalty: 23.890163428842648
+- decision_variables_values:
+    x1: -0.7505968121583395
+    x2: 4.0810648280758235
+    x3: 2.6467419969031507
+  objective_value_with_penalty: 24.22372890355069
+- decision_variables_values:
+    x1: 0.4001712588412598
+    x2: 1.6964263768171266
+    x3: 1.6488657778398235
+  objective_value_with_penalty: 5.756757841694808
+- decision_variables_values:
+    x1: -0.4919319225602239
+    x2: 4.362769376073534
+    x3: -2.3741846199647045
+  objective_value_with_penalty: 24.912506254915805
+- decision_variables_values:
+    x1: -4.8460283322735
+    x2: 3.1829692840465986
+    x3: -2.271215680664933
+  objective_value_with_penalty: 38.77370472847987
+- decision_variables_values:
+    x1: -2.8086642616012067
+    x2: -0.5944357469499337
+    x3: -1.5331044520011563
+  objective_value_with_penalty: 10.592358052393543
+- decision_variables_values:
+    x1: 2.467584979882412
+    x2: -3.8335765792209315
+    x3: 3.0812373440833225
+  objective_value_with_penalty: 30.27930859226619
+- decision_variables_values:
+    x1: 2.9542490453181935
+    x2: 2.0286204741299807
+    x3: 4.050832421493445
+  objective_value_with_penalty: 29.252131756845255
+- decision_variables_values:
+    x1: -4.3698642742494975
+    x2: 3.8069279879108544
+    x3: 0.9783734978481844
+  objective_value_with_penalty: 34.54562918179276
+- decision_variables_values:
+    x1: -1.824784471087212
+    x2: 3.0782339912504346
+    x3: -3.0724588666202566
+  objective_value_with_penalty: 22.24536635788405
+- decision_variables_values:
+    x1: 2.3557601250243154
+    x2: 2.0476584873963324
+    x3: -0.28444446539046364
+  objective_value_with_penalty: 9.823419701552082
+- decision_variables_values:
+    x1: -0.20432403941217103
+    x2: 2.0641086363260346
+    x3: -4.790846009888553
+  objective_value_with_penalty: 27.2544982661025
+- decision_variables_values:
+    x1: 1.5050007909151866
+    x2: -0.2642859077167472
+    x3: -3.258992206388297
+  objective_value_with_penalty: 12.95590462297266
+- decision_variables_values:
+    x1: 1.861790094646767
+    x2: 2.2101143687267575
+    x3: 4.089217141963171
+  objective_value_with_penalty: 25.072564713502732
+- decision_variables_values:
+    x1: -4.498456342972539
+    x2: -4.8383757174695035
+    x3: -0.34764446969040463
+  objective_value_with_penalty: 43.76684573033472
+- decision_variables_values:
+    x1: 0.2569723981360603
+    x2: 3.1507217757103474
+    x3: 3.2196220869220555
+  objective_value_with_penalty: 20.359048903935495
+- decision_variables_values:
+    x1: 2.7955889439004853
+    x2: -4.486187217756296
+    x3: -4.7442869138218535
+  objective_value_with_penalty: 50.449451616679895
+- decision_variables_values:
+    x1: 1.132020647638556
+    x2: -0.7286683904171767
+    x3: -4.219868187990908
+  objective_value_with_penalty: 19.619715893890845
+- decision_variables_values:
+    x1: 2.177439739669519
+    x2: 0.5976540762995457
+    x3: 4.024124803624713
+  objective_value_with_penalty: 21.29201464995716
+- decision_variables_values:
+    x1: 0.7439916852793544
+    x2: -4.905675673711234
+    x3: 0.6743173303127357
+  objective_value_with_penalty: 25.073881305367077
+- decision_variables_values:
+    x1: 5.087948513295289
+    x2: -2.9346600800523435
+    x3: -4.551908634698661
+  objective_value_with_penalty: 55.2193220780408
+- decision_variables_values:
+    x1: 4.316839592629498
+    x2: -4.406765196481823
+    x3: -0.06579250529646519
+  objective_value_with_penalty: 38.05901221917028
+- decision_variables_values:
+    x1: -3.2889734833498836
+    x2: 0.3150088877185029
+    x3: -2.0025793464487687
+  objective_value_with_penalty: 14.926901212343495
+- decision_variables_values:
+    x1: 3.915187747476307
+    x2: 1.8490597145090293
+    x3: -4.193651728434152
+  objective_value_with_penalty: 36.33443174520756
+- decision_variables_values:
+    x1: -1.805382715375491
+    x2: -0.13324594439003956
+    x3: -2.265871239407668
+  objective_value_with_penalty: 8.411333704247816
+- decision_variables_values:
+    x1: 2.2828445601126726
+    x2: -3.0085479570315887
+    x3: 4.941316692138641
+  objective_value_with_penalty: 38.67935074740293
+- decision_variables_values:
+    x1: 1.0693032937971063
+    x2: -2.92712392996247
+    x3: -1.4995600433235996
+  objective_value_with_penalty: 11.960144359016953
+- decision_variables_values:
+    x1: -1.7194410282420893
+    x2: 3.025823341981133
+    x3: 4.24956893741119
+  objective_value_with_penalty: 30.17092050029015
+- decision_variables_values:
+    x1: -5.1038964576561625
+    x2: -0.3378593115829105
+    x3: 5.018748655921875
+  objective_value_with_penalty: 51.35174603621603
+- decision_variables_values:
+    x1: 2.3490727807105474
+    x2: -2.8250028443775954
+    x3: -1.2676600051962383
+  objective_value_with_penalty: 15.105745888590814
+- decision_variables_values:
+    x1: 3.874685489026974
+    x2: -3.623162795883302
+    x3: -2.4788283766800068
+  objective_value_with_penalty: 34.28508640538314
+- decision_variables_values:
+    x1: 1.8857764936306145
+    x2: 2.014988411782104
+    x3: 3.180010959486048
+  objective_value_with_penalty: 17.728800985997317
+- decision_variables_values:
+    x1: -2.314885812239347
+    x2: 4.563578002897995
+    x3: 2.618851670900937
+  objective_value_with_penalty: 33.04332458642211
+- decision_variables_values:
+    x1: 4.318589842574512
+    x2: 2.827962339670835
+    x3: -1.7004507296468878
+  objective_value_with_penalty: 29.53912190694092
+- decision_variables_values:
+    x1: 0.9503900761890245
+    x2: 4.4814773747800425
+    x3: -1.4866076875938985
+  objective_value_with_penalty: 23.19688317439728
+- decision_variables_values:
+    x1: -4.075176564642793
+    x2: 2.006541600005793
+    x3: -0.2465861564884264
+  objective_value_with_penalty: 20.694077958139378
+- decision_variables_values:
+    x1: 2.3922668316986018
+    x2: 3.861580928123021
+    x3: -3.3154000256406286
+  objective_value_with_penalty: 31.6266251885066
+- decision_variables_values:
+    x1: -4.558845151687191
+    x2: -2.0209976967047747
+    x3: 0.9074745419607373
+  objective_value_with_penalty: 25.691010851454656
+- decision_variables_values:
+    x1: -3.8922406009188126
+    x2: -1.9160597664758234
+    x3: -1.0988836707868606
+  objective_value_with_penalty: 20.028367246070232
+- decision_variables_values:
+    x1: 3.0128062725147418
+    x2: 4.113607148364294
+    x3: -0.8123529451078682
+  objective_value_with_penalty: 26.65868271420342
+- decision_variables_values:
+    x1: 0.4395594219342662
+    x2: -4.943146927279247
+    x3: 4.600862153643038
+  objective_value_with_penalty: 45.7958465869063
+- decision_variables_values:
+    x1: -2.1422348662853756
+    x2: -1.3175736070366977
+    x3: 0.8021488697449186
+  objective_value_with_penalty: 6.968613241521465
+- decision_variables_values:
+    x1: 4.494117133694048
+    x2: 1.740007401771944
+    x3: -1.36448424162778
+  objective_value_with_penalty: 25.086531815234096
+- decision_variables_values:
+    x1: 4.1958770677649335
+    x2: 1.9949367346480562
+    x3: -5.095770895383326
+  objective_value_with_penalty: 47.55203796127969
+- decision_variables_values:
+    x1: -2.515912782793249
+    x2: 1.5788417810078101
+    x3: -2.424786021724957
+  objective_value_with_penalty: 14.702145751231129
+- decision_variables_values:
+    x1: -5.014634357696008
+    x2: 0.769482263296319
+    x3: 0.2835346406543646
+  objective_value_with_penalty: 25.81905258736388
+- decision_variables_values:
+    x1: -0.8105760820871932
+    x2: 2.8559945550541066
+    x3: 4.326891203757431
+  objective_value_with_penalty: 27.53572597250396
+- decision_variables_values:
+    x1: -4.3891785234314264
+    x2: 5.016616710653211
+    x3: -1.7455314552624555
+  objective_value_with_penalty: 47.47821139346738
+- decision_variables_values:
+    x1: 2.7044060493277957
+    x2: -1.6467739716473817
+    x3: 1.337629228497991
+  objective_value_with_penalty: 11.814928546268197
+- decision_variables_values:
+    x1: -4.755720044474306
+    x2: -4.903641994232914
+    x3: -4.286616407955499
+  objective_value_with_penalty: 65.03765817797256
+- decision_variables_values:
+    x1: -2.4396502967670495
+    x2: 4.435390398916577
+    x3: 0.9867540985887011
+  objective_value_with_penalty: 26.598265212398505
+- decision_variables_values:
+    x1: 1.4557812554814928
+    x2: 3.332301173148921
+    x3: -5.09904381634005
+  objective_value_with_penalty: 39.22377801333664
+- decision_variables_values:
+    x1: -2.989199202733138
+    x2: -4.086332481923462
+    x3: 2.897070108562672
+  objective_value_with_penalty: 34.02644024037052
+- decision_variables_values:
+    x1: 4.61705160418757
+    x2: 3.3194674740721153
+    x3: 4.355903795577107
+  objective_value_with_penalty: 51.309927703476774
+- decision_variables_values:
+    x1: -0.7671370957313801
+    x2: 0.3028007322514883
+    x3: -0.608900096981694
+  objective_value_with_penalty: 1.0509469352035306
+- decision_variables_values:
+    x1: 4.208644876050898
+    x2: 0.38803006003463203
+    x3: 2.7318536105637836
+  objective_value_with_penalty: 25.326283169750344
+- decision_variables_values:
+    x1: -2.043715220666626
+    x2: -2.065379674815491
+    x3: 1.0158642245077205
+  objective_value_with_penalty: 9.474545226960052
+- decision_variables_values:
+    x1: 0.8368283680487298
+    x2: -2.939146782958212
+    x3: -1.9784685224541843
+  objective_value_with_penalty: 13.25320322368675
+- decision_variables_values:
+    x1: -2.644971130981476
+    x2: 4.338016289189919
+    x3: -1.4645177308460666
+  objective_value_with_penalty: 27.959069792965014
+- decision_variables_values:
+    x1: 3.6609041519359193
+    x2: -4.57507030794336
+    x3: 2.486926043172109
+  objective_value_with_penalty: 40.51828867649428
+- decision_variables_values:
+    x1: -3.2019614965848824
+    x2: -3.376192998270686
+    x3: -3.1572051872071736
+  objective_value_with_penalty: 31.619181181311987
+- decision_variables_values:
+    x1: 1.5409515299943113
+    x2: 2.7332137694075502
+    x3: -0.7378185626288509
+  objective_value_with_penalty: 10.389365358430542
+- decision_variables_values:
+    x1: -2.4327764210590885
+    x2: 3.301838806291854
+    x3: -0.607152179540182
+  objective_value_with_penalty: 17.189174386716275
+- decision_variables_values:
+    x1: 4.189271067412997
+    x2: 1.3450980369492944
+    x3: 4.778398082537186
+  objective_value_with_penalty: 42.19236904046353
+- decision_variables_values:
+    x1: 3.236630040939871
+    x2: -3.7505691845133287
+    x3: -0.3196254093729678
+  objective_value_with_penalty: 24.644703632052245
+- decision_variables_values:
+    x1: 2.7526007037277624
+    x2: 2.7481882221375793
+    x3: 3.51945809559916
+  objective_value_with_penalty: 27.51593442513675
+- decision_variables_values:
+    x1: 1.4337975606074096
+    x2: -3.6068922522184668
+    x3: -4.814111242188362
+  objective_value_with_penalty: 38.24111421608174
+- decision_variables_values:
+    x1: -4.665097722019587
+    x2: 3.101435107903318
+    x3: 2.7773116901079273
+  objective_value_with_penalty: 39.09549670853775
+- decision_variables_values:
+    x1: -4.200730010744515
+    x2: -1.740775951487283
+    x3: 3.7528658789897866
+  objective_value_with_penalty: 34.76043584213185
+- decision_variables_values:
+    x1: 1.0370849691526614
+    x2: 3.153635437954418
+    x3: 2.785537068584591
+  objective_value_with_penalty: 18.780178469223166
+- decision_variables_values:
+    x1: 4.1955439878464
+    x2: -3.8722009305223493
+    x3: 2.3356414826238243
+  objective_value_with_penalty: 38.05175053564544
+- decision_variables_values:
+    x1: 0.17457704163734178
+    x2: -3.8674137733394653
+    x3: 3.812933835963224
+  objective_value_with_penalty: 29.525830875115876
+- decision_variables_values:
+    x1: 2.447263999829816
+    x2: 4.841266918495372
+    x3: 3.325381402644635
+  objective_value_with_penalty: 40.48512793403551
+- decision_variables_values:
+    x1: 1.7601702528555645
+    x2: 3.087959891194221
+    x3: -1.6948573035544472
+  objective_value_with_penalty: 15.506236888073701
+- decision_variables_values:
+    x1: 4.873090442293129
+    x2: -1.7326070441885473
+    x3: 3.1145062957464935
+  objective_value_with_penalty: 36.44908709458496
+- decision_variables_values:
+    x1: -2.34253949417419
+    x2: -0.761674686658182
+    x3: 3.9978563631260355
+  objective_value_with_penalty: 22.05049511024904
+- decision_variables_values:
+    x1: -2.4058387397193552
+    x2: -1.6173231605812792
+    x3: -2.083772834086839
+  objective_value_with_penalty: 12.745903471365331
+- decision_variables_values:
+    x1: -0.8364279149274259
+    x2: -0.7012011665612405
+    x3: -0.26600529511661275
+  objective_value_with_penalty: 1.2620535498867618
+- decision_variables_values:
+    x1: -1.137135944243422
+    x2: 1.2261652823306513
+    x3: 3.193475968327223
+  objective_value_with_penalty: 12.99484821556688
+- decision_variables_values:
+    x1: -1.854269947852607
+    x2: -0.20636284830949236
+    x3: -0.9088633071861034
+  objective_value_with_penalty: 4.306935175820978
+- decision_variables_values:
+    x1: 0.6682427404842848
+    x2: 0.3544441651275312
+    x3: 3.9909357457219263
+  objective_value_with_penalty: 16.499747152883927
+- decision_variables_values:
+    x1: 3.1153691088184834
+    x2: -2.858016072923409
+    x3: -2.2726171389323806
+  objective_value_with_penalty: 23.038569217438216
+- decision_variables_values:
+    x1: -0.048822811566868296
+    x2: -1.8191845760496346
+    x3: 0.2233106411115875
+  objective_value_with_penalty: 3.361683831099851
+- decision_variables_values:
+    x1: -4.296768402410601
+    x2: -0.4532583467593305
+    x3: 1.696993187284618
+  objective_value_with_penalty: 21.547447710551555
+- decision_variables_values:
+    x1: -3.9733732946746056
+    x2: -2.9111079604873966
+    x3: -3.709371096365718
+  objective_value_with_penalty: 38.02167882699983
+- decision_variables_values:
+    x1: 3.5469602085436955
+    x2: -0.7303710319092609
+    x3: -0.5320628632214914
+  objective_value_with_penalty: 13.397459455663986
+- decision_variables_values:
+    x1: 1.3826298099265752
+    x2: 1.3081734053178016
+    x3: 4.322204557867562
+  objective_value_with_penalty: 22.304435089729502
+- decision_variables_values:
+    x1: -2.8865185912128095
+    x2: 2.101368608160409
+    x3: -1.4126201031325034
+  objective_value_with_penalty: 14.743235160553283
+- decision_variables_values:
+    x1: 4.540028672020921
+    x2: 0.04408815608305261
+    x3: 3.1099989274165436
+  objective_value_with_penalty: 30.285897436810906
+- decision_variables_values:
+    x1: 4.976939509449264
+    x2: -3.9234069005668313
+    x3: 1.0599423871394267
+  objective_value_with_penalty: 41.28652645218734
+- decision_variables_values:
+    x1: 1.0050763626267178
+    x2: -2.647958254816657
+    x3: 2.0834405385313914
+  objective_value_with_penalty: 12.362585891558606
+- decision_variables_values:
+    x1: 2.944294417879667
+    x2: -1.3299977639042662
+    x3: 4.478315542005629
+  objective_value_with_penalty: 30.493073764916886
+- decision_variables_values:
+    x1: -1.641032528971075
+    x2: -0.5680187885468202
+    x3: -2.96186878850485
+  objective_value_with_penalty: 11.788299825602586
+- decision_variables_values:
+    x1: 4.0675130743103525
+    x2: -4.2402327292018835
+    x3: 1.7606385265474636
+  objective_value_with_penalty: 37.62408422864374
+- decision_variables_values:
+    x1: 2.482776284689188
+    x2: 1.197428853181024
+    x3: -4.995845179993422
+  objective_value_with_penalty: 32.55648300070898
+- decision_variables_values:
+    x1: 0.7919162853846684
+    x2: 1.7437474736493996
+    x3: -1.399896699905662
+  objective_value_with_penalty: 5.627497425322878
+- decision_variables_values:
+    x1: -0.17645796153908666
+    x2: 0.17420953464772193
+    x3: -5.105531287371511
+  objective_value_with_penalty: 26.1279361004821
+- decision_variables_values:
+    x1: 2.510414051093802
+    x2: -1.16087502244274
+    x3: 4.609293952550039
+  objective_value_with_penalty: 28.895400266674987
+- decision_variables_values:
+    x1: 0.04196405803567593
+    x2: 3.64114981431245
+    x3: 2.9310864452076038
+  objective_value_with_penalty: 21.851000701714156
+- decision_variables_values:
+    x1: -4.238445755170751
+    x2: 2.2524506960511905
+    x3: 4.914430421338859
+  objective_value_with_penalty: 47.1895829238473
+- decision_variables_values:
+    x1: -2.673652460041152
+    x2: 2.6457939322013635
+    x3: 1.4399604104085837
+  objective_value_with_penalty: 16.222128992301712
+- decision_variables_values:
+    x1: 4.308009884255333
+    x2: 2.165806362059075
+    x3: -4.0789342561924276
+  objective_value_with_penalty: 39.88737102711728
+- decision_variables_values:
+    x1: 4.994756746904474
+    x2: 4.304053764575966
+    x3: 1.1396905145772305
+  objective_value_with_penalty: 44.77136823812562
+- decision_variables_values:
+    x1: 4.982122741304553
+    x2: -0.07397925386954363
+    x3: -1.0091246731535923
+  objective_value_with_penalty: 25.845352545394434
+- decision_variables_values:
+    x1: 1.535461529225782
+    x2: -4.102795565764826
+    x3: 4.179500627899269
+  objective_value_with_penalty: 36.658799060802274
+- decision_variables_values:
+    x1: 3.785723534571189
+    x2: -0.2848601762690306
+    x3: 2.147242116534435
+  objective_value_with_penalty: 19.02349670724948
+- decision_variables_values:
+    x1: 0.8010870260113165
+    x2: 3.761614871628624
+    x3: 2.4908821386243947
+  objective_value_with_penalty: 20.995980694219323
+- decision_variables_values:
+    x1: -0.7245511993796034
+    x2: -2.719618927731508
+    x3: -3.922509119815744
+  objective_value_with_penalty: 23.30737934763558
+- decision_variables_values:
+    x1: 2.468831703946873
+    x2: 0.3905222260386223
+    x3: -4.9738578446781165
+  objective_value_with_penalty: 30.98689945050942
+- decision_variables_values:
+    x1: -3.025809507696463
+    x2: -3.6360717793141464
+    x3: 2.605588272011097
+  objective_value_with_penalty: 29.16563140443283
+- decision_variables_values:
+    x1: -4.473373038147564
+    x2: -4.894992551868354
+    x3: -3.2502472222327388
+  objective_value_with_penalty: 54.53612542690386
+- decision_variables_values:
+    x1: -4.982816504497565
+    x2: 3.44916870169195
+    x3: -1.3450226914389716
+  objective_value_with_penalty: 38.5343110907104
+- decision_variables_values:
+    x1: 3.425141448047918
+    x2: 2.47397955128989
+    x3: 1.9823890241859692
+  objective_value_with_penalty: 21.782035002549314
+- decision_variables_values:
+    x1: 0.16364444094174058
+    x2: 3.5442649340643007
+    x3: 3.7443139139322588
+  objective_value_with_penalty: 26.608480111955664
+- decision_variables_values:
+    x1: -0.08795920033958371
+    x2: 4.7384804839306005
+    x3: -4.8247783728368105
+  objective_value_with_penalty: 45.73942046450938
+- decision_variables_values:
+    x1: -1.2233867831795
+    x2: 0.42833593571288286
+    x3: 1.951476915572413
+  objective_value_with_penalty: 5.488409047093334
+- decision_variables_values:
+    x1: 1.8747630328910239
+    x2: 2.881180539274573
+    x3: -4.408023683969673
+  objective_value_with_penalty: 31.246610527826835
+- decision_variables_values:
+    x1: -4.316572465922396
+    x2: -4.643775126332257
+    x3: 2.932619738177068
+  objective_value_with_penalty: 48.79770380624726
+- decision_variables_values:
+    x1: -3.6864701986681965
+    x2: -4.515680549736668
+    x3: -0.707739072980047
+  objective_value_with_penalty: 34.48232794836145
+- decision_variables_values:
+    x1: 0.12458933934656002
+    x2: -1.087790617409099
+    x3: 2.6792047960276033
+  objective_value_with_penalty: 8.376949269859393
+- decision_variables_values:
+    x1: 1.2159311283116674
+    x2: 2.224504840112412
+    x3: -0.8349232422764636
+  objective_value_with_penalty: 7.124007112974275
+- decision_variables_values:
+    x1: 3.0351022305475572
+    x2: -1.073811493718928
+    x3: 2.843392350826745
+  objective_value_with_penalty: 18.449796734657678
+- decision_variables_values:
+    x1: -1.9307461704827027
+    x2: -0.831061294806041
+    x3: 4.947858540368043
+  objective_value_with_penalty: 28.899747786051293
+- decision_variables_values:
+    x1: 0.9436405568930786
+    x2: -1.691316135072252
+    x3: -2.151369693664892
+  objective_value_with_penalty: 8.379399328188992
+- decision_variables_values:
+    x1: 4.073706560325788
+    x2: 3.0942297428715113
+    x3: 3.624102311827234
+  objective_value_with_penalty: 39.303460407903565
+- decision_variables_values:
+    x1: -1.9759068536932398
+    x2: -3.7998516898936225
+    x3: -3.854698801521949
+  objective_value_with_penalty: 33.20178361011409
+- decision_variables_values:
+    x1: -0.6434709505939722
+    x2: -4.705862519074307
+    x3: 2.9292680653924714
+  objective_value_with_penalty: 31.139808311614843
+- decision_variables_values:
+    x1: 0.8909700383026724
+    x2: 0.519801635557136
+    x3: 2.611031690430056
+  objective_value_with_penalty: 7.8815078379109735
+- decision_variables_values:
+    x1: -0.015294671362138246
+    x2: -1.99101325693576
+    x3: 1.929939932869373
+  objective_value_with_penalty: 7.689035860749858
+- decision_variables_values:
+    x1: -2.1372434627550625
+    x2: -2.3789683768056467
+    x3: 4.1154448630198095
+  objective_value_with_penalty: 27.16418657748668
+- decision_variables_values:
+    x1: 1.9557047794936588
+    x2: -2.5977229096689007
+    x3: -4.57783368171543
+  objective_value_with_penalty: 31.529506717401247
+- decision_variables_values:
+    x1: 4.804621652431099
+    x2: 4.706967160723619
+    x3: 0.5388748868548863
+  objective_value_with_penalty: 45.530315218823176
+- decision_variables_values:
+    x1: -4.744591845579475
+    x2: 1.4162701483613924
+    x3: 2.19597501473105
+  objective_value_with_penalty: 29.33927917960188
+- decision_variables_values:
+    x1: 3.590218171054043
+    x2: 0.6361178871042288
+    x3: 0.2124529728250728
+  objective_value_with_penalty: 13.339448747722798
+- decision_variables_values:
+    x1: 3.210305441950312
+    x2: 2.987881020787502
+    x3: -4.22074836796678
+  objective_value_with_penalty: 37.04821081069219
+- decision_variables_values:
+    x1: 3.0157830662568843
+    x2: -3.8664675236605195
+    x3: 1.3062471003271403
+  objective_value_with_penalty: 25.750800101356347
+- decision_variables_values:
+    x1: 4.324844425992249
+    x2: 2.900419418107071
+    x3: 0.6627300304441128
+  objective_value_with_penalty: 27.55592320322124
+- decision_variables_values:
+    x1: -2.847532761753738
+    x2: 3.0818279356625444
+    x3: -0.5465287140845545
+  objective_value_with_penalty: 17.904799889609844
+- decision_variables_values:
+    x1: -3.932129382252006
+    x2: 0.4432211316793264
+    x3: -1.8454818381798193
+  objective_value_with_penalty: 19.06388966538821
+- decision_variables_values:
+    x1: 4.171658431230191
+    x2: 2.4733680883093596
+    x3: 4.510636337942553
+  objective_value_with_penalty: 43.866123940288844
+- decision_variables_values:
+    x1: -3.774712091435198
+    x2: 3.3164791243056273
+    x3: 1.0066269614472834
+  objective_value_with_penalty: 26.260782994694697
+- decision_variables_values:
+    x1: 4.165526348723332
+    x2: -1.619177396206485
+    x3: -2.7176759178895464
+  objective_value_with_penalty: 27.359107596971132
+- decision_variables_values:
+    x1: -2.059922690597798
+    x2: 2.352954966136009
+    x3: 4.44876032663161
+  objective_value_with_penalty: 29.57114700771516
+- decision_variables_values:
+    x1: -2.448730995575322
+    x2: 5.067798606641488
+    x3: 0.19564907739223703
+  objective_value_with_penalty: 31.717144767653146
+- decision_variables_values:
+    x1: 1.4919113940026376
+    x2: -0.3230893906313925
+    x3: -0.15625835133944488
+  objective_value_with_penalty: 2.354603034256779
+- decision_variables_values:
+    x1: -0.3369768355702343
+    x2: 2.299328059551078
+    x3: 2.997006932122285
+  objective_value_with_penalty: 14.382513464338883
+- decision_variables_values:
+    x1: -2.2760994938322265
+    x2: -2.2688532750924377
+    x3: -4.58997558400357
+  objective_value_with_penalty: 31.39619995146991
+- decision_variables_values:
+    x1: -2.7253601557665594
+    x2: -2.457201337959515
+    x3: -1.4664799692511314
+  objective_value_with_penalty: 15.615989894124755
+- decision_variables_values:
+    x1: 4.73496059494764
+    x2: -1.4034031476583642
+    x3: -0.8009364988568439
+  objective_value_with_penalty: 25.030891505765368
+- decision_variables_values:
+    x1: 4.243947470817097
+    x2: 2.3838691943927373
+    x3: 3.96241864535716
+  objective_value_with_penalty: 39.39468399210358
+- decision_variables_values:
+    x1: -0.9327543811158225
+    x2: 3.6240610872909604
+    x3: 3.2976266363209747
+  objective_value_with_penalty: 24.878190932480887
+- decision_variables_values:
+    x1: 0.7848257941111827
+    x2: -2.4011020024537073
+    x3: 0.21589539581080341
+  objective_value_with_penalty: 6.427853175221756
+- decision_variables_values:
+    x1: -2.5203278158929834
+    x2: -2.8655404374663194
+    x3: -0.15105737881406167
+  objective_value_with_penalty: 14.586192630012736
+- decision_variables_values:
+    x1: -1.7269496234163397
+    x2: 1.9620226333201405
+    x3: -3.8051093500727937
+  objective_value_with_penalty: 21.310744981489734
+- decision_variables_values:
+    x1: -1.6595827496057542
+    x2: 3.3508228607280914
+    x3: -3.1803816030409053
+  objective_value_with_penalty: 24.097055887728025
+- decision_variables_values:
+    x1: 3.1606460322517007
+    x2: 2.64210438607022
+    x3: -2.2066315120578475
+  objective_value_with_penalty: 21.839621558086616
+- decision_variables_values:
+    x1: -2.991468304458787
+    x2: -1.4625665039228077
+    x3: -2.7157446197412027
+  objective_value_with_penalty: 18.463252234631803
+- decision_variables_values:
+    x1: 2.44972331665587
+    x2: -0.8842659948761495
+    x3: -0.6955141934814444
+  objective_value_with_penalty: 7.266810671195887
+- decision_variables_values:
+    x1: -1.907386126981255
+    x2: 4.847588098961983
+    x3: 0.058261401299922966
+  objective_value_with_penalty: 27.14062660547983
+- decision_variables_values:
+    x1: -4.9714401482243
+    x2: 2.3348892262335577
+    x3: 1.3341052410467196
+  objective_value_with_penalty: 31.946761640346317
+- decision_variables_values:
+    x1: -3.9725953673480126
+    x2: -3.2219181345192682
+    x3: 1.097491672177239
+  objective_value_with_penalty: 27.366758388717404
+- decision_variables_values:
+    x1: 1.5919189186229366
+    x2: 0.18057238340264892
+    x3: 2.0444378570368347
+  objective_value_with_penalty: 6.746538380402698
+- decision_variables_values:
+    x1: 4.050730603788584
+    x2: -0.4161161789015777
+    x3: 1.643463494141388
+  objective_value_with_penalty: 19.282543355388498
+- decision_variables_values:
+    x1: 4.49589975836835
+    x2: 4.702090080666797
+    x3: 0.15171104450029027
+  objective_value_with_penalty: 42.34578200502504
+- decision_variables_values:
+    x1: 1.884563695915216
+    x2: -3.8681427476997614
+    x3: -1.5302894504909057
+  objective_value_with_penalty: 20.855894442827637
+- decision_variables_values:
+    x1: 2.1751175708079495
+    x2: -4.1488499458344545
+    x3: -1.716733448731799
+  objective_value_with_penalty: 24.891266053882607
+- decision_variables_values:
+    x1: -1.9679746444508668
+    x2: -2.126390157739057
+    x3: 3.438576673158237
+  objective_value_with_penalty: 20.218268841319016
+- decision_variables_values:
+    x1: 4.463383748389433
+    x2: 4.929697924190937
+    x3: -2.688648437283138
+  objective_value_with_penalty: 51.4525465284644
+- decision_variables_values:
+    x1: -3.091874486526692
+    x2: 4.168816862964772
+    x3: 0.05330514442828971
+  objective_value_with_penalty: 26.941563315796664
+- decision_variables_values:
+    x1: -4.214357274912051
+    x2: 1.2452124387201131
+    x3: -1.8420217856017018
+  objective_value_with_penalty: 22.704405516778703
+- decision_variables_values:
+    x1: 1.9227940257873692
+    x2: -1.9885418141641664
+    x3: 1.1113960272705548
+  objective_value_with_penalty: 8.886636541715685
+- decision_variables_values:
+    x1: -1.966412837360342
+    x2: 0.17454880379149262
+    x3: 0.4200960660570354
+  objective_value_with_penalty: 4.073727436557189
+- decision_variables_values:
+    x1: 4.511632518882037
+    x2: -4.137914165236016
+    x3: 0.8965027828578718
+  objective_value_with_penalty: 38.28087886396666
+- decision_variables_values:
+    x1: -0.7298673025981044
+    x2: -3.7402679639093925
+    x3: -1.313471886692548
+  objective_value_with_penalty: 16.247519118380428
+- decision_variables_values:
+    x1: 1.6534955678010075
+    x2: 1.6216374674695055
+    x3: 0.9171834410642044
+  objective_value_with_penalty: 6.204981133200863
+- decision_variables_values:
+    x1: 1.3981898697859494
+    x2: -2.114320949875769
+    x3: -4.402767538744516
+  objective_value_with_penalty: 25.80964999127807
+- decision_variables_values:
+    x1: -4.385891683118146
+    x2: -1.3376938870945048
+    x3: -3.296061530271172
+  objective_value_with_penalty: 31.88949240294847
+- decision_variables_values:
+    x1: 0.16746061771408893
+    x2: -3.325154233928082
+    x3: 2.473953423343489
+  objective_value_with_penalty: 17.205139278768005
+- decision_variables_values:
+    x1: 2.5910414776981403
+    x2: 2.1041456216202583
+    x3: 1.749284813986712
+  objective_value_with_penalty: 14.200922096580392
+- decision_variables_values:
+    x1: 4.27378254114037
+    x2: -3.1933017263009233
+    x3: 1.8208508628882836
+  objective_value_with_penalty: 31.777890989033697
+- decision_variables_values:
+    x1: 0.2900866840986005
+    x2: 3.484930992557161
+    x3: 2.6818405850921705
+  objective_value_with_penalty: 19.421163231024277
+- decision_variables_values:
+    x1: -3.9156461902878474
+    x2: 4.286215002094596
+    x3: -2.799469693482241
+  objective_value_with_penalty: 41.54095469642206
+- decision_variables_values:
+    x1: 3.9047497757587477
+    x2: -1.7830038585295394
+    x3: 3.056275416833656
+  objective_value_with_penalty: 27.766992994360955
+- decision_variables_values:
+    x1: 1.4331540332509736
+    x2: 1.3911758791100866
+    x3: 0.8442133303921251
+  objective_value_with_penalty: 4.7019969568530176
+- decision_variables_values:
+    x1: 2.3552823889068826
+    x2: -0.8653175367724053
+    x3: -0.4635918935059582
+  objective_value_with_penalty: 6.511047014665214
+- decision_variables_values:
+    x1: -4.75889210547963
+    x2: -5.024003442384509
+    x3: -1.4771841218895463
+  objective_value_with_penalty: 50.06973759065033
+- decision_variables_values:
+    x1: 2.185398012302894
+    x2: 4.292279875047911
+    x3: -2.78727504006422
+  objective_value_with_penalty: 30.968533146883754
+- decision_variables_values:
+    x1: -2.058131248206631
+    x2: -1.0558213540825205
+    x3: -2.3659252553557906
+  objective_value_with_penalty: 10.948265280511595
+- decision_variables_values:
+    x1: 3.673440307889991
+    x2: 3.7289635080833916
+    x3: -2.3369551259701224
+  objective_value_with_penalty: 32.86069180104654
+- decision_variables_values:
+    x1: 3.9361485048751517
+    x2: 3.9640394405021935
+    x3: -1.5132408936783022
+  objective_value_with_penalty: 33.496771740588144
+- decision_variables_values:
+    x1: -0.3326857477054297
+    x2: -2.677185870521665
+    x3: 3.4849818770265673
+  objective_value_with_penalty: 19.42310267525078
+- decision_variables_values:
+    x1: 4.958442162911912
+    x2: 3.0879054440837974
+    x3: 1.810637607098017
+  objective_value_with_penalty: 37.39971725878255
+- decision_variables_values:
+    x1: 2.80017449336857
+    x2: 2.7176827752604638
+    x3: 3.6864812004823024
+  objective_value_with_penalty: 28.816920501768784
+- decision_variables_values:
+    x1: 4.53349807855655
+    x2: -0.5977686265648776
+    x3: -4.155092298260184
+  objective_value_with_penalty: 38.1747241662423
+- decision_variables_values:
+    x1: -2.8484596742619352
+    x2: -1.8503096070459968
+    x3: 2.900409107014851
+  objective_value_with_penalty: 19.94974114587781
+- decision_variables_values:
+    x1: 0.4441958668415005
+    x2: -3.93532415736545
+    x3: -0.4254045717376371
+  objective_value_with_penalty: 15.865055241318442
+- decision_variables_values:
+    x1: 1.698418286867911
+    x2: -0.41797085938461276
+    x3: -0.6063096257417007
+  objective_value_with_penalty: 3.426935678729082
+- decision_variables_values:
+    x1: 1.1455498223734848
+    x2: -4.235413158310402
+    x3: -1.252862928432819
+  objective_value_with_penalty: 20.820674534570077
+- decision_variables_values:
+    x1: 2.4836242861747975
+    x2: -2.5648329027197168
+    x3: -2.5750564227512145
+  objective_value_with_penalty: 19.3776729941032
+- decision_variables_values:
+    x1: -1.7136487463149899
+    x2: 2.8224844080697986
+    x3: 3.4458693023136098
+  objective_value_with_penalty: 22.77702550817134
+- decision_variables_values:
+    x1: 3.494681144355609
+    x2: -3.8008342705817686
+    x3: 5.113791596965243
+  objective_value_with_penalty: 52.8100019503358
+- decision_variables_values:
+    x1: 0.5726185667590267
+    x2: -3.646735833320812
+    x3: 1.0063692227213554
+  objective_value_with_penalty: 14.639353273463984
+- decision_variables_values:
+    x1: -4.47708106666432
+    x2: 2.2996679733549152
+    x3: 2.5339155090429815
+  objective_value_with_penalty: 31.75345547212698
+- decision_variables_values:
+    x1: 3.7550434899644527
+    x2: -2.7452213034125554
+    x3: -1.8156946383110233
+  objective_value_with_penalty: 24.933338635825944
+- decision_variables_values:
+    x1: -2.2662897062274205
+    x2: -3.3408753083444003
+    x3: 1.8389534156575067
+  objective_value_with_penalty: 19.679266523416068
+- decision_variables_values:
+    x1: -2.1664215897761587
+    x2: -3.861791091900067
+    x3: -0.18736944077864415
+  objective_value_with_penalty: 19.641920249464672
+- decision_variables_values:
+    x1: 1.4346296411332835
+    x2: -0.9139536600353582
+    x3: 1.8253350236976607
+  objective_value_with_penalty: 6.2253214486475805
+- decision_variables_values:
+    x1: -2.0537314337556087
+    x2: 0.6797966387188286
+    x3: -0.9900716725785674
+  objective_value_with_penalty: 5.660178188851808
+- decision_variables_values:
+    x1: 4.726509823985132
+    x2: 4.3622858520582914
+    x3: -4.419998800603687
+  objective_value_with_penalty: 60.90582236863392
+- decision_variables_values:
+    x1: 0.4827010278657049
+    x2: 4.839049095072075
+    x3: -4.323627827733967
+  objective_value_with_penalty: 42.34315401957602
+- decision_variables_values:
+    x1: 1.8008454402799376
+    x2: -0.5380809231071124
+    x3: 4.453931151357703
+  objective_value_with_penalty: 23.3700780806234
+- decision_variables_values:
+    x1: 1.7618910627720847
+    x2: -3.466987279879362
+    x3: 3.624074835432853
+  objective_value_with_penalty: 28.258179328739104
+- decision_variables_values:
+    x1: -2.2662026900768013
+    x2: 3.7868176300298595
+    x3: -3.7886120352838555
+  objective_value_with_penalty: 33.82924354951397
+- decision_variables_values:
+    x1: -2.397629754963698
+    x2: -4.322160348985622
+    x3: -0.43031812938737524
+  objective_value_with_penalty: 24.614872216710243
+- decision_variables_values:
+    x1: 1.5986051321095802
+    x2: 4.180702815304476
+    x3: 0.2648895079746385
+  objective_value_with_penalty: 20.103980849736903
+- decision_variables_values:
+    x1: 1.6506684728291638
+    x2: 0.7432220637947964
+    x3: -5.063720180825161
+  objective_value_with_penalty: 28.91834751299956
+- decision_variables_values:
+    x1: -0.8311249939531411
+    x2: 0.6625569271039122
+    x3: -4.215673164121553
+  objective_value_with_penalty: 18.90165066392161
+- decision_variables_values:
+    x1: 4.383532356698901
+    x2: 3.2274434195054473
+    x3: 3.3154279282202106
+  objective_value_with_penalty: 40.62380929555779
+- decision_variables_values:
+    x1: 3.8212771877225054
+    x2: 3.545191738917093
+    x3: -2.6587788587919907
+  objective_value_with_penalty: 34.23964883105366
+- decision_variables_values:
+    x1: 3.2498786093957
+    x2: -0.5279813100949875
+    x3: 3.6867479113306123
+  objective_value_with_penalty: 24.43258540131798
+- decision_variables_values:
+    x1: 4.564950979600227
+    x2: -3.180522360408452
+    x3: -1.5203477012808002
+  objective_value_with_penalty: 33.265957064001036
+- decision_variables_values:
+    x1: -2.578832693297177
+    x2: -0.7754526477814645
+    x3: 4.618660643032981
+  objective_value_with_penalty: 28.58373100447148
+- decision_variables_values:
+    x1: -0.6386186020106699
+    x2: -4.479499438424375
+    x3: -1.3910105192906768
+  objective_value_with_penalty: 22.40865920245567
+- decision_variables_values:
+    x1: 4.320300118601046
+    x2: -2.835401436093757
+    x3: -4.327478199385486
+  objective_value_with_penalty: 45.4315619847434
+- decision_variables_values:
+    x1: -4.25200044493707
+    x2: -4.491928541705709
+    x3: 3.4409285511589607
+  objective_value_with_penalty: 50.09691910171633
+- decision_variables_values:
+    x1: 2.370650913472799
+    x2: -2.66184632194767
+    x3: 1.9551365748774936
+  objective_value_with_penalty: 16.527970621639454
+- decision_variables_values:
+    x1: -4.4084876159269735
+    x2: -2.0512132388374904
+    x3: 2.5990812229752622
+  objective_value_with_penalty: 30.397462014586264
+- decision_variables_values:
+    x1: 5.105176061616416
+    x2: -2.1701722605802867
+    x3: 0.24023026298562833
+  objective_value_with_penalty: 30.830180839947598
+- decision_variables_values:
+    x1: 2.1097620717982855
+    x2: -0.9730298666919115
+    x3: 4.354624584858022
+  objective_value_with_penalty: 24.360638396122972
+- decision_variables_values:
+    x1: -3.534667124531719
+    x2: 1.0933659880093396
+    x3: -4.087690989169232
+  objective_value_with_penalty: 30.398538487916305
+- decision_variables_values:
+    x1: 2.3675476835819094
+    x2: -0.7683514932378612
+    x3: 0.9467136035250654
+  objective_value_with_penalty: 7.0919126982943315
+- decision_variables_values:
+    x1: 1.6720829468213454
+    x2: -2.1116927811234087
+    x3: -2.149144716888171
+  objective_value_with_penalty: 11.873930797027807
+- decision_variables_values:
+    x1: 3.5330685798962014
+    x2: 4.581374028124988
+    x3: 3.710389805605929
+  objective_value_with_penalty: 47.238554085372336
+- decision_variables_values:
+    x1: 0.26231779907477204
+    x2: -4.137618533365187
+    x3: -0.6534656717573526
+  objective_value_with_penalty: 17.615715139523804
+- decision_variables_values:
+    x1: 1.6124328193652158
+    x2: -2.1693697818434283
+    x3: -2.985711009032708
+  objective_value_with_penalty: 16.220575076800575
+- decision_variables_values:
+    x1: -1.3863001957984684
+    x2: -3.4463440386805577
+    x3: -3.218009380948116
+  objective_value_with_penalty: 24.15469984168997
+- decision_variables_values:
+    x1: 4.8823434245418325
+    x2: 1.8090630965253043
+    x3: -2.629810859327555
+  objective_value_with_penalty: 34.025891758213724
+- decision_variables_values:
+    x1: -5.056176823919425
+    x2: -0.5729715563798834
+    x3: -1.0852862522484292
+  objective_value_with_penalty: 27.07106672847975
+- decision_variables_values:
+    x1: -3.0194569246175322
+    x2: -3.296513473099326
+    x3: 3.518148673834175
+  objective_value_with_penalty: 32.36149128914731
+- decision_variables_values:
+    x1: -1.2569323500637903
+    x2: 0.07585477696078513
+    x3: -2.687119624452639
+  objective_value_with_penalty: 8.806244755943144
+- decision_variables_values:
+    x1: -2.7118320660120707
+    x2: -0.16151800319586762
+    x3: 3.5189319771299354
+  objective_value_with_penalty: 19.763003479275273
+- decision_variables_values:
+    x1: 1.3995321780793715
+    x2: 0.08973642628498979
+    x3: -4.895235259081983
+  objective_value_with_penalty: 25.930071185441438
+- decision_variables_values:
+    x1: 1.1115868923925056
+    x2: -2.8634886118664817
+    x3: 1.440481832852992
+  objective_value_with_penalty: 11.510180360407372
+- decision_variables_values:
+    x1: -4.19577237951473
+    x2: -0.2659202617848102
+    x3: 5.078406532200828
+  objective_value_with_penalty: 43.465432352626436
+- decision_variables_values:
+    x1: -1.261425877364443
+    x2: 1.7333038940576797
+    x3: 3.06471224506305
+  objective_value_with_penalty: 13.987998778279572
+- decision_variables_values:
+    x1: 0.5354617556741177
+    x2: -3.0566427191600454
+    x3: 1.2524298463108066
+  objective_value_with_penalty: 11.198364524313835
+- decision_variables_values:
+    x1: -2.345099464450495
+    x2: -0.8464808882625743
+    x3: 3.3117400136147106
+  objective_value_with_penalty: 17.18364331013656
+- decision_variables_values:
+    x1: -5.027779961681438
+    x2: 0.3249480661189974
+    x3: 3.614833587801189
+  objective_value_with_penalty: 38.4511844562555
+- decision_variables_values:
+    x1: -0.7140642653290259
+    x2: 0.039643678880225686
+    x3: -4.604739959538662
+  objective_value_with_penalty: 21.71508949126716
+- decision_variables_values:
+    x1: 0.7998517076075196
+    x2: 0.7886808863987982
+    x3: -0.9855590558280074
+  objective_value_with_penalty: 2.2331069472580523
+- decision_variables_values:
+    x1: 1.4910544893223934
+    x2: 4.964990038620619
+    x3: 2.288519295162221
+  objective_value_with_penalty: 32.111690138060226
+- decision_variables_values:
+    x1: -0.7959523142215383
+    x2: 1.9355777517053818
+    x3: 0.013418965351045031
+  objective_value_with_penalty: 4.380181388042575
+- decision_variables_values:
+    x1: -0.6573551794164674
+    x2: -4.500783859528583
+    x3: 0.5037410072362114
+  objective_value_with_penalty: 20.942926184470014
+- decision_variables_values:
+    x1: -0.4592216768644857
+    x2: 1.003396956902403
+    x3: -3.8010925734186722
+  objective_value_with_penalty: 15.665994753321817
+- decision_variables_values:
+    x1: -3.8264135023285544
+    x2: -4.326818698882863
+    x3: -4.3249995431666095
+  objective_value_with_penalty: 52.06842139219604
+- decision_variables_values:
+    x1: 4.905537095540239
+    x2: 0.25980665660743263
+    x3: 4.050673070918003
+  objective_value_with_penalty: 40.53974602199918
+- decision_variables_values:
+    x1: 0.34542310539248167
+    x2: -0.3607401005290818
+    x3: 5.098710041726014
+  objective_value_with_penalty: 26.246294631466412
+- decision_variables_values:
+    x1: -4.648934398579932
+    x2: 2.4768684903233646
+    x3: -3.422880692954515
+  objective_value_with_penalty: 39.46358079885728
+- decision_variables_values:
+    x1: -4.548854145937493
+    x2: 2.8443252721683185
+    x3: -1.7845293300875698
+  objective_value_with_penalty: 31.966805224850887
+- decision_variables_values:
+    x1: -4.988545241653701
+    x2: -2.0637469779343074
+    x3: -3.226215633529754
+  objective_value_with_penalty: 39.55310253099056
+- decision_variables_values:
+    x1: -2.612359708719057
+    x2: -3.2962349065456884
+    x3: -4.035584942563997
+  objective_value_with_penalty: 33.97553363551823
+- decision_variables_values:
+    x1: 2.909996684384601
+    x2: 4.6690744521159795
+    x3: -4.7034067378001945
+  objective_value_with_penalty: 52.39037188371577
+- decision_variables_values:
+    x1: 4.846388932939337
+    x2: -3.6406652241128032
+    x3: 3.312048624490189
+  objective_value_with_penalty: 47.71159505436856
+- decision_variables_values:
+    x1: -0.6487151849033248
+    x2: -0.8292273599341913
+    x3: 3.078917456769605
+  objective_value_with_penalty: 10.588182111188196
+- decision_variables_values:
+    x1: 3.6838264015540885
+    x2: -1.3645902923379287
+    x3: 3.529553689610757
+  objective_value_with_penalty: 27.890432870574763
+- decision_variables_values:
+    x1: -3.6126207302822886
+    x2: -3.91813831625539
+    x3: -3.806121664815389
+  objective_value_with_penalty: 42.88939853355103
+- decision_variables_values:
+    x1: -0.05287433166428546
+    x2: 0.2138563074901061
+    x3: -0.7015120063268911
+  objective_value_with_penalty: 0.5406493102230279
+- decision_variables_values:
+    x1: -4.259834894289512
+    x2: 3.5346505865265803
+    x3: 1.7265392650684932
+  objective_value_with_penalty: 33.62088592926249
+- decision_variables_values:
+    x1: -2.656436941831122
+    x2: -4.760057755091358
+    x3: -3.5337362216233723
+  objective_value_with_penalty: 42.202098741743484
+- decision_variables_values:
+    x1: -1.2031021306656031
+    x2: -4.798227455809342
+    x3: -1.707293717421519
+  objective_value_with_penalty: 27.385293292041695
+- decision_variables_values:
+    x1: 4.906214111150827
+    x2: -3.0490357099850156
+    x3: 1.071581901593584
+  objective_value_with_penalty: 34.51584343704225
+- decision_variables_values:
+    x1: -3.949439594844258
+    x2: 1.1126427658366378
+    x3: -1.9307289316415939
+  objective_value_with_penalty: 20.563761245170074
+- decision_variables_values:
+    x1: 4.982190277101025
+    x2: -0.885931743930084
+    x3: -4.910887070687797
+  objective_value_with_penalty: 49.723906833191556
+- decision_variables_values:
+    x1: 4.867063254609586
+    x2: 4.1419111306566245
+    x3: -2.8038565995526947
+  objective_value_with_penalty: 48.70534436948329
+- decision_variables_values:
+    x1: 4.462627422503814
+    x2: 2.6400643362687095
+    x3: -4.179853746826856
+  objective_value_with_penalty: 44.356160556583475
+- decision_variables_values:
+    x1: 3.8610027069353334
+    x2: 0.06015118957004084
+    x3: 2.0489011501132817
+  objective_value_with_penalty: 19.108955991504192
+- decision_variables_values:
+    x1: 1.3697349658811984
+    x2: 3.048089404938046
+    x3: 3.004078877219164
+  objective_value_with_penalty: 20.19151279780749
+- decision_variables_values:
+    x1: 0.6785302280141874
+    x2: -4.498906387107665
+    x3: 0.29093756023123163
+  objective_value_with_penalty: 20.78520661424043
+- decision_variables_values:
+    x1: 2.231063431144812
+    x2: -1.5087954150568739
+    x3: -2.054343230520416
+  objective_value_with_penalty: 11.474433747073364
+- decision_variables_values:
+    x1: 2.1007814419661814
+    x2: -0.43063710768948127
+    x3: -0.9155249687034726
+  objective_value_with_penalty: 5.436916953748165
+- decision_variables_values:
+    x1: 4.672704962705679
+    x2: 1.5950070803484104
+    x3: -1.1055519966131646
+  objective_value_with_penalty: 25.6004644720712
+- decision_variables_values:
+    x1: -2.5133641648309184
+    x2: -3.936173120116273
+    x3: -0.9795363130591523
+  objective_value_with_penalty: 22.769949645183612
+- decision_variables_values:
+    x1: -2.9853967014129275
+    x2: -4.427469514698543
+    x3: 1.347944017090744
+  objective_value_with_penalty: 30.33203284160287
+- decision_variables_values:
+    x1: -1.4960138285266704
+    x2: -3.3755005104661393
+    x3: -0.13632889890280886
+  objective_value_with_penalty: 13.650646639976245
+- decision_variables_values:
+    x1: 2.1079247162967567
+    x2: 4.304343528286927
+    x3: 3.762417661776836
+  objective_value_with_penalty: 37.12650648073059
+- decision_variables_values:
+    x1: 3.2176423586712373
+    x2: 3.8488048485149298
+    x3: 1.9175358016566557
+  objective_value_with_penalty: 28.84346466090247
+- decision_variables_values:
+    x1: 2.939323461362817
+    x2: -3.200374818826497
+    x3: 1.594018630759571
+  objective_value_with_penalty: 21.422916786705244
+- decision_variables_values:
+    x1: 1.9446703636560132
+    x2: -3.3038685448840237
+    x3: -4.728085990072426
+  objective_value_with_penalty: 37.05208731467524
+- decision_variables_values:
+    x1: 2.0629238614524494
+    x2: -3.349680799230595
+    x3: 0.7660331149641824
+  objective_value_with_penalty: 16.06282304810573
+- decision_variables_values:
+    x1: 4.827599051994588
+    x2: 1.1251719859446796
+    x3: -4.953003859742473
+  objective_value_with_penalty: 49.10397183939757
+- decision_variables_values:
+    x1: 3.5860113271619065
+    x2: -1.2946602556476923
+    x3: 2.0131512505759455
+  objective_value_with_penalty: 18.58840037378274
+- decision_variables_values:
+    x1: -0.906761132181372
+    x2: -1.1857313130007765
+    x3: 3.754410259615544
+  objective_value_with_penalty: 16.323770894971847
+- decision_variables_values:
+    x1: -1.0676825303897468
+    x2: 1.3469639721527065
+    x3: 1.5913126296139124
+  objective_value_with_penalty: 5.486533813145595
+- decision_variables_values:
+    x1: -2.6548149271614387
+    x2: 1.2652470560082474
+    x3: -3.1884841798235652
+  objective_value_with_penalty: 18.81532377520189
+- decision_variables_values:
+    x1: 2.9188206340524703
+    x2: 1.9220987478376177
+    x3: 3.589281158214823
+  objective_value_with_penalty: 25.096916722925343
+- decision_variables_values:
+    x1: 3.0321477469171176
+    x2: 1.270105467487812
+    x3: -3.063773561695166
+  objective_value_with_penalty: 20.19379629501927
+- decision_variables_values:
+    x1: -2.164587557014761
+    x2: 2.424343553294846
+    x3: 0.06156294650057603
+  objective_value_with_penalty: 10.566670952767243
+- decision_variables_values:
+    x1: 1.3967574182913962
+    x2: -4.02915116392257
+    x3: -2.288932577559416
+  objective_value_with_penalty: 23.42420273190344
+- decision_variables_values:
+    x1: -2.3165795417434696
+    x2: -4.241465684582863
+    x3: 2.107997387900915
+  objective_value_with_penalty: 27.80022491411544
+- decision_variables_values:
+    x1: 4.16945952832284
+    x2: -0.8609392120614885
+    x3: 5.035016207439072
+  objective_value_with_penalty: 43.47699729436131
+- decision_variables_values:
+    x1: -0.014960193063187965
+    x2: 1.8965841452311603
+    x3: 4.677023767418452
+  objective_value_with_penalty: 25.471806548315783
+- decision_variables_values:
+    x1: 2.1317788960441373
+    x2: 0.46629374571293614
+    x3: 1.1851848175024164
+  objective_value_with_penalty: 6.1665741705483965
+- decision_variables_values:
+    x1: -2.433150737108881
+    x2: -0.6497145828546795
+    x3: -3.2979677645155756
+  objective_value_with_penalty: 17.218942924451383
+- decision_variables_values:
+    x1: 2.0934258707804405
+    x2: -2.792427694341809
+    x3: 4.462860804461726
+  objective_value_with_penalty: 32.09721086458072
+- decision_variables_values:
+    x1: -0.2005240306704943
+    x2: -3.0144354898003245
+    x3: -2.8199814342161313
+  objective_value_with_penalty: 17.079326498367735
+- decision_variables_values:
+    x1: 3.3695736958263156
+    x2: 2.3546075900747496
+    x3: 4.616744140069266
+  objective_value_with_penalty: 38.21253024970614
+- decision_variables_values:
+    x1: -1.9775597652821615
+    x2: -4.13664173104055
+    x3: -2.496161842994886
+  objective_value_with_penalty: 27.253371382672622
+- decision_variables_values:
+    x1: 4.360699867495245
+    x2: -3.0293826619863387
+    x3: -1.7116935044860622
+  objective_value_with_penalty: 31.12275730041626
+- decision_variables_values:
+    x1: 3.991579975117907
+    x2: -2.701685045301463
+    x3: -4.382198380403137
+  objective_value_with_penalty: 42.435475426975714
+- decision_variables_values:
+    x1: -1.5700879796167224
+    x2: 0.6739073613766937
+    x3: -0.7907120113405854
+  objective_value_with_penalty: 3.544552880332893
+- decision_variables_values:
+    x1: -1.0829771938937904
+    x2: -1.5098549188453614
+    x3: -1.6855749357777472
+  objective_value_with_penalty: 6.293664342577758
+- decision_variables_values:
+    x1: -2.793981429150272
+    x2: -1.5510410025411612
+    x3: 1.807544351785019
+  objective_value_with_penalty: 13.47927700167041
+- decision_variables_values:
+    x1: 0.05668042933571904
+    x2: -0.12006961117208714
+    x3: 2.3765617527089464
+  objective_value_with_penalty: 5.665675147035717
+- decision_variables_values:
+    x1: -2.1782774354270997
+    x2: -2.253489619385899
+    x3: 2.459989617966232
+  objective_value_with_penalty: 15.874656970872515
+- decision_variables_values:
+    x1: -0.02206559850936962
+    x2: -4.77223919237478
+    x3: -4.777261573603554
+  objective_value_with_penalty: 45.59698194250458
+- decision_variables_values:
+    x1: -3.785687871447707
+    x2: -4.3492429200859934
+    x3: -3.527031662034589
+  objective_value_with_penalty: 45.687298982938884
+- decision_variables_values:
+    x1: 1.0049097653049879
+    x2: -4.920310351940881
+    x3: -2.46753891569183
+  objective_value_with_penalty: 31.30804589627553
+- decision_variables_values:
+    x1: 3.634782642989971
+    x2: -1.1557722477555639
+    x3: -2.69417782413385
+  objective_value_with_penalty: 21.80604849851771
+- decision_variables_values:
+    x1: 0.29790322713364503
+    x2: 0.7680935549323973
+    x3: 4.206564830346999
+  objective_value_with_penalty: 18.373901713777606
+- decision_variables_values:
+    x1: -5.0283613075171845
+    x2: -3.7139004966584244
+    x3: -0.9915386703645268
+  objective_value_with_penalty: 40.06062327284387
+- decision_variables_values:
+    x1: -0.8180700161035972
+    x2: -1.7052609296165597
+    x3: 1.7510367894170873
+  objective_value_with_penalty: 6.643283227216575
+- decision_variables_values:
+    x1: -4.528286444202032
+    x2: 0.28921627428816876
+    x3: 3.220298534084386
+  objective_value_with_penalty: 30.95934682268306
+- decision_variables_values:
+    x1: -1.261154918496885
+    x2: -3.4767900793194517
+    x3: 1.1311411037248957
+  objective_value_with_penalty: 14.95806118063902
+- decision_variables_values:
+    x1: 0.37440342629413603
+    x2: -2.9107801709820866
+    x3: 5.103523717402829
+  objective_value_with_penalty: 34.65877346349648
+- decision_variables_values:
+    x1: 2.80441877848138
+    x2: 2.2920640920949236
+    x3: 0.7776129817393418
+  objective_value_with_penalty: 13.723004436739469
+- decision_variables_values:
+    x1: 1.584684108167644
+    x2: 2.1090110883828173
+    x3: 1.2210281781088135
+  objective_value_with_penalty: 8.450061305336485
+- decision_variables_values:
+    x1: 4.8138308581818885
+    x2: -4.618217858281156
+    x3: 0.7215666917510131
+  objective_value_with_penalty: 45.02156220837566
+- decision_variables_values:
+    x1: -4.118541099444787
+    x2: -2.7175502226995967
+    x3: -4.682369424418364
+  objective_value_with_penalty: 46.27204342743846
+- decision_variables_values:
+    x1: 0.41655386720582666
+    x2: -4.124320826446708
+    x3: -4.571944201649518
+  objective_value_with_penalty: 38.08621318674284
+- decision_variables_values:
+    x1: -4.277437882912591
+    x2: 2.6330205947659566
+    x3: 0.4866891462770129
+  objective_value_with_penalty: 25.466138619741265
+- decision_variables_values:
+    x1: -4.785425122937838
+    x2: 4.815381663836878
+    x3: -1.5649952662582236
+  objective_value_with_penalty: 48.537404359071694
+- decision_variables_values:
+    x1: -1.5296792473254062
+    x2: -5.073141249147212
+    x3: 0.13575158312699376
+  objective_value_with_penalty: 28.09510922581844
+- decision_variables_values:
+    x1: -0.1729246350401752
+    x2: -3.7076876288615654
+    x3: -2.941748636681983
+  objective_value_with_penalty: 22.430735524037182
+- decision_variables_values:
+    x1: 2.9591155969474565
+    x2: -3.9047358948294164
+    x3: 0.4342715577797662
+  objective_value_with_penalty: 24.19191931036345
+- decision_variables_values:
+    x1: 4.718858421110979
+    x2: -0.8023747001049681
+    x3: -0.9928853912087856
+  objective_value_with_penalty: 23.897251357934362
+- decision_variables_values:
+    x1: -2.7145723538091353
+    x2: -4.977953504079407
+    x3: -2.5777905229847566
+  objective_value_with_penalty: 38.79392813323134
+- decision_variables_values:
+    x1: 3.0786755169572944
+    x2: -3.6958260780101577
+    x3: 2.9740003458098885
+  objective_value_with_penalty: 31.982051394489545
+- decision_variables_values:
+    x1: -4.504827417799936
+    x2: 3.1627951131376113
+    x3: 1.9902118086094696
+  objective_value_with_penalty: 34.257686034977766
+- decision_variables_values:
+    x1: 4.7063096260026045
+    x2: -0.6460835135513738
+    x3: 0.09518299592160329
+  objective_value_with_penalty: 22.575834005000278
+- decision_variables_values:
+    x1: 0.5635365946536526
+    x2: 3.0788979100221043
+    x3: 4.453020281267919
+  objective_value_with_penalty: 29.62657545923573
+- decision_variables_values:
+    x1: -2.373319340520053
+    x2: 0.00955822837697351
+    x3: 0.07059784953398207
+  objective_value_with_penalty: 5.637720108175069
+- decision_variables_values:
+    x1: -1.0716521853588894
+    x2: 3.914262046110445
+    x3: 2.0398830302092863
+  objective_value_with_penalty: 20.631008548941033
+- decision_variables_values:
+    x1: 3.4840470448569745
+    x2: -4.952832786536883
+    x3: -0.6864021552963342
+  objective_value_with_penalty: 37.14028434096677
+- decision_variables_values:
+    x1: -0.011718176380752787
+    x2: -3.0594469939907025
+    x3: 2.536204161527378
+  objective_value_with_penalty: 15.792684773645226
+- decision_variables_values:
+    x1: -3.0331468122667675
+    x2: -5.033965112105135
+    x3: 4.154597204847337
+  objective_value_with_penalty: 51.80146226918103
+- decision_variables_values:
+    x1: 0.33055555251647206
+    x2: 4.909327911985735
+    x3: -3.181064938835807
+  objective_value_with_penalty: 34.32994166579214
+- decision_variables_values:
+    x1: -2.0259239621486587
+    x2: -1.6310129171183156
+    x3: 3.221681059195796
+  objective_value_with_penalty: 17.143799883395864
+- decision_variables_values:
+    x1: -1.6963687109400873
+    x2: 1.4075767688619854
+    x3: 0.33940388279054634
+  objective_value_with_penalty: 4.97413415934978
+- decision_variables_values:
+    x1: -0.12138686409351784
+    x2: 3.601204013729986
+    x3: 3.558346346567194
+  objective_value_with_penalty: 25.645233841407517
+- decision_variables_values:
+    x1: 2.2486650226685683
+    x2: -4.695204896595389
+    x3: -2.977500471293937
+  objective_value_with_penalty: 35.96695246174197
+- decision_variables_values:
+    x1: -4.945080354827986
+    x2: 2.7348608432901056
+    x3: -3.2316275528589973
+  objective_value_with_penalty: 42.37670018826458
+- decision_variables_values:
+    x1: 0.6578708345400877
+    x2: 0.6117938374913674
+    x3: -0.6672827331755311
+  objective_value_with_penalty: 1.2523519805250922
+- decision_variables_values:
+    x1: 4.3013721737003285
+    x2: -3.0856452397930116
+    x3: -3.067778419617657
+  objective_value_with_penalty: 37.43427355441257
+- decision_variables_values:
+    x1: 1.8828428320354034
+    x2: 4.474207238143189
+    x3: 5.047881908528569
+  objective_value_with_penalty: 49.04473930245004
+- decision_variables_values:
+    x1: -0.36117887478087596
+    x2: -0.9032841979949158
+    x3: -3.8678839596749786
+  objective_value_with_penalty: 15.90689884744629
+- decision_variables_values:
+    x1: -1.4583435436675427
+    x2: -2.2646720349694225
+    x3: -0.16233539480242154
+  objective_value_with_penalty: 7.281858097735009
+- decision_variables_values:
+    x1: -1.5219935087227032
+    x2: -2.126338726255058
+    x3: -4.73387425206942
+  objective_value_with_penalty: 29.247346053771835
+- decision_variables_values:
+    x1: 0.5519357441194144
+    x2: -2.768606767158478
+    x3: 1.7040256916951764
+  objective_value_with_penalty: 10.873520054749596
+- decision_variables_values:
+    x1: 1.9446390937342803
+    x2: 4.768109036870878
+    x3: -1.4003589399867655
+  objective_value_with_penalty: 28.477490153170272
+- decision_variables_values:
+    x1: 2.802309370346384
+    x2: -5.064957094705216
+    x3: -3.735631025566777
+  objective_value_with_penalty: 47.461667337512935
+- decision_variables_values:
+    x1: -2.1831973682753314
+    x2: -4.521440899287226
+    x3: -2.6975435128538097
+  objective_value_with_penalty: 32.48651955833129
+- decision_variables_values:
+    x1: -1.2588186313980838
+    x2: 3.40260613385657
+    x3: 3.728298272141177
+  objective_value_with_penalty: 27.062560854964183
+- decision_variables_values:
+    x1: -3.039640660221204
+    x2: 4.99450543052087
+    x3: 3.847640271502443
+  objective_value_with_penalty: 48.98883549765985
+- decision_variables_values:
+    x1: -3.458639585461955
+    x2: -1.1368223660905312
+    x3: 1.4020075075808078
+  objective_value_with_penalty: 15.22017792548107
+- decision_variables_values:
+    x1: 3.612006255438467
+    x2: -1.8658303951907338
+    x3: 1.6107715819257669
+  objective_value_with_penalty: 19.122497342083864
+- decision_variables_values:
+    x1: 1.1245554253105876
+    x2: -1.528675100884651
+    x3: -1.0624749470643708
+  objective_value_with_penalty: 4.730325481799612
+- decision_variables_values:
+    x1: 4.164709754638337
+    x2: -2.306540305689921
+    x3: 3.7598350608392286
+  objective_value_with_penalty: 36.8012952068678
+- decision_variables_values:
+    x1: -1.128425742379211
+    x2: -1.4985928258171488
+    x3: 2.75693912181924
+  objective_value_with_penalty: 11.119838435072143
+- decision_variables_values:
+    x1: -1.414475767393609
+    x2: 4.279428488338003
+    x3: -2.2120403153998085
+  objective_value_with_penalty: 25.20737224029671
+- decision_variables_values:
+    x1: 4.757878849185448
+    x2: 2.506501034339352
+    x3: -4.57446787637311
+  objective_value_with_penalty: 49.84571493064
+- decision_variables_values:
+    x1: -0.8645046505215488
+    x2: -3.6918670919950527
+    x3: 2.977891923132611
+  objective_value_with_penalty: 23.245091221587835
+- decision_variables_values:
+    x1: -4.99439482048057
+    x2: -4.842947399322863
+    x3: 1.6534949955811769
+  objective_value_with_penalty: 51.132164835863236
+- decision_variables_values:
+    x1: -3.470997326016313
+    x2: -2.8621137508235086
+    x3: 3.730439284770015
+  objective_value_with_penalty: 34.155694817220834
+- decision_variables_values:
+    x1: 3.12704787575212
+    x2: -0.3732545070926401
+    x3: 2.563749989608879
+  objective_value_with_penalty: 16.490561353530342
+- decision_variables_values:
+    x1: 3.186835519869258
+    x2: 3.6213835683450517
+    x3: 0.40120807765807065
+  objective_value_with_penalty: 23.43130750135799
+- decision_variables_values:
+    x1: 2.0831372751386255
+    x2: -1.7436230894758409
+    x3: 1.2646382878162772
+  objective_value_with_penalty: 8.978992384236138
+- decision_variables_values:
+    x1: -4.453891728702574
+    x2: -2.147145258698887
+    x3: -0.7456198525810205
+  objective_value_with_penalty: 25.00333325752126
+- decision_variables_values:
+    x1: -0.6170316388132964
+    x2: 3.2678458347873294
+    x3: -1.4828566775447678
+  objective_value_with_penalty: 13.258408369372628
+- decision_variables_values:
+    x1: 2.460066144038648
+    x2: 2.5833006783276593
+    x3: -3.6707505126896423
+  objective_value_with_penalty: 26.199777154104595
+- decision_variables_values:
+    x1: 2.2224358201195082
+    x2: 3.397297853165763
+    x3: 4.187167914244726
+  objective_value_with_penalty: 34.0132288197555
+- decision_variables_values:
+    x1: 2.919683602718977
+    x2: -1.0353203987204722
+    x3: 1.547296949948736
+  objective_value_with_penalty: 11.990568519313445
+- decision_variables_values:
+    x1: -4.980539088136113
+    x2: 1.918909388476778
+    x3: 1.5165917916677722
+  objective_value_with_penalty: 30.78803351219009
+- decision_variables_values:
+    x1: -1.8658649963312293
+    x2: 3.8066108755045507
+    x3: 4.786746040985954
+  objective_value_with_penalty: 40.884676202938365
+- decision_variables_values:
+    x1: -1.3820379099680382
+    x2: -4.718885287597264
+    x3: 1.9078181180680156
+  objective_value_with_penalty: 27.817677113719327
+- decision_variables_values:
+    x1: 2.075997061230461
+    x2: 3.114025534939569
+    x3: -0.9168719375725338
+  objective_value_with_penalty: 14.84757298040119
+- decision_variables_values:
+    x1: -0.025792608075708934
+    x2: 4.977079996874601
+    x3: 2.4691364844890753
+  objective_value_with_penalty: 30.868625532955697
+- decision_variables_values:
+    x1: -2.5868298899835382
+    x2: 4.040341590062748
+    x3: -4.090140580879043
+  objective_value_with_penalty: 39.745299015456574
+- decision_variables_values:
+    x1: -3.646733811895502
+    x2: 1.5331421203784439
+    x3: -2.760970742817623
+  objective_value_with_penalty: 23.272151698795305
+- decision_variables_values:
+    x1: -3.3767687778032838
+    x2: -0.4270336906412915
+    x3: -4.653169375219976
+  objective_value_with_penalty: 33.23691038617487
+- decision_variables_values:
+    x1: 4.61428513547028
+    x2: 0.7475222595701787
+    x3: 1.8721797101785436
+  objective_value_with_penalty: 25.3554737071791
+- decision_variables_values:
+    x1: -2.9040586809501954
+    x2: -2.338745598434091
+    x3: -3.738303249528009
+  objective_value_with_penalty: 27.878198982028696
+- decision_variables_values:
+    x1: 1.605597988550235
+    x2: -3.4385754904313877
+    x3: 2.3451996788185276
+  objective_value_with_penalty: 19.901707837762544
+- decision_variables_values:
+    x1: 4.695668139304577
+    x2: -4.612537072248614
+    x3: -0.7216939284988761
+  objective_value_with_penalty: 43.84563964378007
+- decision_variables_values:
+    x1: -4.471286135015901
+    x2: -0.9671055019331289
+    x3: 2.91909871720127
+  objective_value_with_penalty: 29.448830073820858
+- decision_variables_values:
+    x1: -2.0721812607008863
+    x2: -0.7668755300347128
+    x3: 3.724835529837006
+  objective_value_with_penalty: 18.756432980102065
+- decision_variables_values:
+    x1: 2.9320715258202688
+    x2: 4.124185731596191
+    x3: 0.08436952229792638
+  objective_value_with_penalty: 25.613069597520393
+- decision_variables_values:
+    x1: -4.588787166848951
+    x2: 0.41015452250982687
+    x3: -2.1169943735476364
+  objective_value_with_penalty: 25.706859572605232
+- decision_variables_values:
+    x1: -3.6747745204509568
+    x2: -0.8071434921942213
+    x3: 2.8019248109125625
+  objective_value_with_penalty: 22.006231039154443
+- decision_variables_values:
+    x1: -1.1413986141975316
+    x2: -4.117844025639073
+    x3: 0.9850387134422753
+  objective_value_with_penalty: 19.229731482963466
+- decision_variables_values:
+    x1: -0.12907433045135264
+    x2: 2.3822827313219337
+    x3: 0.9076725040755722
+  objective_value_with_penalty: 6.5158005693909775
+- decision_variables_values:
+    x1: -4.2468226880177795
+    x2: -3.5624888000333352
+    x3: 5.07987166726907
+  objective_value_with_penalty: 56.53192554974855
