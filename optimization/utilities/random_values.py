@@ -5,18 +5,19 @@ Note: It uses built-in random package (it could have been used directly), but th
 abstraction layer that enables to easily change this implementation.
 """
 
-__all__ = ["generate_random_int", "generate_random_float", "choose_random_value", "choose_random_values",
+__all__ = ["generate_random_int", "generate_random_float",
+           "choose_random_value", "choose_random_values", "choose_random_value_with_weights",
            "shuffle", "shuffled"]
 
 
-from typing import Any, Set, List, Iterable
+from typing import Any, List, Iterable, Sequence, Set, Union
 from random import randint as generate_random_int
 from random import uniform as generate_random_float
-from random import sample, shuffle
+from random import sample, shuffle, choices
 from copy import deepcopy
 
 
-def choose_random_value(values_pool: Set[Any]) -> Any:
+def choose_random_value(values_pool: Union[Sequence[Any], Set[Any]]) -> Any:
     """
     Picks randomly chosen value from 'values_pool'.
 
@@ -27,7 +28,19 @@ def choose_random_value(values_pool: Set[Any]) -> Any:
     return sample(population=values_pool, k=1)[0]
 
 
-def choose_random_values(values_pool: Set[Any], values_number: int) -> List[Any]:
+def choose_random_value_with_weights(values_pool: Sequence[Any], weights: Sequence[Union[float, int]]) -> Any:
+    """
+    Picks randomly chosen value from 'values_pool' according to weights values.
+
+    :param values_pool: Sequence with possible values to pick.
+    :param weights: Sequence with weights to use.
+
+    :return: Randomly chosen value with given weights.
+    """
+    return choices(population=values_pool, weights=weights, k=1)[0]
+
+
+def choose_random_values(values_pool: Union[Sequence[Any], Set[Any]], values_number: int) -> List[Any]:
     """
     Picks randomly chosen values from 'values_pool'.
 

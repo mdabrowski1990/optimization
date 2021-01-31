@@ -41,8 +41,6 @@ class OptimizationProblem:
 
         :raise TypeError: For some parameter a value has incorrect type.
         :raise ValueError: For some parameter a value is incorrect.
-
-        :return: None
         """
         # check: decision_variables
         if not isinstance(decision_variables, OrderedDict):
@@ -80,6 +78,7 @@ class OptimizationProblem:
         self.constraints = constraints
         self.penalty_function = penalty_function
         self.objective_function = objective_function
+        self.variables_number = len(self.decision_variables)
 
     def get_log_data(self) -> Dict[str, Union[str, dict, list]]:
         """

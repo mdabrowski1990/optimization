@@ -15,5 +15,5 @@ Provides:
 """
 
 from .problem import OptimizationType, OptimizationProblem
-from .decision_variables import IntegerVariable, DiscreteVariable, FloatVariable, ChoiceVariable
+from .decision_variables import IntegerVariable, DiscreteVariable, FloatVariable, ChoiceVariable, DecisionVariable
 from .solution import AbstractSolution
