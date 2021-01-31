@@ -1,4 +1,4 @@
-# optimization
+# optimization - WORK IN PROGRESS, soon to be officially released!
 Optimization is a process of searching a better solution in order to find the best possible solution.
 
 This package provides tools for defining optimization problems and effective search using some of the most popular 
