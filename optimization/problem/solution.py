@@ -19,7 +19,8 @@ class AbstractSolution(ABC):
         """Optimization problem for which this class is able to create solutions (as objects)."""
         ...
 
-    def __init__(self, **decision_variables_values: Any) -> None:
+    def __init__(self_solution,  # noqa
+                 **decision_variables_values: Any) -> None:
         """
         Creates object that carries all information about single solution of 'optimization_problem'.
 
@@ -32,7 +33,7 @@ class AbstractSolution(ABC):
         """
         # find values for all variables
         values_to_set = OrderedDict()
-        for variable_name, variable_definition in self.optimization_problem.decision_variables.items():  # type: ignore
+        for variable_name, variable_definition in self_solution.optimization_problem.decision_variables.items():  # noqa
             if variable_name in decision_variables_values:
                 value = decision_variables_values.pop(variable_name)
                 if not variable_definition.is_proper_value(value):
@@ -46,8 +47,8 @@ class AbstractSolution(ABC):
             raise ValueError(f"Values for unknown decision variables were provided: "
                              f"{list(decision_variables_values.keys())}.")
         # set attributes
-        self.decision_variables_values = values_to_set
-        self._objective_value_with_penalty = None
+        self_solution.decision_variables_values = values_to_set
+        self_solution._objective_value_with_penalty = None
 
     def __eq__(self, other: object) -> bool:
         """
@@ -59,7 +60,7 @@ class AbstractSolution(ABC):
 
         :return: True if equal, False otherwise.
         """
-        if isinstance(other, self.__class__):
+        if isinstance(other, AbstractSolution) and other.optimization_problem == self.optimization_problem:
             return self.get_objective_value_with_penalty() == other.get_objective_value_with_penalty()
         raise TypeError(f"Cannot compare '{self}' with '{other}'.")
 
@@ -85,7 +86,7 @@ class AbstractSolution(ABC):
 
         :return: True if less or equal than other, False otherwise.
         """
-        if isinstance(other, self.__class__):
+        if isinstance(other, AbstractSolution) and other.optimization_problem == self.optimization_problem:
             if self.optimization_problem.optimization_type == OptimizationType.Maximize:
                 return self.get_objective_value_with_penalty() <= other.get_objective_value_with_penalty()
             return self.get_objective_value_with_penalty() >= other.get_objective_value_with_penalty()
@@ -101,7 +102,7 @@ class AbstractSolution(ABC):
 
         :return: True if less than other, False otherwise.
         """
-        if isinstance(other, self.__class__):
+        if isinstance(other, AbstractSolution) and other.optimization_problem == self.optimization_problem:
             if self.optimization_problem.optimization_type == OptimizationType.Maximize:
                 return self.get_objective_value_with_penalty() < other.get_objective_value_with_penalty()
             return self.get_objective_value_with_penalty() > other.get_objective_value_with_penalty()
@@ -144,7 +145,7 @@ class AbstractSolution(ABC):
 
         :return: Dictionary with constraints values.
             Keys: Names of constraint functions.
-            Values: Calculated of the corresponding constraint.
+            Values: Calculated value of the corresponding constraint.
         """
         constraints_values = {
             constraint_name: abs(constraint_function(**self.decision_variables_values))
@@ -154,7 +155,7 @@ class AbstractSolution(ABC):
 
     def _calculate_penalty(self) -> Union[float, int]:
         """:return: Value of solution penalty."""
-        return self.optimization_problem.penalty_function(**self._calculate_constraints())  # TODO: consider abs here
+        return self.optimization_problem.penalty_function(**self._calculate_constraints())
 
     def get_objective_value_with_penalty(self):
         """:return: Value of solution objective with penalty."""

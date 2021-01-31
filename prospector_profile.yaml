@@ -33,3 +33,6 @@ mypy:
   run: true
   options:
     ignore-missing-imports: true
+
+vulture:
+  run: false  # due to issue

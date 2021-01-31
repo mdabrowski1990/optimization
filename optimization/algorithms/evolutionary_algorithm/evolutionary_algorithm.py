@@ -14,6 +14,7 @@ from .selection import SelectionType, SELECTION_FUNCTIONS, SELECTION_ADDITIONAL_
 from .crossover import CrossoverType, CROSSOVER_FUNCTIONS, CROSSOVER_ADDITIONAL_PARAMS, check_crossover_parameters, \
     ChildrenValuesTyping
 from .mutation import MutationType, MUTATION_FUNCTIONS, MUTATION_ADDITIONAL_PARAMS, check_mutation_parameters
+from .limits import MIN_EA_POPULATION_SIZE, MAX_EA_POPULATION_SIZE, MIN_EA_MUTATION_CHANCE, MAX_EA_MUTATION_CHANCE
 
 
 class EvolutionaryAlgorithm(AbstractOptimizationAlgorithm):
@@ -24,12 +25,13 @@ class EvolutionaryAlgorithm(AbstractOptimizationAlgorithm):
     for given optimization problem.
     """
 
-    MIN_POPULATION_SIZE = 10
-    MAX_POPULATION_SIZE = 1000
-    MIN_MUTATION_CHANCE = 0.001
-    MAX_MUTATION_CHANCE = 0.2
+    MIN_POPULATION_SIZE: int = MIN_EA_POPULATION_SIZE
+    MAX_POPULATION_SIZE: int = MAX_EA_POPULATION_SIZE
+    MIN_MUTATION_CHANCE: float = MIN_EA_MUTATION_CHANCE
+    MAX_MUTATION_CHANCE: float = MAX_EA_MUTATION_CHANCE
 
-    def __init__(self, problem: OptimizationProblem,  # pylint: disable=too-many-arguments
+    def __init__(self_ea,  # noqa
+                 problem: OptimizationProblem,
                  stop_conditions: StopConditions,
                  population_size: int,
                  selection_type: Union[SelectionType, str],
@@ -53,38 +55,46 @@ class EvolutionaryAlgorithm(AbstractOptimizationAlgorithm):
             When True, then only better adopted children will replace their parents.
             When False, then children will always replace their parents.
         :param logger: Logger used for optimization process recording.
-        :param other_params: Parameter related to selected selection, crossover and mutation type.
+        :param other_params: Parameter related to selected selection, crossover and mutation type such as:
+            - :param tournament_group_size: int - determines group size used in tournament
+                and double tournament selections
+            - :param roulette_bias: float - bias towards promoting better adopted individuals in roulette selection
+            - :param ranking_bias: float - represents selection pressure (the higher the value the higher the pressure)
+                in ranking selection
+            - :param crossover_points_number: int - number of crossover points to use in multipoint crossover
+            - :param crossover_pattern: int - pattern of crossover to be used in adaptive crossover
+            - :param mutation_points_number: int - number of mutation points to be used in multipoint mutation.
 
         :raise ValueError: Unexpected value of 'other_params'.
         """
-        self._check_init_input(population_size=population_size, mutation_chance=mutation_chance,
-                               apply_elitism=apply_elitism)
+        self_ea._check_init_input(population_size=population_size, mutation_chance=mutation_chance,
+                                  apply_elitism=apply_elitism)
         super().__init__(problem=problem, stop_conditions=stop_conditions, logger=logger)
-        self.population_size = population_size
-        self._population: list = []
-        self.mutation_chance = mutation_chance
-        self.apply_elitism = apply_elitism
-        self.selection_type = selection_type.value if isinstance(selection_type, SelectionType) \
+        self_ea.population_size = population_size
+        self_ea._population: list = []
+        self_ea.mutation_chance = mutation_chance
+        self_ea.apply_elitism = apply_elitism
+        self_ea.selection_type = selection_type.value if isinstance(selection_type, SelectionType) \
             else getattr(SelectionType, selection_type).value
-        self.crossover_type = crossover_type.value if isinstance(crossover_type, CrossoverType) \
+        self_ea.crossover_type = crossover_type.value if isinstance(crossover_type, CrossoverType) \
             else getattr(CrossoverType, crossover_type).value
-        self.mutation_type = mutation_type.value if isinstance(mutation_type, MutationType) \
+        self_ea.mutation_type = mutation_type.value if isinstance(mutation_type, MutationType) \
             else getattr(MutationType, mutation_type).value
-        self.selection_function = SELECTION_FUNCTIONS[self.selection_type]
-        self.crossover_function = CROSSOVER_FUNCTIONS[self.crossover_type]
-        self.mutation_function = MUTATION_FUNCTIONS[self.mutation_type]
-        self.selection_params: Dict[str, Any] = {}
-        self.crossover_params: Dict[str, Any] = {}
-        self.mutation_params: Dict[str, Any] = {}
-        for selection_param in SELECTION_ADDITIONAL_PARAMS[self.selection_type]:
-            self.selection_params[selection_param] = other_params.pop(selection_param)
-        for crossover_param in CROSSOVER_ADDITIONAL_PARAMS[self.crossover_type]:
-            self.crossover_params[crossover_param] = other_params.pop(crossover_param)
-        for mutation_param in MUTATION_ADDITIONAL_PARAMS[self.mutation_type]:
-            self.mutation_params[mutation_param] = other_params.pop(mutation_param)
+        self_ea.selection_function = SELECTION_FUNCTIONS[self_ea.selection_type]
+        self_ea.crossover_function = CROSSOVER_FUNCTIONS[self_ea.crossover_type]
+        self_ea.mutation_function = MUTATION_FUNCTIONS[self_ea.mutation_type]
+        self_ea.selection_params: Dict[str, Any] = {}
+        self_ea.crossover_params: Dict[str, Any] = {}
+        self_ea.mutation_params: Dict[str, Any] = {}
+        for selection_param in SELECTION_ADDITIONAL_PARAMS[self_ea.selection_type]:
+            self_ea.selection_params[selection_param] = other_params.pop(selection_param)
+        for crossover_param in CROSSOVER_ADDITIONAL_PARAMS[self_ea.crossover_type]:
+            self_ea.crossover_params[crossover_param] = other_params.pop(crossover_param)
+        for mutation_param in MUTATION_ADDITIONAL_PARAMS[self_ea.mutation_type]:
+            self_ea.mutation_params[mutation_param] = other_params.pop(mutation_param)
         if other_params:
             raise ValueError(f"Unexpected 'other_params' received: {other_params}.")
-        self._check_additional_parameters()
+        self_ea._check_additional_parameters()
 
     def _check_init_input(self, population_size: int, mutation_chance: float, apply_elitism: bool) -> None:
         """
@@ -123,6 +133,17 @@ class EvolutionaryAlgorithm(AbstractOptimizationAlgorithm):
         check_crossover_parameters(variables_number=self.problem.variables_number, **self.crossover_params)
         check_mutation_parameters(variables_number=self.problem.variables_number, **self.mutation_params)
 
+    def _log_iteration(self, iteration_index: int) -> None:
+        """
+        Logs population data in given algorithm's iteration.
+
+        :param iteration_index: Index number (counted from 0) of optimization algorithm iteration.
+
+        :return: None
+        """
+        if self.logger is not None:
+            self.logger.log_iteration(iteration=iteration_index, solutions=self._population)
+
     def _generate_random_population(self) -> None:
         """
         Creates initial random population of solutions. To be called as initial iteration.
@@ -138,16 +159,20 @@ class EvolutionaryAlgorithm(AbstractOptimizationAlgorithm):
 
         :return: Parents pair generator.
         """
-        return self.selection_function(population_size=self.population_size, population=self._population,
+        return self.selection_function(population_size=self.population_size,
+                                       population=self._population,
                                        **self.selection_params)
 
     def _perform_crossover(self, parents: Tuple[AbstractSolution, AbstractSolution]) -> ChildrenValuesTyping:
         """
         Performs crossover of two parents.
 
+        :param parents: Solution objects with values of selected parents.
+
         :return: Values of children decision variables (genes).
         """
-        return self.crossover_function(parents=parents, variables_number=self.problem.variables_number,
+        return self.crossover_function(parents=parents,
+                                       variables_number=self.problem.variables_number,
                                        **self.crossover_params)
 
     def _perform_mutation(self, individual_values: OrderedDict[str, Any]) -> None:  # type: ignore
@@ -160,11 +185,12 @@ class EvolutionaryAlgorithm(AbstractOptimizationAlgorithm):
         """
         decision_variables_list = list(self.problem.decision_variables.items())  # type: ignore
         for mutation_point in self.mutation_function(variables_number=self.problem.variables_number,
-                                                     mutation_chance=self.mutation_chance, **self.mutation_params):
+                                                     mutation_chance=self.mutation_chance,
+                                                     **self.mutation_params):
             name, var = decision_variables_list[mutation_point]
             individual_values[name] = var.generate_random_value()  # type: ignore
 
-    def _evolution_iteration(self) -> None:
+    def _evolution_iteration(self, **_: Any) -> None:
         """
         Perform iteration according to evolutionary algorithm. To be called as following iteration.
 
@@ -199,8 +225,7 @@ class EvolutionaryAlgorithm(AbstractOptimizationAlgorithm):
             self._evolution_iteration()
         self._best_solution = max(*self._population) if self._best_solution is None \
             else max(*self._population, self._best_solution)
-        if self.logger is not None:
-            self.logger.log_iteration(iteration=iteration_index, solutions=self._population)
+        self._log_iteration(iteration_index=iteration_index)
 
     def get_log_data(self) -> Dict[str, Any]:
         """

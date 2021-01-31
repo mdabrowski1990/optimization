@@ -14,4 +14,5 @@ from .problem import OptimizationProblem, OptimizationType, IntegerVariable, Dis
     ChoiceVariable
 from .stop_conditions import StopConditions
 from .logging import AbstractLogger, Logger, LoggingFormat, LoggingVerbosity
-from .algorithms import RandomAlgorithm, EvolutionaryAlgorithm, SelectionType, CrossoverType, MutationType
+from .algorithms import RandomAlgorithm, EvolutionaryAlgorithm, SelectionType, CrossoverType, MutationType, \
+    AdaptationType, AdaptiveEvolutionaryAlgorithm, EvolutionaryAlgorithmAdaptationProblem

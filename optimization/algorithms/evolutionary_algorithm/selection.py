@@ -5,8 +5,8 @@ Code is basing on  information from:
 'Introduction to Evolutionary Computing. Second edition.' Eiben, A.E., Smith, James E.
 """
 
-__all__ = ["SelectionType", "SELECTION_FUNCTIONS", "SELECTION_ADDITIONAL_PARAMS", "check_selection_parameters",
-           "SelectionOutput"]
+__all__ = ["SelectionType", "SELECTION_FUNCTIONS", "SELECTION_ADDITIONAL_PARAMS", "SELECTION_ADDITIONAL_PARAMS_LIMITS",
+           "check_selection_parameters", "SelectionOutput"]
 
 
 from typing import List, Iterator, Union, Tuple, Dict, Callable, Any
@@ -14,6 +14,8 @@ from enum import Enum
 
 from ...problem import AbstractSolution
 from ...utilities import choose_random_values, choose_random_value_with_weights
+from .limits import MIN_TOURNAMENT_GROUP_SIZE, MAX_TOURNAMENT_GROUP_SIZE, MIN_ROULETTE_BIAS, MAX_ROULETTE_BIAS, \
+    MIN_RANKING_BIAS, MAX_RANKING_BIAS
 
 
 # selection utilities
@@ -89,7 +91,7 @@ def check_tournament_group_size(tournament_group_size: int) -> None:
     """
     if not isinstance(tournament_group_size, int):
         raise TypeError(f"Parameter 'tournament_group_size' is not int type. Actual value: {tournament_group_size}.")
-    if not 3 <= tournament_group_size <= 8:
+    if not MIN_TOURNAMENT_GROUP_SIZE <= tournament_group_size <= MAX_TOURNAMENT_GROUP_SIZE:
         raise ValueError(f"Parameter 'tournament_group_size' has invalid value. "
                          f"Expected value: 3 <= tournament_group_size <= 8. Actual value: {tournament_group_size}.")
 
@@ -105,7 +107,7 @@ def check_roulette_bias(roulette_bias: Union[float, int]) -> None:
     """
     if not isinstance(roulette_bias, (int, float)):
         raise TypeError(f"Parameter 'roulette_bias' is not int nor float type. Actual value: {roulette_bias}.")
-    if not 1 < roulette_bias <= 100:
+    if not MIN_ROULETTE_BIAS <= roulette_bias <= MAX_ROULETTE_BIAS:
         raise ValueError(f"Parameter 'roulette_bias' has invalid value. Expected value: 1 < roulette_bias <= 100. "
                          f"Actual value: {roulette_bias}.")
 
@@ -122,7 +124,7 @@ def check_ranking_bias(ranking_bias: float) -> None:
     """
     if not isinstance(ranking_bias, float):
         raise TypeError(f"Parameter 'ranking_bias' is not float type. Actual value: {ranking_bias}.")
-    if not 1 < ranking_bias <= 2:
+    if not MIN_RANKING_BIAS <= ranking_bias <= MAX_RANKING_BIAS:
         raise ValueError(f"Parameter 'ranking_bias' has invalid value. Expected value: 1 < ranking_bias <= 2. "
                          f"Actual value: {ranking_bias}.")
 
@@ -293,6 +295,13 @@ SELECTION_ADDITIONAL_PARAMS: Dict[str, Tuple[str, ...]] = {
     SelectionType.DoubleTournament.value: ("tournament_group_size", ),
     SelectionType.Roulette.value: ("roulette_bias", ),
     SelectionType.Ranking.value: ("ranking_bias", ),
+}
+
+SELECTION_ADDITIONAL_PARAMS_LIMITS: Dict[str, Tuple[Union[float, int], Union[float, int]]] = {
+    # parameter name: (min value, max value)
+    "tournament_group_size": (MIN_TOURNAMENT_GROUP_SIZE, MAX_TOURNAMENT_GROUP_SIZE),
+    "roulette_bias": (MIN_ROULETTE_BIAS, MAX_ROULETTE_BIAS),
+    "ranking_bias": (MIN_RANKING_BIAS, MAX_RANKING_BIAS),
 }
 
 

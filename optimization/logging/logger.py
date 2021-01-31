@@ -14,7 +14,7 @@ __all__ = ["AbstractLogger", "LoggingVerbosity", "LoggingFormat", "Logger"]
 from typing import Iterable, Optional
 from abc import ABC, abstractmethod
 from enum import IntEnum, Enum
-from os import path, mkdir
+from os import path, mkdir, makedirs
 from datetime import datetime, timedelta
 
 from yaml import dump as yaml_dump
@@ -115,7 +115,7 @@ class AbstractLogger(ABC):
     """
 
     @abstractmethod
-    def log_at_start(self, algorithm, stop_conditions, problem):
+    def log_at_start(self, algorithm, stop_conditions, problem):  # TODO: adaptation problem should also be logged
         """
         Logging method that will be called before the start of the optimization process.
 
@@ -136,7 +136,8 @@ class AbstractLogger(ABC):
         ...
 
     @abstractmethod
-    def log_lower_level_iteration(self, upper_iteration: int,
+    def log_lower_level_iteration(self,
+                                  upper_iteration: int,
                                   lower_algorithm_index: int,
                                   lower_iteration: int,
                                   solutions: Iterable):
@@ -162,13 +163,29 @@ class AbstractLogger(ABC):
         """
         ...
 
+    @abstractmethod
+    def log_lower_level_at_end(self,
+                               upper_iteration: int,
+                               lower_algorithm_index: int,
+                               best_solution,
+                               optimization_time: timedelta) -> None:
+        """
+        Logging method that will be called at the end of lower level optimization process.
+
+        :param upper_iteration: Upper algorithm iteration.
+        :param lower_algorithm_index: Lower algorithm index.
+        :param best_solution: The best solution found by the optimization algorithm.
+        :param optimization_time: Optimization process duration time.
+        """
+
 
 class Logger(AbstractLogger):
     """Build-in logger for reporting optimization data."""
 
     LOG_DIRECTORY_PATTERN = "{}_%Y-%m-%d_%H-%M-%S"
 
-    def __init__(self, logs_dir: str,
+    def __init__(self,
+                 logs_dir: str,
                  verbosity: LoggingVerbosity = LoggingVerbosity.BestSolution,
                  log_format: LoggingFormat = LoggingFormat.YAML) -> None:
         """
@@ -181,7 +198,7 @@ class Logger(AbstractLogger):
         if not isinstance(logs_dir, str):
             raise TypeError(f"Parameter 'logs_dir' is not str type. Actual value: {logs_dir}.")
         if not path.isdir(logs_dir):
-            raise ValueError(f"Directory '{logs_dir}' is not a valid path to existing directory.")
+            makedirs(logs_dir)
         if isinstance(verbosity, LoggingVerbosity):
             pass
         elif isinstance(verbosity, str):
@@ -248,7 +265,7 @@ class Logger(AbstractLogger):
         :param problem: Optimization problem to solve.
         """
         # prepare separate directory for this optimization process logging
-        _top_level_dir_name = datetime.now().strftime(self.LOG_DIRECTORY_PATTERN)
+        _top_level_dir_name = datetime.now().strftime(self.LOG_DIRECTORY_PATTERN.format(algorithm.__class__.__name__))
         self.optimization_process_dir = path.join(self.main_dir, _top_level_dir_name)
         mkdir(self.optimization_process_dir)
         # create log files and dump data according to verbosity level
@@ -280,7 +297,8 @@ class Logger(AbstractLogger):
                 with open(file_path, mode) as json_file:
                     json_dump(data_to_log, json_file)
 
-    def log_lower_level_iteration(self, upper_iteration: int,
+    def log_lower_level_iteration(self,
+                                  upper_iteration: int,
                                   lower_algorithm_index: int,
                                   lower_iteration: int,
                                   solutions: Iterable) -> None:
@@ -308,12 +326,12 @@ class Logger(AbstractLogger):
             data_to_log = {f"Iteration {lower_iteration}": [solution.get_log_data() for solution in solutions]}
             if self.log_format == LoggingFormat.YAML:
                 file_path = path.join(self.optimization_process_dir,  # type: ignore
-                                      f"solutions_iter_{upper_iteration}_alg_{lower_algorithm_index}.yaml")
+                                      f"iter_{upper_iteration}_alg_{lower_algorithm_index}_solutions.yaml")
                 with open(file_path, mode) as yaml_file:
                     yaml_dump(data_to_log, yaml_file, YamlDumper)
             elif self.log_format == LoggingFormat.JSON:
                 file_path = path.join(self.optimization_process_dir,  # type: ignore
-                                      f"solutions_iter_{upper_iteration}_alg_{lower_algorithm_index}.json")
+                                      f"iter_{upper_iteration}_alg_{lower_algorithm_index}_solutions.json")
                 with open(file_path, mode) as json_file:
                     json_dump(data_to_log, json_file)
 
@@ -338,5 +356,37 @@ class Logger(AbstractLogger):
                     yaml_dump(log_data, yaml_file, YamlDumper)
             elif self.log_format == LoggingFormat.JSON:
                 file_path = path.join(self.optimization_process_dir, "best_solution.json")  # type: ignore
+                with open(file_path, "w") as json_file:
+                    json_dump(log_data, json_file)
+
+    def log_lower_level_at_end(self,
+                               upper_iteration: int,
+                               lower_algorithm_index: int,
+                               best_solution,
+                               optimization_time: timedelta) -> None:
+        """
+        Logging method that will be called at the end of optimization process.
+
+        :param upper_iteration: Upper algorithm iteration.
+        :param lower_algorithm_index: Lower algorithm index.
+        :param best_solution: The best solution found by the optimization algorithm.
+        :param optimization_time: Optimization process duration time.
+        """
+        # assess data to log
+        log_data = {}
+        if self.verbosity >= LoggingVerbosity.OptimizationTime:
+            log_data["optimization_duration"] = str(optimization_time)
+        if self.verbosity >= LoggingVerbosity.BestSolution:
+            log_data["best_solution"] = best_solution.get_log_data()
+        # log to file
+        if log_data:
+            if self.log_format == LoggingFormat.YAML:
+                file_path = path.join(self.optimization_process_dir,  # type: ignore
+                                      f"iter_{upper_iteration}_alg_{lower_algorithm_index}_best_solution.yaml")
+                with open(file_path, "w") as yaml_file:
+                    yaml_dump(log_data, yaml_file, YamlDumper)
+            elif self.log_format == LoggingFormat.JSON:
+                file_path = path.join(self.optimization_process_dir,  # type: ignore
+                                      f"iter_{upper_iteration}_alg_{lower_algorithm_index}_best_solution.json")
                 with open(file_path, "w") as json_file:
                     json_dump(log_data, json_file)
