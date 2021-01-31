@@ -1,8 +1,7 @@
 # optimization
 Optimization is a process of searching a better solution in order to find the best possible solution.
 
-This package provides tools for defining optimization problems and effective search using some of the most popular 
-(mostly heuristic) algorithms.
+This package provides tools for defining optimization problems and search using some of the algorithms.
 
 
 ### Optimization problem definition
