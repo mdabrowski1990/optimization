@@ -60,7 +60,7 @@ class AbstractSolution(ABC):
 
         :return: True if equal, False otherwise.
         """
-        if isinstance(other, self.__class__):
+        if isinstance(other, AbstractSolution) and other.optimization_problem == self.optimization_problem:
             return self.get_objective_value_with_penalty() == other.get_objective_value_with_penalty()
         raise TypeError(f"Cannot compare '{self}' with '{other}'.")
 
@@ -86,7 +86,7 @@ class AbstractSolution(ABC):
 
         :return: True if less or equal than other, False otherwise.
         """
-        if isinstance(other, self.__class__):
+        if isinstance(other, AbstractSolution) and other.optimization_problem == self.optimization_problem:
             if self.optimization_problem.optimization_type == OptimizationType.Maximize:
                 return self.get_objective_value_with_penalty() <= other.get_objective_value_with_penalty()
             return self.get_objective_value_with_penalty() >= other.get_objective_value_with_penalty()
@@ -102,7 +102,7 @@ class AbstractSolution(ABC):
 
         :return: True if less than other, False otherwise.
         """
-        if isinstance(other, self.__class__):
+        if isinstance(other, AbstractSolution) and other.optimization_problem == self.optimization_problem:
             if self.optimization_problem.optimization_type == OptimizationType.Maximize:
                 return self.get_objective_value_with_penalty() < other.get_objective_value_with_penalty()
             return self.get_objective_value_with_penalty() > other.get_objective_value_with_penalty()

@@ -2,7 +2,7 @@ import pytest
 from mock import Mock, patch
 from datetime import timedelta
 
-from optimization.stop_conditions import StopConditions
+from optimization.stop_conditions import StopConditions, OptimizationType
 
 
 class TestStopConditions:
@@ -146,7 +146,7 @@ class TestStopConditions:
 
     @pytest.mark.parametrize("satisfying_objective_value", [-1, -32.342, 0, 0., 2.456, 564])
     @pytest.mark.parametrize("diff", [0, 0.000000000001, 1, 543.543534])
-    def test_is_satisfying_solution_found__true(self, satisfying_objective_value, diff):
+    def test_is_satisfying_solution_found__maximize__true(self, satisfying_objective_value, diff):
         """
         Test '_is_satisfying_solution_found' method return results of comparison 'best_solution' and
         'satisfying_objective_value'.
@@ -154,6 +154,24 @@ class TestStopConditions:
         :param satisfying_objective_value: Example value of 'satisfying_objective_value'.
         :param diff: Difference between 'satisfying_objective_value' and best)solution objective.
         """
+        self.mock_solution_object.optimization_problem = Mock(optimization_type=OptimizationType.Maximize)
+        self.mock_stop_condition_object.satisfying_objective_value = satisfying_objective_value
+        self.mock_get_objective_value_with_penalty.return_value = satisfying_objective_value + diff
+        assert StopConditions._is_satisfying_solution_found(self=self.mock_stop_condition_object,
+                                                            best_solution=self.mock_solution_object) is True
+        self.mock_get_objective_value_with_penalty.assert_called_once_with()
+
+    @pytest.mark.parametrize("satisfying_objective_value", [-1, -32.342, 0, 0., 2.456, 564])
+    @pytest.mark.parametrize("diff", [0, -0.000000000001, -1, -543.543534])
+    def test_is_satisfying_solution_found__minimize__true(self, satisfying_objective_value, diff):
+        """
+        Test '_is_satisfying_solution_found' method return results of comparison 'best_solution' and
+        'satisfying_objective_value'.
+
+        :param satisfying_objective_value: Example value of 'satisfying_objective_value'.
+        :param diff: Difference between 'satisfying_objective_value' and best)solution objective.
+        """
+        self.mock_solution_object.optimization_problem = Mock(optimization_type=OptimizationType.Minimize)
         self.mock_stop_condition_object.satisfying_objective_value = satisfying_objective_value
         self.mock_get_objective_value_with_penalty.return_value = satisfying_objective_value + diff
         assert StopConditions._is_satisfying_solution_found(self=self.mock_stop_condition_object,
@@ -162,7 +180,7 @@ class TestStopConditions:
 
     @pytest.mark.parametrize("satisfying_objective_value", [-1, -32.342, 0, 0., 2.456, 564])
     @pytest.mark.parametrize("diff", [-0.000000000001, -1, -543.543534])
-    def test_is_satisfying_solution_found__false(self, satisfying_objective_value, diff):
+    def test_is_satisfying_solution_found__maximize_false(self, satisfying_objective_value, diff):
         """
         Test '_is_satisfying_solution_found' method return results of comparison 'best_solution' and
         'satisfying_objective_value'.
@@ -170,6 +188,24 @@ class TestStopConditions:
         :param satisfying_objective_value: Example value of 'satisfying_objective_value'.
         :param diff: Difference between 'satisfying_objective_value' and best)solution objective.
         """
+        self.mock_solution_object.optimization_problem = Mock(optimization_type=OptimizationType.Maximize)
+        self.mock_stop_condition_object.satisfying_objective_value = satisfying_objective_value
+        self.mock_get_objective_value_with_penalty.return_value = satisfying_objective_value + diff
+        assert StopConditions._is_satisfying_solution_found(self=self.mock_stop_condition_object,
+                                                            best_solution=self.mock_solution_object) is False
+        self.mock_get_objective_value_with_penalty.assert_called_once_with()
+
+    @pytest.mark.parametrize("satisfying_objective_value", [-1, -32.342, 0, 0., 2.456, 564])
+    @pytest.mark.parametrize("diff", [0.000000000001, 1, 543.543534])
+    def test_is_satisfying_solution_found__minimize_false(self, satisfying_objective_value, diff):
+        """
+        Test '_is_satisfying_solution_found' method return results of comparison 'best_solution' and
+        'satisfying_objective_value'.
+
+        :param satisfying_objective_value: Example value of 'satisfying_objective_value'.
+        :param diff: Difference between 'satisfying_objective_value' and best)solution objective.
+        """
+        self.mock_solution_object.optimization_problem = Mock(optimization_type=OptimizationType.Minimize)
         self.mock_stop_condition_object.satisfying_objective_value = satisfying_objective_value
         self.mock_get_objective_value_with_penalty.return_value = satisfying_objective_value + diff
         assert StopConditions._is_satisfying_solution_found(self=self.mock_stop_condition_object,

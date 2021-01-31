@@ -15,6 +15,7 @@ from enum import Enum
 from abc import abstractmethod
 from collections import OrderedDict
 from copy import deepcopy
+from datetime import datetime
 
 from ...utilities import shuffled
 from .evolutionary_algorithm import EvolutionaryAlgorithm
@@ -59,10 +60,10 @@ class EvolutionaryAlgorithmAdaptationProblem(OptimizationProblem):
 
     def __init__(self,
                  adaptation_type: AdaptationType,
-                 population_size_boundaries: Tuple[int, int],
-                 selection_types: Iterable[SelectionType],
-                 crossover_types: Iterable[CrossoverType],
-                 mutation_types: Iterable[MutationType],
+                 population_size_boundaries: Tuple[int, int] = (MIN_POPULATION_SIZE, MAX_POPULATION_SIZE),
+                 selection_types: Iterable[SelectionType] = tuple(SelectionType),
+                 crossover_types: Iterable[CrossoverType] = tuple(CrossoverType),
+                 mutation_types: Iterable[MutationType] = tuple(MutationType),
                  mutation_chance_boundaries: Tuple[float, float] = (MIN_MUTATION_CHANCE, MAX_MUTATION_CHANCE),
                  apply_elitism_options: Iterable[bool] = (True, False),
                  **optional_params: Any) -> None:
@@ -551,12 +552,22 @@ class LowerAdaptiveEvolutionaryAlgorithm(EvolutionaryAlgorithm, AbstractSolution
                                        crossover_type=crossover_type, mutation_type=mutation_type,
                                        mutation_chance=mutation_chance, apply_elitism=apply_elitism, logger=logger,
                                        **other_params)
-        self._population = initial_population
+        self._population = initial_population[:population_size]
         # init as solution
         AbstractSolution.__init__(self_solution=self, population_size=population_size, selection_type=selection_type,
                                   crossover_type=crossover_type, mutation_type=mutation_type,
                                   mutation_chance=mutation_chance, apply_elitism=apply_elitism)
         self.additional_decision_variables_values = other_params
+
+    @property
+    def population(self) -> List[AbstractSolution]:
+        """External access to read population."""
+        return self._population
+
+    @property
+    def best_solution(self) -> Optional[AbstractSolution]:
+        """External access to read best found solution."""
+        return self._best_solution
 
     def _log_iteration(self, iteration_index: int) -> None:
         """
@@ -580,6 +591,29 @@ class LowerAdaptiveEvolutionaryAlgorithm(EvolutionaryAlgorithm, AbstractSolution
             population_size=self.population_size
         )
 
+    def perform_optimization(self) -> AbstractSolution:
+        """
+        Executes optimization process.
+
+        :return: The best solution that was found by the optimization algorithm.
+        """
+        # pre start
+        self._start_time = datetime.now()
+        # optimization process
+        iteration_index = 0
+        self._perform_iteration(iteration_index=iteration_index)
+        while not self._is_stop_achieved():
+            iteration_index += 1
+            self._perform_iteration(iteration_index=iteration_index)
+        # after stop
+        self._end_time = datetime.now()
+        if self.logger is not None:
+            self.logger.log_lower_level_at_end(upper_iteration=self.upper_iteration,
+                                               lower_algorithm_index=self.index,
+                                               best_solution=self._best_solution,
+                                               optimization_time=self._end_time - self._start_time)
+        return self._best_solution  # type: ignore
+
     def get_log_data(self) -> Dict[str, Any]:
         """
         Gets data for logging purposes.
@@ -589,7 +623,10 @@ class LowerAdaptiveEvolutionaryAlgorithm(EvolutionaryAlgorithm, AbstractSolution
         data = super().get_log_data()
         data["upper_iteration"] = self.upper_iteration
         data["index"] = self.index
-        data["decision_variables_values"] = self.decision_variables_values
+        decision_variables = deepcopy(self.decision_variables_values)
+        for enum_name in ("selection_type", "crossover_type", "mutation_type"):
+            decision_variables[enum_name] = decision_variables[enum_name].value
+        data["decision_variables_values"] = decision_variables
         data["additional_decision_variables_values"] = self.additional_decision_variables_values
         return data
 
@@ -733,8 +770,8 @@ class AdaptiveEvolutionaryAlgorithm(EvolutionaryAlgorithm):
             value_before_mutation = values_before_main_mutation[main_function]  # type: ignore
             value_after_mutation = values_after_main_mutation[main_function]  # type: ignore
             if value_before_mutation != value_after_mutation:
-                old_side_values = set(additional_params[value_before_mutation])
-                required_side_values = set(additional_params[value_before_mutation])
+                old_side_values = set(additional_params[value_before_mutation.value])
+                required_side_values = set(additional_params[value_after_mutation.value])
                 for var_name_no_longer_needed in old_side_values.difference(required_side_values):
                     final_values.pop(var_name_no_longer_needed)  # type: ignore
                 for var_name_new in required_side_values.difference(old_side_values):
@@ -750,7 +787,10 @@ class AdaptiveEvolutionaryAlgorithm(EvolutionaryAlgorithm):
 
         :return: Values of children decision variables (genes).
         """
-        child_1_main_values, child_2_main_values = super()._perform_crossover(parents=parents)
+        child_1_main_values, child_2_main_values = \
+            self.crossover_function(parents=parents,
+                                    variables_number=self.adaptation_problem.variables_number,
+                                    **self.crossover_params)
         child_1_side_values, child_2_side_values = self._assign_additional_params_to_children(
             parents=parents, child_1_main_values=child_1_main_values, child_2_main_values=child_2_main_values)
         return OrderedDict(**child_1_main_values, **child_1_side_values), \
@@ -764,9 +804,14 @@ class AdaptiveEvolutionaryAlgorithm(EvolutionaryAlgorithm):
 
         :return: None
         """
-        initial_value = deepcopy(individual_values)
-        super()._perform_mutation(individual_values=individual_values)
-        final_values = self._update_additional_params(values_before_main_mutation=initial_value,
+        initial_values = deepcopy(individual_values)
+        decision_variables_list = list(self.adaptation_problem.decision_variables.items())  # type: ignore
+        for mutation_point in self.mutation_function(variables_number=self.problem.variables_number,
+                                                     mutation_chance=self.mutation_chance,
+                                                     **self.mutation_params):
+            name, var = decision_variables_list[mutation_point]
+            individual_values[name] = var.generate_random_value()  # type: ignore
+        final_values = self._update_additional_params(values_before_main_mutation=initial_values,
                                                       values_after_main_mutation=individual_values)
         individual_values.clear()  # type: ignore
         individual_values.update(final_values)  # type: ignore
@@ -795,7 +840,7 @@ class AdaptiveEvolutionaryAlgorithm(EvolutionaryAlgorithm):
             upper_iteration=iteration,
             index=individual_number,
             problem=self.problem,
-            stop_codnitions=self._generate_lower_algorithm_stop_conditions(),
+            stop_conditions=self._generate_lower_algorithm_stop_conditions(),
             logger=self.logger,
             **values)
 
@@ -859,6 +904,8 @@ class AdaptiveEvolutionaryAlgorithm(EvolutionaryAlgorithm):
             self._evolution_iteration(iteration_index=iteration_index)
         for lower_ae in self._population:
             lower_ae.perform_optimization()
+        best_in_iter = max(lower_ae.best_solution for lower_ae in self._population)
+        self._best_solution = best_in_iter if self._best_solution is None else max(best_in_iter, self._best_solution)
         self._log_iteration(iteration_index=iteration_index)
 
     def _evolution_iteration(self, **kwargs: Any) -> None:
@@ -877,14 +924,17 @@ class AdaptiveEvolutionaryAlgorithm(EvolutionaryAlgorithm):
             self._perform_mutation(child1_values)
             self._perform_mutation(child2_values)
             current_population_size = len(new_population)
+            solutions_found_by_parents = shuffled(parent1.population + parent2.population)  # type: ignore
             child1 = self._create_individual(
                 iteration=iteration_index,
                 individual_number=current_population_size,
+                initial_population=solutions_found_by_parents,
                 **child1_values
             )
             child2 = self._create_individual(
                 iteration=iteration_index,
                 individual_number=current_population_size + 1,
+                initial_population=solutions_found_by_parents[::-1],
                 **child2_values
             )
             if self.apply_elitism:

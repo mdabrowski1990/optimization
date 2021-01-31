@@ -163,6 +163,21 @@ class AbstractLogger(ABC):
         """
         ...
 
+    @abstractmethod
+    def log_lower_level_at_end(self,
+                               upper_iteration: int,
+                               lower_algorithm_index: int,
+                               best_solution,
+                               optimization_time: timedelta) -> None:
+        """
+        Logging method that will be called at the end of lower level optimization process.
+
+        :param upper_iteration: Upper algorithm iteration.
+        :param lower_algorithm_index: Lower algorithm index.
+        :param best_solution: The best solution found by the optimization algorithm.
+        :param optimization_time: Optimization process duration time.
+        """
+
 
 class Logger(AbstractLogger):
     """Build-in logger for reporting optimization data."""
@@ -311,12 +326,12 @@ class Logger(AbstractLogger):
             data_to_log = {f"Iteration {lower_iteration}": [solution.get_log_data() for solution in solutions]}
             if self.log_format == LoggingFormat.YAML:
                 file_path = path.join(self.optimization_process_dir,  # type: ignore
-                                      f"solutions_iter_{upper_iteration}_alg_{lower_algorithm_index}.yaml")
+                                      f"iter_{upper_iteration}_alg_{lower_algorithm_index}_solutions.yaml")
                 with open(file_path, mode) as yaml_file:
                     yaml_dump(data_to_log, yaml_file, YamlDumper)
             elif self.log_format == LoggingFormat.JSON:
                 file_path = path.join(self.optimization_process_dir,  # type: ignore
-                                      f"solutions_iter_{upper_iteration}_alg_{lower_algorithm_index}.json")
+                                      f"iter_{upper_iteration}_alg_{lower_algorithm_index}_solutions.json")
                 with open(file_path, mode) as json_file:
                     json_dump(data_to_log, json_file)
 
@@ -341,5 +356,37 @@ class Logger(AbstractLogger):
                     yaml_dump(log_data, yaml_file, YamlDumper)
             elif self.log_format == LoggingFormat.JSON:
                 file_path = path.join(self.optimization_process_dir, "best_solution.json")  # type: ignore
+                with open(file_path, "w") as json_file:
+                    json_dump(log_data, json_file)
+
+    def log_lower_level_at_end(self,
+                               upper_iteration: int,
+                               lower_algorithm_index: int,
+                               best_solution,
+                               optimization_time: timedelta) -> None:
+        """
+        Logging method that will be called at the end of optimization process.
+
+        :param upper_iteration: Upper algorithm iteration.
+        :param lower_algorithm_index: Lower algorithm index.
+        :param best_solution: The best solution found by the optimization algorithm.
+        :param optimization_time: Optimization process duration time.
+        """
+        # assess data to log
+        log_data = {}
+        if self.verbosity >= LoggingVerbosity.OptimizationTime:
+            log_data["optimization_duration"] = str(optimization_time)
+        if self.verbosity >= LoggingVerbosity.BestSolution:
+            log_data["best_solution"] = best_solution.get_log_data()
+        # log to file
+        if log_data:
+            if self.log_format == LoggingFormat.YAML:
+                file_path = path.join(self.optimization_process_dir,  # type: ignore
+                                      f"iter_{upper_iteration}_alg_{lower_algorithm_index}_best_solution.yaml")
+                with open(file_path, "w") as yaml_file:
+                    yaml_dump(log_data, yaml_file, YamlDumper)
+            elif self.log_format == LoggingFormat.JSON:
+                file_path = path.join(self.optimization_process_dir,  # type: ignore
+                                      f"iter_{upper_iteration}_alg_{lower_algorithm_index}_best_solution.json")
                 with open(file_path, "w") as json_file:
                     json_dump(log_data, json_file)

@@ -1,13 +1,14 @@
 """
 Example use of optimization package.
 
-Problem to be optimized: De Jong F1 function
+Problem to be optimized: De Jong F3 function
 More info:
 https://www.researchgate.net/publication/279561942_A_simple_and_global_optimization_algorithm_for_engineering_problems_Differential_evolution_algorithm
 http://www2.denizyuret.com/pub/aitr1569/node19.html
 
 Stop conditions (when algorithm must stop the optimization):
 - maximal time (10s) is reached
+- optimal solution is found (objective value == -30)
 
 Algorithms used:
 - Random Algorithm (ra):
@@ -52,6 +53,8 @@ Algorithms used:
 from collections import OrderedDict
 from datetime import timedelta
 from os import getcwd, path
+from math import floor
+from time import sleep
 
 from optimization import OptimizationProblem, FloatVariable, OptimizationType, StopConditions, \
     Logger, LoggingVerbosity, \
@@ -63,18 +66,19 @@ from optimization import OptimizationProblem, FloatVariable, OptimizationType, S
 # De Jong F1 function problem definition
 x = FloatVariable(min_value=-5.12, max_value=5.12)
 problem_de_jong_f1 = OptimizationProblem(
-    decision_variables=OrderedDict(x1=x, x2=x, x3=x),
+    decision_variables=OrderedDict(x1=x, x2=x, x3=x, x4=x, x5=x),
     constraints={},
     penalty_function=lambda **values: 0,
-    objective_function=lambda **values: values["x1"] ** 2 + values["x2"] ** 2 + values["x3"] ** 2,
+    objective_function=lambda **values: floor(values["x1"]) + floor(values["x2"]) + floor(values["x3"]) + floor(values["x4"]) + floor(values["x5"]),
     optimization_type=OptimizationType.Minimize
 )
 
 # Define when Algorithm to be stopped
-stop_conditions_f1 = StopConditions(time_limit=timedelta(seconds=10))  # stop after 10 s
+stop_conditions_f1 = StopConditions(time_limit=timedelta(seconds=10),  # stop after 10 s
+                                    satisfying_objective_value=-30)  # stop if optimal solution is found (objective = -30)
 
 # Define logger for optimization process recording
-example_logs_path = path.join(getcwd(), "De Jong F1 - logs")
+example_logs_path = path.join(getcwd(), "De Jong F3 - logs")
 logger = Logger(logs_dir=example_logs_path, verbosity=LoggingVerbosity.AllSolutions)
 
 # DEFINE ALGORITHMS
@@ -114,7 +118,8 @@ ea3 = EvolutionaryAlgorithm(problem=problem_de_jong_f1,
                             apply_elitism=True)
 # adaptive evolutionary algorithms
 example_adaptation_problem = EvolutionaryAlgorithmAdaptationProblem(
-    adaptation_type=AdaptationType.BestSolution,
+    adaptation_type=AdaptationType.BestSolutions,
+    solutions_number=5,
     population_size_boundaries=(10, 50))
 aea1 = AdaptiveEvolutionaryAlgorithm(
     problem=problem_de_jong_f1,
@@ -160,9 +165,13 @@ print("Optimization started for: ea1")
 ea1.perform_optimization()
 print("Optimization completed for: ea1")
 
+sleep(1)  # wait to avoid conflict with directory names (it might happen when optimal solution is found in less than 1s)
+
 print("Optimization started for: ea2")
 ea2.perform_optimization()
 print("Optimization completed for: ea2")
+
+sleep(1)  # wait to avoid conflict with directory names (it might happen when optimal solution is found in less than 1s)
 
 print("Optimization started for: ea3")
 ea3.perform_optimization()
@@ -172,9 +181,13 @@ print("Optimization started for: aea1")
 aea1.perform_optimization()
 print("Optimization completed for: aea1")
 
+sleep(1)  # wait to avoid conflict with directory names (it might happen when optimal solution is found in less than 1s)
+
 print("Optimization started for: aea2")
 aea2.perform_optimization()
 print("Optimization completed for: aea2")
+
+sleep(1)  # wait to avoid conflict with directory names (it might happen when optimal solution is found in less than 1s)
 
 print("Optimization started for: aea3")
 aea3.perform_optimization()

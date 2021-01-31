@@ -6,7 +6,7 @@ __all__ = ["StopConditions"]
 from typing import Optional, Union, Dict
 from datetime import timedelta, datetime
 
-from .problem.solution import AbstractSolution
+from .problem import AbstractSolution, OptimizationType
 
 
 class StopConditions:
@@ -79,8 +79,11 @@ class StopConditions:
 
         :return: True if satisfying solution found, otherwise False.
         """
-        return self.satisfying_objective_value is not None \
-            and best_solution.get_objective_value_with_penalty() >= self.satisfying_objective_value
+        if self.satisfying_objective_value is not None:
+            if best_solution.optimization_problem.optimization_type == OptimizationType.Minimize:
+                return best_solution.get_objective_value_with_penalty() <= self.satisfying_objective_value
+            return best_solution.get_objective_value_with_penalty() >= self.satisfying_objective_value
+        return False
 
     def _is_limit_without_progress_exceeded(self, best_solution: AbstractSolution) -> bool:
         """
@@ -143,9 +146,10 @@ class StopConditions:
 
         :return: Dictionary with this Stop Conditions crucial data.
         """
+        max_time = None if self.max_iter_without_progress is None else str(self.max_time_without_progress)
         return {
             "time_limit": str(self.time_limit),
             "satisfying_objective_value": self.satisfying_objective_value,
             "max_iter_without_progress": self.max_iter_without_progress,
-            "max_time_without_progress": str(self.max_time_without_progress)
+            "max_time_without_progress": max_time
         }
